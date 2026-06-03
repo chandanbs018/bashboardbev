@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ─── Reset & Base ─────────────────────────────────────────── */
+/* ─── Reset & Base (preserved) ─────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --bg:       #F5F4F1;
@@ -52,8 +52,6 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
-
-/* ─── Layout ───────────────────────────────────────────────── */
 .app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 .topbar {
   background: var(--surface);
@@ -83,10 +81,22 @@ body {
 .breadcrumb a:hover { text-decoration: underline; }
 .breadcrumb-sep { color: var(--border2); }
 .topbar-right { display: flex; align-items: center; gap: 10px; }
-.role-badge {
-  font-size: 11px; font-weight: 500; padding: 3px 10px;
-  border-radius: 20px; background: var(--purple-bg); color: var(--purple-txt);
+.role-selector {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font);
+  transition: all var(--transition);
 }
+.role-selector:hover { background: var(--surface3); }
 .avatar {
   width: 30px; height: 30px; border-radius: 50%;
   background: var(--blue); color: #fff;
@@ -98,17 +108,9 @@ body {
   width: 30px; height: 30px; border-radius: var(--radius-sm);
   border: 1px solid var(--border); background: transparent;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--text2); transition: background var(--transition);
-  position: relative;
+  cursor: pointer; color: var(--text2);
 }
-.icon-btn:hover { background: var(--surface2); }
-.notif-dot {
-  position: absolute; top: 4px; right: 4px;
-  width: 6px; height: 6px; border-radius: 50%; background: var(--red);
-  border: 1.5px solid var(--surface);
-}
-
-/* ─── Filters Bar ──────────────────────────────────────────── */
+.notif-dot { position: absolute; top: 4px; right: 4px; width: 6px; height: 6px; border-radius: 50%; background: var(--red); border: 1.5px solid var(--surface); }
 .filters-bar {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
@@ -118,6 +120,7 @@ body {
   align-items: center;
   gap: 6px;
   flex-shrink: 0;
+  overflow-x: auto;
 }
 .filter-label { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; margin-right: 4px; }
 .chip {
@@ -125,14 +128,10 @@ body {
   font-size: 12px; padding: 4px 10px;
   border: 1px solid var(--border); border-radius: 20px;
   cursor: pointer; background: var(--surface); color: var(--text2);
-  transition: all var(--transition); white-space: nowrap;
+  white-space: nowrap;
 }
-.chip:hover { border-color: var(--border2); background: var(--surface2); }
 .chip.active { background: var(--blue-bg); border-color: var(--blue); color: var(--blue-txt); font-weight: 500; }
-.chip svg { width: 12px; height: 12px; flex-shrink: 0; }
 .filter-sep { width: 1px; height: 18px; background: var(--border); margin: 0 4px; }
-
-/* ─── Main screens ─────────────────────────────────────────── */
 .screens { flex: 1; overflow: hidden; position: relative; }
 .screen {
   position: absolute; inset: 0;
@@ -142,28 +141,11 @@ body {
   padding: 18px 20px 24px;
 }
 .screen.active { opacity: 1; pointer-events: all; }
-
-/* ─── Alert Strip ──────────────────────────────────────────── */
-.alert-strip {
-  background: var(--amber-bg);
-  border: 1px solid #F6D06A;
-  border-radius: var(--radius-sm);
-  padding: 8px 14px;
-  display: flex; align-items: center; gap: 8px;
-  font-size: 12px; color: var(--amber-txt);
-  margin-bottom: 16px;
-}
-.alert-strip strong { font-weight: 600; }
-.alert-strip-link { margin-left: auto; font-size: 11px; color: var(--amber); cursor: pointer; text-decoration: underline; white-space: nowrap; }
-
-/* ─── Section labels ───────────────────────────────────────── */
 .section-label {
   font-size: 10px; font-weight: 600; color: var(--text3);
   text-transform: uppercase; letter-spacing: .07em;
   margin-bottom: 10px;
 }
-
-/* ─── KPI Cards ────────────────────────────────────────────── */
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
@@ -179,28 +161,36 @@ body {
   transition: all var(--transition);
   box-shadow: var(--shadow-sm);
   position: relative;
-  overflow: hidden;
 }
-.kpi-card::after {
-  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-  height: 3px; background: transparent; transition: background var(--transition);
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-}
-.kpi-card:hover { box-shadow: var(--shadow); border-color: var(--border2); transform: translateY(-1px); }
-.kpi-card:hover::after { background: var(--blue); }
-.kpi-card.warn::after { background: var(--amber); }
+.kpi-card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
 .kpi-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-.kpi-name { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; }
-.kpi-src { font-size: 9px; color: var(--text3); background: var(--surface2); padding: 2px 6px; border-radius: 4px; font-family: var(--mono); }
+.kpi-name { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; }
+.kpi-src { font-size: 9px; color: var(--text3); background: var(--surface2); padding: 2px 6px; border-radius: 4px; }
 .kpi-value { font-size: 22px; font-weight: 600; color: var(--text); letter-spacing: -.03em; line-height: 1.1; margin-bottom: 6px; }
 .kpi-sub { display: flex; align-items: center; gap: 6px; font-size: 11px; margin-bottom: 8px; }
 .trend-up { color: var(--green); display: flex; align-items: center; gap: 3px; font-weight: 500; }
 .trend-down { color: var(--red); display: flex; align-items: center; gap: 3px; font-weight: 500; }
-.trend-label { color: var(--text3); }
 .kpi-spark { height: 32px; width: 100%; }
-.kpi-footer { display: flex; justify-content: space-between; padding-top: 8px; border-top: 1px solid var(--border); font-size: 10px; color: var(--text3); font-family: var(--mono); }
-
-/* ─── Highlights ───────────────────────────────────────────── */
+.kpi-footer { display: flex; justify-content: space-between; padding-top: 8px; border-top: 1px solid var(--border); font-size: 10px; color: var(--text3); }
+.health-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 20px; }
+.health-healthy { background: var(--green-bg); color: var(--green-txt); }
+.health-warning { background: var(--amber-bg); color: var(--amber-txt); }
+.health-critical { background: var(--red-bg); color: var(--red-txt); }
+.exec-summary {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.exec-summary-icon { font-size: 28px; }
+.exec-summary-content { flex: 1; }
+.exec-summary-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.exec-summary-text { font-size: 13px; color: var(--text2); line-height: 1.5; }
 .highlights-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -212,22 +202,17 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 12px 14px;
-  display: flex; align-items: flex-start; gap: 10px;
-  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
 }
-.hl-icon {
-  width: 30px; height: 30px; border-radius: var(--radius-sm);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; flex-shrink: 0;
-}
+.hl-icon { width: 30px; height: 30px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 14px; }
 .hl-icon.success { background: var(--green-bg); }
 .hl-icon.danger  { background: var(--red-bg); }
 .hl-icon.warning { background: var(--amber-bg); }
 .hl-icon.info    { background: var(--blue-bg); }
 .hl-text { font-size: 12px; font-weight: 500; color: var(--text); line-height: 1.4; }
 .hl-sub  { font-size: 11px; color: var(--text2); margin-top: 2px; }
-
-/* ─── Charts Row ───────────────────────────────────────────── */
 .charts-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -238,1173 +223,248 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 14px 16px;
-  box-shadow: var(--shadow-sm);
 }
 .chart-title { font-size: 13px; font-weight: 600; color: var(--text); }
 .chart-sub   { font-size: 11px; color: var(--text3); margin-bottom: 12px; }
-.chart-svg   { width: 100%; overflow: visible; }
-.legend      { display: flex; gap: 12px; margin-top: 8px; }
+.legend { display: flex; gap: 12px; margin-top: 8px; }
 .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--text2); }
 .legend-dot  { width: 8px; height: 8px; border-radius: 50%; }
 
-/* ─── KPI Workspace ────────────────────────────────────────── */
-.workspace {
-  display: grid;
-  grid-template-columns: 65fr 35fr;
-  gap: 14px;
-  height: 100%;
-  min-height: 0;
-}
-.ws-left  { display: flex; flex-direction: column; gap: 12px; min-height: 0; }
-.ws-right { display: flex; flex-direction: column; gap: 0; min-height: 0; }
-
-.kpi-meta {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 14px 16px;
-  box-shadow: var(--shadow-sm);
-}
-.kpi-meta-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
-.kpi-meta-title { font-size: 20px; font-weight: 600; letter-spacing: -.03em; color: var(--text); }
-.kpi-meta-desc  { font-size: 12px; color: var(--text2); line-height: 1.55; margin-bottom: 8px; }
-.kpi-meta-row   { display: flex; gap: 16px; flex-wrap: wrap; }
-.meta-item { font-size: 11px; color: var(--text3); }
-.meta-item strong { color: var(--text2); font-weight: 500; }
-.status-badge {
-  font-size: 11px; font-weight: 500; padding: 3px 10px;
-  border-radius: 20px; white-space: nowrap;
-}
-.status-badge.ok  { background: var(--green-bg); color: var(--green-txt); }
-.status-badge.warn { background: var(--amber-bg); color: var(--amber-txt); }
-.status-badge.bad  { background: var(--red-bg);   color: var(--red-txt); }
-
-/* Summary cards */
-.sum-row {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
-}
-.sum-card {
-  background: var(--surface2);
-  border-radius: var(--radius);
-  padding: 10px 12px;
-  text-align: center;
-}
-.sum-lbl { font-size: 9px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 5px; }
-.sum-val { font-size: 17px; font-weight: 600; color: var(--text); letter-spacing: -.02em; line-height: 1.1; }
-.sum-val.up   { color: var(--green); }
-.sum-val.down { color: var(--red); }
-.sum-val.sm   { font-size: 13px; }
-
-/* Chart container */
-.chart-container {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 14px 16px;
-  box-shadow: var(--shadow-sm);
-}
-.chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
-.chart-tabs { display: flex; gap: 4px; }
-.c-tab {
-  font-size: 11px; padding: 4px 11px;
-  border-radius: 20px; border: 1px solid var(--border);
-  cursor: pointer; color: var(--text2); background: transparent;
-  transition: all var(--transition);
-}
-.c-tab:hover  { background: var(--surface2); }
-.c-tab.active { background: var(--blue-bg); border-color: var(--blue); color: var(--blue-txt); font-weight: 500; }
-
-/* Drill table */
-.drill-container {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 14px 16px;
-  box-shadow: var(--shadow-sm);
-}
-.drill-bc { display: flex; align-items: center; gap: 6px; font-size: 12px; margin-bottom: 10px; flex-wrap: wrap; }
-.drill-bc a { color: var(--blue); cursor: pointer; }
-.drill-bc a:hover { text-decoration: underline; }
-.drill-bc-sep { color: var(--text3); }
-.drill-bc-cur { color: var(--text); font-weight: 500; }
-.table-controls { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-.search-input {
-  flex: 1; font-size: 12px; padding: 6px 10px 6px 30px;
-  border: 1px solid var(--border); border-radius: var(--radius-sm);
-  background: var(--surface2); color: var(--text);
-  font-family: var(--font); outline: none;
-  transition: border-color var(--transition);
-  position: relative;
-}
-.search-input:focus { border-color: var(--blue); background: var(--surface); }
-.search-wrap { position: relative; flex: 1; }
-.search-icon { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: var(--text3); pointer-events: none; }
-.btn-sm {
-  font-size: 11px; padding: 6px 12px;
-  border: 1px solid var(--border); border-radius: var(--radius-sm);
-  cursor: pointer; background: var(--surface); color: var(--text2);
-  font-family: var(--font); transition: all var(--transition); white-space: nowrap;
-  display: flex; align-items: center; gap: 5px;
-}
-.btn-sm:hover { background: var(--surface2); border-color: var(--border2); }
-.btn-primary {
-  background: var(--blue); border-color: var(--blue); color: #fff;
-  font-weight: 500;
-}
-.btn-primary:hover { background: var(--blue-txt); border-color: var(--blue-txt); }
-.data-table { width: 100%; border-collapse: collapse; }
-.data-table th {
-  text-align: left; padding: 6px 10px;
-  font-size: 10px; font-weight: 600; color: var(--text3);
-  text-transform: uppercase; letter-spacing: .06em;
-  border-bottom: 1px solid var(--border2);
-}
-.data-table td {
-  padding: 8px 10px;
-  border-bottom: 1px solid var(--border);
-  font-size: 12px; color: var(--text);
-}
-.data-table tr:last-child td { border-bottom: none; }
-.data-table tr:hover td { background: var(--surface2); }
-.drill-link { color: var(--blue); cursor: pointer; display: flex; align-items: center; gap: 4px; }
-.drill-link:hover { text-decoration: underline; }
-.badge {
-  font-size: 10px; font-weight: 500; padding: 2px 6px;
-  border-radius: 4px; display: inline-block;
-}
-.badge.up  { background: var(--green-bg); color: var(--green-txt); }
-.badge.dn  { background: var(--red-bg);   color: var(--red-txt); }
-.badge.neu { background: var(--surface3); color: var(--text2); }
-.share-pct { font-size: 11px; color: var(--text3); font-family: var(--mono); }
-
-/* ─── AI Panel ─────────────────────────────────────────────── */
+/* Workspace and AI panel preserved but enhanced */
+.workspace { display: grid; grid-template-columns: 65fr 35fr; gap: 14px; height: 100%; min-height: 0; }
+.ws-left { display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+.ws-right { display: flex; flex-direction: column; min-height: 0; }
 .ai-panel {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   display: flex; flex-direction: column;
-  box-shadow: var(--shadow);
   height: 100%;
   overflow: hidden;
 }
-.ai-header {
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-  flex-shrink: 0;
-  background: var(--surface);
-}
+.ai-header { padding: 12px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
 .ai-title { font-size: 13px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 7px; }
-.ai-badge { font-size: 9px; font-weight: 600; padding: 2px 7px; border-radius: 10px; background: var(--purple-bg); color: var(--purple-txt); letter-spacing: .04em; text-transform: uppercase; }
-.ai-ctx-chip { font-size: 11px; padding: 3px 10px; border: 1px solid var(--blue); border-radius: 20px; background: var(--blue-bg); color: var(--blue-txt); font-weight: 500; }
+.ai-badge { font-size: 9px; font-weight: 600; padding: 2px 7px; border-radius: 10px; background: var(--purple-bg); color: var(--purple-txt); }
+.ai-ctx-chip { font-size: 11px; padding: 3px 10px; border: 1px solid var(--blue); border-radius: 20px; background: var(--blue-bg); color: var(--blue-txt); }
 .ai-body { flex: 1; overflow-y: auto; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
-.ai-input-row { display: flex; gap: 6px; align-items: flex-end; }
-.ai-textarea {
-  flex: 1; font-size: 12px; padding: 8px 10px;
-  border: 1px solid var(--border); border-radius: var(--radius-sm);
-  background: var(--surface2); color: var(--text);
-  font-family: var(--font); resize: none; min-height: 36px; line-height: 1.4; outline: none;
-  transition: border-color var(--transition);
-}
+.ai-textarea { width: 100%; font-size: 12px; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface2); resize: none; font-family: var(--font); outline: none; }
 .ai-textarea:focus { border-color: var(--blue); background: var(--surface); }
-.ai-send {
-  width: 34px; height: 34px; background: var(--blue); border: none; border-radius: var(--radius-sm);
-  cursor: pointer; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  transition: background var(--transition);
-}
-.ai-send:hover { background: var(--blue-txt); }
-.sq-label { font-size: 9px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .07em; }
-.sq-pills { display: flex; flex-direction: column; gap: 5px; }
-.sq-pill {
-  font-size: 11px; padding: 6px 11px;
-  border: 1px solid var(--border); border-radius: 20px;
-  cursor: pointer; color: var(--text2); background: var(--surface2);
-  display: flex; align-items: center; gap: 6px;
-  transition: all var(--transition);
-}
-.sq-pill:hover { border-color: var(--blue); color: var(--blue-txt); background: var(--blue-bg); }
-.ai-divider { height: 1px; background: var(--border); }
-.insight-block { display: flex; flex-direction: column; gap: 5px; }
-.insight-card {
-  border-radius: var(--radius-sm); padding: 8px 11px;
-  font-size: 12px; line-height: 1.5;
-  display: flex; align-items: flex-start; gap: 7px;
-}
-.insight-card.info    { background: var(--blue-bg);  color: var(--blue-txt); }
+.ai-send { width: 34px; height: 34px; background: var(--blue); border: none; border-radius: var(--radius-sm); cursor: pointer; color: #fff; display: flex; align-items: center; justify-content: center; }
+.sq-pill { font-size: 11px; padding: 6px 11px; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; background: var(--surface2); transition: all var(--transition); }
+.sq-pill:hover { border-color: var(--blue); background: var(--blue-bg); color: var(--blue-txt); }
+.ai-response { background: var(--surface2); border-radius: var(--radius); padding: 11px 13px; font-size: 12px; line-height: 1.65; }
+.insight-card { border-radius: var(--radius-sm); padding: 8px 11px; font-size: 12px; margin-top: 6px; }
+.insight-card.info { background: var(--blue-bg); color: var(--blue-txt); }
 .insight-card.success { background: var(--green-bg); color: var(--green-txt); }
 .insight-card.warning { background: var(--amber-bg); color: var(--amber-txt); }
-.insight-card.danger  { background: var(--red-bg);   color: var(--red-txt); }
-.insight-icon { flex-shrink: 0; margin-top: 1px; }
-.ai-response {
-  background: var(--surface2);
-  border-radius: var(--radius);
-  padding: 11px 13px;
-  font-size: 12px; line-height: 1.65; color: var(--text);
-}
-.ai-response-label { font-size: 9px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 6px; }
-.ai-mini-chart { height: 44px; width: 100%; margin: 7px 0; }
-.risk-row { display: flex; flex-direction: column; gap: 5px; }
-.risk-item {
-  display: flex; align-items: center; gap: 7px;
-  padding: 7px 11px; border-radius: var(--radius-sm);
-  background: var(--red-bg); color: var(--red-txt); font-size: 11px; line-height: 1.4;
-}
-.ai-footer { padding: 8px 14px; border-top: 1px solid var(--border); text-align: center; font-size: 10px; color: var(--text3); flex-shrink: 0; background: var(--surface); }
-
-/* ─── Export Modal ─────────────────────────────────────────── */
-.modal-overlay {
-  position: fixed; inset: 0; background: rgba(10,10,8,.5);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 999; opacity: 0; pointer-events: none;
-  transition: opacity .2s ease;
-  backdrop-filter: blur(4px);
-}
+.risk-item { display: flex; align-items: center; gap: 7px; padding: 7px 11px; border-radius: var(--radius-sm); background: var(--red-bg); color: var(--red-txt); font-size: 11px; margin-top: 6px; }
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th { text-align: left; padding: 6px 10px; font-size: 10px; font-weight: 600; color: var(--text3); border-bottom: 1px solid var(--border2); }
+.data-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); font-size: 12px; }
+.drill-link { color: var(--blue); cursor: pointer; }
+.kpi-catalog-toggle { position: fixed; bottom: 20px; left: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 30px; padding: 8px 16px; font-size: 12px; cursor: pointer; z-index: 200; box-shadow: var(--shadow); }
+.kpi-catalog-panel { position: fixed; bottom: 70px; left: 20px; width: 240px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); z-index: 199; display: none; flex-direction: column; max-height: 400px; overflow-y: auto; }
+.kpi-catalog-panel.open { display: flex; }
+.catalog-group { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+.catalog-group-title { font-weight: 600; font-size: 11px; color: var(--text3); margin-bottom: 6px; }
+.catalog-item { padding: 6px 8px; font-size: 12px; cursor: pointer; border-radius: var(--radius-sm); }
+.catalog-item:hover { background: var(--surface2); color: var(--blue); }
+.modal-overlay { position: fixed; inset: 0; background: rgba(10,10,8,.5); display: flex; align-items: center; justify-content: center; z-index: 999; opacity: 0; pointer-events: none; transition: opacity .2s; backdrop-filter: blur(4px); }
 .modal-overlay.open { opacity: 1; pointer-events: all; }
-.modal {
-  background: var(--surface); border-radius: var(--radius-lg);
-  width: 500px; max-width: calc(100vw - 32px);
-  box-shadow: 0 20px 60px rgba(0,0,0,.18), 0 4px 16px rgba(0,0,0,.08);
-  border: 1px solid var(--border);
-  overflow: hidden;
-  transform: translateY(8px) scale(.98);
-  transition: transform .22s ease;
-}
-.modal-overlay.open .modal { transform: translateY(0) scale(1); }
-.modal-hdr {
-  padding: 16px 18px;
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-}
-.modal-title { font-size: 15px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 8px; }
-.modal-close { cursor: pointer; color: var(--text3); background: none; border: none; font-size: 18px; line-height: 1; padding: 4px; border-radius: var(--radius-sm); transition: background var(--transition); }
-.modal-close:hover { background: var(--surface2); }
-.modal-body { padding: 18px; display: flex; flex-direction: column; gap: 16px; }
-.modal-ctx { font-size: 12px; color: var(--text2); display: flex; align-items: center; gap: 7px; }
-.modal-ctx strong { color: var(--text); font-weight: 600; }
-.fmt-row { display: flex; gap: 8px; }
-.fmt-card {
-  flex: 1; border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 12px 14px; cursor: pointer; transition: all var(--transition);
-  display: flex; align-items: center; gap: 10px;
-}
-.fmt-card:hover { border-color: var(--border2); background: var(--surface2); }
-.fmt-card.active { border: 1.5px solid var(--blue); background: var(--blue-bg); }
-.fmt-icon { font-size: 22px; }
-.fmt-lbl { font-size: 13px; font-weight: 600; color: var(--text); }
-.fmt-sub { font-size: 11px; color: var(--text2); }
-.content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
-.content-item {
-  display: flex; align-items: center; gap: 9px;
-  padding: 9px 12px; border: 1px solid var(--border); border-radius: var(--radius);
-  cursor: pointer; transition: all var(--transition);
-}
-.content-item:hover { border-color: var(--border2); }
-.content-item.checked { border-color: var(--blue); background: var(--blue-bg); }
-.check-box {
-  width: 15px; height: 15px; border-radius: 4px;
-  border: 1.5px solid var(--border2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px; flex-shrink: 0; transition: all var(--transition);
-}
-.check-box.on { background: var(--blue); border-color: var(--blue); color: #fff; }
-.content-lbl { font-size: 12px; font-weight: 500; color: var(--text); }
-.content-sub { font-size: 10px; color: var(--text2); margin-top: 1px; }
-.preview-strip {
-  background: var(--surface2); border-radius: var(--radius-sm);
-  padding: 9px 13px; font-size: 11px; color: var(--text2);
-  display: flex; align-items: center; gap: 7px; border: 1px solid var(--border);
-}
-.preview-strip strong { color: var(--text); font-weight: 600; }
-.modal-footer {
-  padding: 12px 18px;
-  border-top: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-  background: var(--surface2);
-}
-.modal-filter-hint { font-size: 11px; color: var(--text3); }
-.modal-actions { display: flex; gap: 8px; }
-
-/* Buttons */
-.btn { font-size: 12px; padding: 7px 16px; border-radius: var(--radius-sm); cursor: pointer; font-family: var(--font); transition: all var(--transition); font-weight: 500; display: flex; align-items: center; gap: 5px; border: 1px solid transparent; }
-.btn-ghost { background: transparent; border-color: var(--border); color: var(--text2); }
-.btn-ghost:hover { background: var(--surface3); border-color: var(--border2); }
-.btn-blue { background: var(--blue); border-color: var(--blue); color: #fff; }
-.btn-blue:hover { background: var(--blue-txt); border-color: var(--blue-txt); }
-
-/* Toast */
-.toast {
-  position: fixed; bottom: 24px; right: 24px;
-  background: var(--text); color: #fff;
-  padding: 10px 16px; border-radius: var(--radius);
-  font-size: 12px; font-weight: 500;
-  box-shadow: var(--shadow);
-  transform: translateY(20px); opacity: 0;
-  transition: all .25s ease;
-  z-index: 1000;
-  display: flex; align-items: center; gap: 8px;
-}
+.modal { background: var(--surface); border-radius: var(--radius-lg); width: 500px; max-width: calc(100vw - 32px); border: 1px solid var(--border); }
+.toast { position: fixed; bottom: 24px; right: 24px; background: var(--text); color: #fff; padding: 10px 16px; border-radius: var(--radius); font-size: 12px; transform: translateY(20px); opacity: 0; transition: all .25s; z-index: 1000; }
 .toast.show { transform: translateY(0); opacity: 1; }
-
-/* SVG helpers */
-.no-fill { fill: none; }
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
-
-/* Workspace height calc */
-#screen-workspace .workspace {
-  height: calc(100vh - 52px - 42px - 36px - 24px);
-}
 </style>
 </head>
 <body>
-
 <div class="app">
-
-  <!-- ═══ TOPBAR ═══════════════════════════════════════════ -->
   <header class="topbar">
     <div class="topbar-left">
-      <div class="logo">
-        <div class="logo-mark"><span>BEV</span></div>
-        Analytics
-      </div>
+      <div class="logo"><div class="logo-mark"><span>BEV</span></div>Analytics</div>
       <div class="topbar-divider"></div>
-      <nav class="breadcrumb" id="breadcrumb">
-        <a onclick="showScreen('home')">Dashboard</a>
-      </nav>
+      <nav class="breadcrumb" id="breadcrumb"><a onclick="showScreen('home')">Dashboard</a></nav>
     </div>
     <div class="topbar-right">
-      <span class="refresh-time">08:42 AM</span>
-      <button class="icon-btn" title="Notifications">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M8 1.5a4.5 4.5 0 0 0-4.5 4.5c0 2.2-.6 3.5-1.2 4.2-.3.4-.1.8.5.8h10.4c.6 0 .8-.4.5-.8-.6-.7-1.2-2-1.2-4.2A4.5 4.5 0 0 0 8 1.5Z"/>
-          <path d="M6.5 13.5a1.5 1.5 0 0 0 3 0"/>
-        </svg>
-        <span class="notif-dot"></span>
-      </button>
-      <span class="role-badge">Managing Director</span>
-      <div class="avatar" title="Arjun Kumar">AK</div>
+      <span class="refresh-time" id="live-time">--:-- --</span>
+      <button class="icon-btn" title="Notifications"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M8 1.5a4.5 4.5 0 0 0-4.5 4.5c0 2.2-.6 3.5-1.2 4.2-.3.4-.1.8.5.8h10.4c.6 0 .8-.4.5-.8-.6-.7-1.2-2-1.2-4.2A4.5 4.5 0 0 0 8 1.5Z"/><path d="M6.5 13.5a1.5 1.5 0 0 0 3 0"/></svg><span class="notif-dot"></span></button>
+      <select id="role-switcher" class="role-selector" onchange="switchRole(this.value)">
+        <option value="MD">👔 Managing Director</option>
+        <option value="Finance">💰 Finance Manager</option>
+        <option value="Operations">🏭 Operations Manager</option>
+        <option value="HR">👥 HR Manager</option>
+      </select>
+      <div class="avatar">AK</div>
     </div>
   </header>
-
-  <!-- ═══ FILTERS BAR ══════════════════════════════════════ -->
-  <div class="filters-bar">
-    <span class="filter-label">Filters</span>
-    <div class="chip active">
-      <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
-        <rect x="1" y="1" width="10" height="10" rx="1.5"/>
-        <line x1="1" y1="4.5" x2="11" y2="4.5"/>
-        <line x1="4" y1="1" x2="4" y2="4.5"/>
-        <line x1="8" y1="1" x2="8" y2="4.5"/>
-      </svg>
-      FY 2024–25
-    </div>
-    <div class="chip">
-      <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path d="M6 1.5C4.067 1.5 2.5 3.067 2.5 5c0 2.5 3.5 5.5 3.5 5.5S9.5 7.5 9.5 5c0-1.933-1.567-3.5-3.5-3.5Z"/>
-        <circle cx="6" cy="5" r="1"/>
-      </svg>
-      All regions ▾
-    </div>
-    <div class="chip">All departments ▾</div>
-    <div class="chip">All projects ▾</div>
-    <div class="filter-sep"></div>
-    <div class="chip" style="color:var(--text3)">✕ Clear</div>
-  </div>
-
-  <!-- ═══ SCREENS ══════════════════════════════════════════ -->
+  <div class="filters-bar"><span class="filter-label">Filters</span><div class="chip active">FY 2024–25</div><div class="chip">All regions ▾</div><div class="chip">All departments ▾</div></div>
   <div class="screens">
-
-    <!-- ─── SCREEN 1: HOME ─────────────────────────────── -->
     <div class="screen active" id="screen-home">
-
-      <!-- Alert -->
-      <div class="alert-strip">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M8 2L1.5 13h13L8 2Z"/><line x1="8" y1="7" x2="8" y2="10"/><circle cx="8" cy="12" r=".5" fill="currentColor"/>
-        </svg>
-        <span><strong>2 alerts require attention:</strong> Inventory turnover below threshold (South plant) · Attrition rate increased 3.2% this quarter</span>
-        <span class="alert-strip-link">View all →</span>
-      </div>
-
-      <!-- KPI Cards -->
+      <div id="exec-summary-container"></div>
       <div class="section-label">Key performance indicators</div>
-      <div class="kpi-grid">
-
-        <div class="kpi-card" onclick="showScreen('workspace', 'Revenue')">
-          <div class="kpi-card-header">
-            <span class="kpi-name">Revenue</span>
-            <span class="kpi-src">ERP</span>
-          </div>
-          <div class="kpi-value">₹248.3 Cr</div>
-          <div class="kpi-sub">
-            <span class="trend-up">▲ +12.4%</span>
-            <span class="trend-label">vs last year</span>
-          </div>
-          <svg class="kpi-spark" viewBox="0 0 100 32" preserveAspectRatio="none">
-            <polyline points="0,26 14,22 28,24 42,16 56,12 70,8 85,5 100,2" fill="none" stroke="#1A7A45" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <div class="kpi-footer"><span>Finance Mgr</span><span>08:42 AM</span></div>
-        </div>
-
-        <div class="kpi-card" onclick="showScreen('workspace', 'Profit Margin')">
-          <div class="kpi-card-header">
-            <span class="kpi-name">Profit Margin</span>
-            <span class="kpi-src">ERP</span>
-          </div>
-          <div class="kpi-value">18.7%</div>
-          <div class="kpi-sub">
-            <span class="trend-up">▲ +1.3pp</span>
-            <span class="trend-label">vs last year</span>
-          </div>
-          <svg class="kpi-spark" viewBox="0 0 100 32" preserveAspectRatio="none">
-            <polyline points="0,24 14,22 28,20 42,21 56,16 70,14 85,12 100,10" fill="none" stroke="#1A7A45" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <div class="kpi-footer"><span>Finance Mgr</span><span>08:42 AM</span></div>
-        </div>
-
-        <div class="kpi-card" onclick="showScreen('workspace', 'Production')">
-          <div class="kpi-card-header">
-            <span class="kpi-name">Production</span>
-            <span class="kpi-src">MFG Sys.</span>
-          </div>
-          <div class="kpi-value">14,820 u</div>
-          <div class="kpi-sub">
-            <span class="trend-up">▲ +8.1%</span>
-            <span class="trend-label">vs target</span>
-          </div>
-          <svg class="kpi-spark" viewBox="0 0 100 32" preserveAspectRatio="none">
-            <polyline points="0,22 14,20 28,23 42,16 56,13 70,14 85,10 100,8" fill="none" stroke="#1A7A45" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <div class="kpi-footer"><span>Ops Mgr</span><span>08:30 AM</span></div>
-        </div>
-
-        <div class="kpi-card warn" onclick="showScreen('workspace', 'Inventory')">
-          <div class="kpi-card-header">
-            <span class="kpi-name">Inventory</span>
-            <span class="kpi-src">ERP</span>
-          </div>
-          <div class="kpi-value">₹38.4 Cr</div>
-          <div class="kpi-sub">
-            <span class="trend-down">▼ −4.2%</span>
-            <span class="trend-label" style="color:var(--amber-txt)">⚠ risk flagged</span>
-          </div>
-          <svg class="kpi-spark" viewBox="0 0 100 32" preserveAspectRatio="none">
-            <polyline points="0,8 14,10 28,12 42,16 56,18 70,22 85,24 100,26" fill="none" stroke="#C0392B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <div class="kpi-footer"><span>Ops Mgr</span><span>08:30 AM</span></div>
-        </div>
-
-        <div class="kpi-card" onclick="showScreen('workspace', 'Headcount')">
-          <div class="kpi-card-header">
-            <span class="kpi-name">Headcount</span>
-            <span class="kpi-src">HRMS</span>
-          </div>
-          <div class="kpi-value">1,284</div>
-          <div class="kpi-sub">
-            <span class="trend-up">▲ +42</span>
-            <span class="trend-label">net hires</span>
-          </div>
-          <svg class="kpi-spark" viewBox="0 0 100 32" preserveAspectRatio="none">
-            <polyline points="0,26 14,24 28,23 42,22 56,20 70,18 85,17 100,15" fill="none" stroke="#1B5FCC" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <div class="kpi-footer"><span>HR Mgr</span><span>07:00 AM</span></div>
-        </div>
-
-        <div class="kpi-card warn" onclick="showScreen('workspace', 'Attrition')">
-          <div class="kpi-card-header">
-            <span class="kpi-name">Attrition</span>
-            <span class="kpi-src">HRMS</span>
-          </div>
-          <div class="kpi-value">9.3%</div>
-          <div class="kpi-sub">
-            <span class="trend-down">▲ +3.2pp</span>
-            <span class="trend-label" style="color:var(--amber-txt)">⚠ above target</span>
-          </div>
-          <svg class="kpi-spark" viewBox="0 0 100 32" preserveAspectRatio="none">
-            <polyline points="0,20 14,19 28,17 42,16 56,18 70,21 85,24 100,26" fill="none" stroke="#B45309" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <div class="kpi-footer"><span>HR Mgr</span><span>07:00 AM</span></div>
-        </div>
-
-      </div>
-
-      <!-- Highlights -->
+      <div class="kpi-grid" id="kpi-grid"></div>
       <div class="section-label">Business highlights</div>
-      <div class="highlights-grid" style="margin-bottom:18px">
-        <div class="highlight-card">
-          <div class="hl-icon success">📈</div>
-          <div>
-            <div class="hl-text">Revenue up 12.4% year-on-year</div>
-            <div class="hl-sub">South region driving growth — ₹82 Cr contribution</div>
-          </div>
-        </div>
-        <div class="highlight-card">
-          <div class="hl-icon success">✅</div>
-          <div>
-            <div class="hl-text">Production exceeded Q4 target by 8.1%</div>
-            <div class="hl-sub">North plant achieved 102% utilization</div>
-          </div>
-        </div>
-        <div class="highlight-card">
-          <div class="hl-icon danger">🔴</div>
-          <div>
-            <div class="hl-text">Inventory risk flagged — South plant</div>
-            <div class="hl-sub">Turnover ratio below 4.0× threshold</div>
-          </div>
-        </div>
-        <div class="highlight-card">
-          <div class="hl-icon warning">⚠️</div>
-          <div>
-            <div class="hl-text">Attrition increased to 9.3%</div>
-            <div class="hl-sub">Engineering & ops departments most affected</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Charts -->
+      <div class="highlights-grid" id="highlights-grid"></div>
       <div class="section-label">Trend analysis</div>
-      <div class="charts-row">
-
-        <div class="chart-card">
-          <div class="chart-title">Revenue trend</div>
-          <div class="chart-sub">Monthly — FY 2024–25 vs FY 2023–24</div>
-          <svg class="chart-svg" viewBox="0 0 320 100" height="100">
-            <!-- Grid -->
-            <line x1="0" y1="15" x2="320" y2="15" stroke="#E8E6E0" stroke-width="0.5"/>
-            <line x1="0" y1="45" x2="320" y2="45" stroke="#E8E6E0" stroke-width="0.5"/>
-            <line x1="0" y1="75" x2="320" y2="75" stroke="#E8E6E0" stroke-width="0.5"/>
-            <!-- Target -->
-            <line x1="0" y1="55" x2="320" y2="55" stroke="#C8C4BB" stroke-width="1" stroke-dasharray="4 3"/>
-            <!-- Last year -->
-            <polyline points="0,80 27,78 54,77 81,75 108,74 135,73 162,73 189,72 216,71 243,70 270,69 297,68 320,67"
-              fill="none" stroke="#C8C4BB" stroke-width="1.5" stroke-dasharray="3 2" stroke-linecap="round"/>
-            <!-- This year -->
-            <polyline points="0,78 27,72 54,75 81,62 108,57 135,50 162,54 189,45 216,36 243,32 270,25 297,20 320,14"
-              fill="none" stroke="#1B5FCC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <!-- Dot at end -->
-            <circle cx="320" cy="14" r="3.5" fill="#1B5FCC"/>
-          </svg>
-          <div class="legend">
-            <div class="legend-item"><div class="legend-dot" style="background:#1B5FCC"></div>FY 2024–25</div>
-            <div class="legend-item"><div class="legend-dot" style="background:#C8C4BB"></div>FY 2023–24</div>
-            <div class="legend-item" style="gap:7px"><div style="width:12px;height:1px;background:#C8C4BB;border-top:1px dashed #C8C4BB"></div>Target</div>
-          </div>
-        </div>
-
-        <div class="chart-card">
-          <div class="chart-title">Production vs target — by plant</div>
-          <div class="chart-sub">Current quarter</div>
-          <svg class="chart-svg" viewBox="0 0 320 100" height="100">
-            <!-- North -->
-            <rect x="20"  y="18" width="28" height="67" rx="3" fill="#1B5FCC" opacity=".85"/>
-            <rect x="20"  y="28" width="28" height="57" rx="3" fill="#C8C4BB" opacity=".4"/>
-            <!-- South -->
-            <rect x="100" y="28" width="28" height="57" rx="3" fill="#1A7A45" opacity=".8"/>
-            <rect x="100" y="30" width="28" height="55" rx="3" fill="#C8C4BB" opacity=".4"/>
-            <!-- East -->
-            <rect x="180" y="22" width="28" height="63" rx="3" fill="#1A7A45" opacity=".8"/>
-            <rect x="180" y="28" width="28" height="57" rx="3" fill="#C8C4BB" opacity=".4"/>
-            <!-- West -->
-            <rect x="260" y="42" width="28" height="43" rx="3" fill="#B45309" opacity=".8"/>
-            <rect x="260" y="28" width="28" height="57" rx="3" fill="#C8C4BB" opacity=".4"/>
-            <!-- Labels -->
-            <text x="34"  y="97" text-anchor="middle" font-size="9" fill="#9A9690" font-family="DM Sans, sans-serif">North</text>
-            <text x="114" y="97" text-anchor="middle" font-size="9" fill="#9A9690" font-family="DM Sans, sans-serif">South</text>
-            <text x="194" y="97" text-anchor="middle" font-size="9" fill="#9A9690" font-family="DM Sans, sans-serif">East</text>
-            <text x="274" y="97" text-anchor="middle" font-size="9" fill="#9A9690" font-family="DM Sans, sans-serif">West</text>
-          </svg>
-          <div class="legend">
-            <div class="legend-item"><div class="legend-dot" style="background:#1B5FCC"></div>Actual</div>
-            <div class="legend-item"><div class="legend-dot" style="background:#C8C4BB;opacity:.6"></div>Target</div>
-          </div>
-        </div>
-
-      </div>
-
-      <div style="text-align:center;padding:16px 0 4px;font-size:11px;color:var(--text3)">
-        Click any KPI card to open the analysis workspace
-      </div>
-
-    </div><!-- /screen-home -->
-
-
-    <!-- ─── SCREEN 2: WORKSPACE ────────────────────────── -->
+      <div class="charts-row" id="charts-row"></div>
+    </div>
     <div class="screen" id="screen-workspace">
-
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-shrink:0">
-        <div style="font-size:11px;color:var(--text3)">
-          Showing KPI workspace for: <strong id="ws-kpi-name" style="color:var(--text);font-size:12px">Revenue</strong>
-        </div>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-ghost btn-sm" onclick="showScreen('home')">← Back to dashboard</button>
-          <button class="btn btn-ghost btn-sm">
-            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M12 7A5 5 0 1 1 2.5 4.5"/><path d="M12 2v3h-3"/>
-            </svg>
-            Refresh
-          </button>
-          <button class="btn btn-blue btn-sm" onclick="openExport()">
-            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M7 1v7M4 5l3 3 3-3"/><path d="M1 10v1.5A1.5 1.5 0 0 0 2.5 13h9A1.5 1.5 0 0 0 13 11.5V10"/>
-            </svg>
-            Export
-          </button>
-        </div>
-      </div>
-
-      <div class="workspace">
-
-        <!-- LEFT -->
-        <div class="ws-left">
-
-          <!-- KPI Meta -->
-          <div class="kpi-meta">
-            <div class="kpi-meta-head">
-              <div>
-                <div class="kpi-meta-title" id="ws-meta-title">Revenue</div>
-                <div class="kpi-meta-desc">Total revenue recognized from product sales and services across all business units and regions for the selected period.</div>
-              </div>
-              <span class="status-badge ok">On track</span>
-            </div>
-            <div class="kpi-meta-row">
-              <span class="meta-item"><strong>Owner:</strong> Finance Manager</span>
-              <span class="meta-item"><strong>Source:</strong> SAP ERP</span>
-              <span class="meta-item"><strong>Frequency:</strong> Daily</span>
-              <span class="meta-item"><strong>Refresh:</strong> 08:42 AM today</span>
-              <span class="meta-item"><strong>Period:</strong> FY 2024–25</span>
-            </div>
-          </div>
-
-          <!-- Summary Cards -->
-          <div>
-            <div class="section-label">Performance summary</div>
-            <div class="sum-row">
-              <div class="sum-card">
-                <div class="sum-lbl">Current</div>
-                <div class="sum-val" id="ws-current">₹248.3 Cr</div>
-              </div>
-              <div class="sum-card">
-                <div class="sum-lbl">Previous</div>
-                <div class="sum-val sm" id="ws-previous">₹220.9 Cr</div>
-              </div>
-              <div class="sum-card">
-                <div class="sum-lbl">Growth</div>
-                <div class="sum-val up" id="ws-growth">+12.4%</div>
-              </div>
-              <div class="sum-card">
-                <div class="sum-lbl">Target</div>
-                <div class="sum-val sm" id="ws-target">₹240.0 Cr</div>
-              </div>
-              <div class="sum-card">
-                <div class="sum-lbl">Variance</div>
-                <div class="sum-val up" id="ws-variance">+₹8.3 Cr</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Chart -->
-          <div class="chart-container">
-            <div class="chart-header">
-              <div class="chart-title" id="ws-chart-title">Revenue trend</div>
-              <div class="chart-tabs">
-                <div class="c-tab active" onclick="selectTab(this)">Trend</div>
-                <div class="c-tab" onclick="selectTab(this)">YoY comparison</div>
-                <div class="c-tab" onclick="selectTab(this)">By region</div>
-                <div class="c-tab" onclick="selectTab(this)">By product</div>
-              </div>
-            </div>
-            <svg width="100%" viewBox="0 0 460 110" height="110" style="margin-top:8px">
-              <!-- Grid -->
-              <line x1="0" y1="20" x2="460" y2="20" stroke="#E8E6E0" stroke-width="0.5"/>
-              <line x1="0" y1="50" x2="460" y2="50" stroke="#E8E6E0" stroke-width="0.5"/>
-              <line x1="0" y1="80" x2="460" y2="80" stroke="#E8E6E0" stroke-width="0.5"/>
-              <!-- Target line -->
-              <line x1="0" y1="58" x2="460" y2="58" stroke="#C8C4BB" stroke-width="1" stroke-dasharray="4 3"/>
-              <!-- Area fill -->
-              <path d="M0,86 38,78 76,82 115,68 154,62 192,54 230,58 269,48 307,38 346,34 384,26 422,21 460,15 V110 H0Z"
-                fill="#1B5FCC" opacity=".05"/>
-              <!-- Last year -->
-              <polyline points="0,90 38,88 76,87 115,85 154,84 192,83 230,83 269,82 307,81 346,80 384,79 422,78 460,77"
-                fill="none" stroke="#C8C4BB" stroke-width="1.5" stroke-dasharray="3 2" stroke-linecap="round"/>
-              <!-- This year -->
-              <polyline points="0,86 38,78 76,82 115,68 154,62 192,54 230,58 269,48 307,38 346,34 384,26 422,21 460,15"
-                fill="none" stroke="#1B5FCC" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="460" cy="15" r="4" fill="#1B5FCC"/>
-              <!-- Month labels -->
-              <text x="0"   y="105" font-size="8" fill="#9A9690" font-family="DM Sans,sans-serif">Apr</text>
-              <text x="76"  y="105" font-size="8" fill="#9A9690" font-family="DM Sans,sans-serif">Jun</text>
-              <text x="154" y="105" font-size="8" fill="#9A9690" font-family="DM Sans,sans-serif">Aug</text>
-              <text x="230" y="105" font-size="8" fill="#9A9690" font-family="DM Sans,sans-serif">Oct</text>
-              <text x="307" y="105" font-size="8" fill="#9A9690" font-family="DM Sans,sans-serif">Dec</text>
-              <text x="384" y="105" font-size="8" fill="#9A9690" font-family="DM Sans,sans-serif">Feb</text>
-              <text x="435" y="105" font-size="8" fill="#9A9690" font-family="DM Sans,sans-serif">Mar</text>
-            </svg>
-            <div class="legend">
-              <div class="legend-item"><div class="legend-dot" style="background:#1B5FCC"></div>FY 2024–25</div>
-              <div class="legend-item"><div class="legend-dot" style="background:#C8C4BB"></div>FY 2023–24</div>
-              <div class="legend-item" style="gap:7px"><div style="width:14px;height:1px;border-top:1px dashed #C8C4BB"></div>Target</div>
-            </div>
-          </div>
-
-          <!-- Drill Down -->
-          <div class="drill-container">
-            <div class="section-label">Drill-down navigator</div>
-            <div class="drill-bc">
-              <a onclick="">Revenue</a>
-              <span class="drill-bc-sep">›</span>
-              <a onclick="">South region</a>
-              <span class="drill-bc-sep">›</span>
-              <span class="drill-bc-cur">Product category</span>
-            </div>
-            <div class="table-controls">
-              <div class="search-wrap">
-                <svg class="search-icon" width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <circle cx="6" cy="6" r="4"/><line x1="9.5" y1="9.5" x2="13" y2="13"/>
-                </svg>
-                <input class="search-input" placeholder="Search categories…" oninput="filterTable(this.value)">
-              </div>
-              <button class="btn-sm">
-                <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <line x1="2" y1="4" x2="12" y2="4"/><line x1="4" y1="7" x2="10" y2="7"/><line x1="6" y1="10" x2="8" y2="10"/>
-                </svg>
-                Sort
-              </button>
-            </div>
-            <table class="data-table" id="drill-table">
-              <thead>
-                <tr>
-                  <th>Category</th>
-                  <th>Revenue</th>
-                  <th>vs Target</th>
-                  <th>YoY</th>
-                  <th style="text-align:right">Share</th>
-                </tr>
-              </thead>
-              <tbody id="drill-tbody">
-                <tr>
-                  <td><span class="drill-link">› Industrial motors</span></td>
-                  <td>₹42.8 Cr</td>
-                  <td><span class="badge up">+6.2%</span></td>
-                  <td><span class="badge up">+14.1%</span></td>
-                  <td style="text-align:right"><span class="share-pct">17.2%</span></td>
-                </tr>
-                <tr>
-                  <td><span class="drill-link">› Control panels</span></td>
-                  <td>₹38.1 Cr</td>
-                  <td><span class="badge up">+2.1%</span></td>
-                  <td><span class="badge up">+9.8%</span></td>
-                  <td style="text-align:right"><span class="share-pct">15.3%</span></td>
-                </tr>
-                <tr>
-                  <td><span class="drill-link">› Switchgear</span></td>
-                  <td>₹31.4 Cr</td>
-                  <td><span class="badge neu">±0.5%</span></td>
-                  <td><span class="badge up">+7.2%</span></td>
-                  <td style="text-align:right"><span class="share-pct">12.6%</span></td>
-                </tr>
-                <tr>
-                  <td><span class="drill-link">› Transformers</span></td>
-                  <td>₹18.7 Cr</td>
-                  <td><span class="badge dn">−3.4%</span></td>
-                  <td><span class="badge dn">−1.2%</span></td>
-                  <td style="text-align:right"><span class="share-pct">7.5%</span></td>
-                </tr>
-                <tr>
-                  <td><span class="drill-link">› Protection relays</span></td>
-                  <td>₹14.2 Cr</td>
-                  <td><span class="badge up">+1.8%</span></td>
-                  <td><span class="badge up">+5.3%</span></td>
-                  <td style="text-align:right"><span class="share-pct">5.7%</span></td>
-                </tr>
-              </tbody>
-            </table>
-            <div style="margin-top:10px;font-size:11px;color:var(--text3);text-align:right">
-              Showing 5 of 11 categories · <a style="color:var(--blue);cursor:pointer">View all</a>
-            </div>
-          </div>
-
-        </div><!-- /ws-left -->
-
-
-        <!-- RIGHT — AI Panel -->
-        <div class="ws-right">
-          <div class="ai-panel">
-            <div class="ai-header">
-              <div class="ai-title">
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <path d="M8 1l1.8 3.6 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4L2.2 5.2l4-.6L8 1z"/>
-                </svg>
-                KPI analysis assistant
-                <span class="ai-badge">AI</span>
-              </div>
-              <span class="ai-ctx-chip" id="ai-context-chip">Revenue</span>
-            </div>
-
-            <div class="ai-body" id="ai-body">
-
-              <!-- Input -->
-              <div class="ai-input-row">
-                <textarea class="ai-textarea" id="ai-input" placeholder="Ask about this KPI…" rows="2" onkeydown="handleAiKey(event)"></textarea>
-                <button class="ai-send" onclick="sendAiQuestion()" title="Send">
-                  <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="white" stroke-width="1.8">
-                    <line x1="2" y1="7" x2="12" y2="7"/><polyline points="8 3 12 7 8 11"/>
-                  </svg>
-                </button>
-              </div>
-
-              <!-- Suggested questions -->
-              <div>
-                <div class="sq-label" style="margin-bottom:6px">Suggested questions</div>
-                <div class="sq-pills" id="sq-pills">
-                  <div class="sq-pill" onclick="askQuestion(this.innerText.trim())">📊 Compare revenue for last 3 years</div>
-                  <div class="sq-pill" onclick="askQuestion(this.innerText.trim())">📍 Which region is best performing?</div>
-                  <div class="sq-pill" onclick="askQuestion(this.innerText.trim())">📦 Revenue breakdown by product</div>
-                  <div class="sq-pill" onclick="askQuestion(this.innerText.trim())">❓ Why did March revenue dip?</div>
-                </div>
-              </div>
-
-              <div class="ai-divider"></div>
-
-              <!-- AI Response -->
-              <div>
-                <div class="ai-response-label">Latest insight</div>
-                <div class="ai-response" id="ai-response-box">
-                  <strong style="font-size:12px">Revenue vs last 3 years</strong><br><br>
-                  FY 24–25 revenue of ₹248.3 Cr represents a <span style="color:var(--green);font-weight:600">12.4% CAGR</span> over 3 years. Growth has accelerated in Q3–Q4, driven by South region industrial motor demand.<br><br>
-                  <svg class="ai-mini-chart" viewBox="0 0 200 44" preserveAspectRatio="none">
-                    <rect x="12" y="24" width="38" height="16" rx="3" fill="#C8C4BB" opacity=".6"/>
-                    <rect x="68" y="14" width="38" height="26" rx="3" fill="#C8C4BB" opacity=".7"/>
-                    <rect x="124" y="4"  width="38" height="36" rx="3" fill="#1B5FCC" opacity=".85"/>
-                    <text x="31"  y="44" text-anchor="middle" font-size="8" fill="#9A9690" font-family="DM Sans,sans-serif">FY 22–23</text>
-                    <text x="87"  y="44" text-anchor="middle" font-size="8" fill="#9A9690" font-family="DM Sans,sans-serif">FY 23–24</text>
-                    <text x="143" y="44" text-anchor="middle" font-size="8" fill="#1B5FCC" font-family="DM Sans,sans-serif">FY 24–25</text>
-                  </svg>
-                  South region contributed <strong>33%</strong> of total revenue — the highest regional share on record.
-                </div>
-              </div>
-
-              <div class="ai-divider"></div>
-
-              <!-- Insights -->
-              <div class="insight-block">
-                <div class="ai-response-label">Key observations</div>
-                <div class="insight-card success">
-                  <span class="insight-icon">↑</span>
-                  Q4 FY25 recorded the highest ever quarterly revenue at ₹74.2 Cr
-                </div>
-                <div class="insight-card info">
-                  <span class="insight-icon">ℹ</span>
-                  Industrial motors now represent 17.2% of revenue — up from 12.4% three years ago
-                </div>
-                <div class="insight-card warning">
-                  <span class="insight-icon">△</span>
-                  Transformer category declined 1.2% YoY — flagging for investigation
-                </div>
-              </div>
-
-              <div class="ai-divider"></div>
-
-              <!-- Risk -->
-              <div class="risk-row">
-                <div class="ai-response-label">Risk indicators</div>
-                <div class="risk-item">
-                  <span>⚠</span>
-                  Transformer revenue declining 3 consecutive quarters — review pipeline
-                </div>
-              </div>
-
-            </div><!-- /ai-body -->
-
-            <div class="ai-footer">
-              Assistant scoped to <span id="ai-footer-kpi">Revenue</span> KPI · Data as of 08:42 AM
-            </div>
-          </div>
-        </div><!-- /ws-right -->
-
-      </div><!-- /workspace -->
-    </div><!-- /screen-workspace -->
-
-  </div><!-- /screens -->
-</div><!-- /app -->
-
-
-<!-- ═══ EXPORT MODAL ═══════════════════════════════════════ -->
-<div class="modal-overlay" id="export-modal">
-  <div class="modal">
-    <div class="modal-hdr">
-      <div class="modal-title">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M8 1v8M5 6l3 3 3-3"/><path d="M2 11v1.5A1.5 1.5 0 0 0 3.5 14h9A1.5 1.5 0 0 0 14 12.5V11"/>
-        </svg>
-        Export dashboard
-      </div>
-      <button class="modal-close" onclick="closeExport()">✕</button>
-    </div>
-
-    <div class="modal-body">
-
-      <div class="modal-ctx">
-        <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="#1B5FCC" stroke-width="1.5">
-          <polyline points="1 7 5 11 13 3"/>
-        </svg>
-        Exporting: <strong id="export-kpi-name">Revenue — KPI analysis workspace</strong>
-      </div>
-
-      <!-- Format -->
-      <div>
-        <div class="section-label">Export format</div>
-        <div class="fmt-row">
-          <div class="fmt-card active" id="fmt-pdf" onclick="selectFormat('pdf')">
-            <span class="fmt-icon">📄</span>
-            <div>
-              <div class="fmt-lbl">PDF report</div>
-              <div class="fmt-sub">Formatted for print & sharing</div>
-            </div>
-          </div>
-          <div class="fmt-card" id="fmt-excel" onclick="selectFormat('excel')">
-            <span class="fmt-icon">📊</span>
-            <div>
-              <div class="fmt-lbl">Excel workbook</div>
-              <div class="fmt-sub">Data tables & raw figures</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Content -->
-      <div>
-        <div class="section-label">Include in export</div>
-        <div class="content-grid">
-          <div class="content-item checked" onclick="toggleContent(this)">
-            <div class="check-box on">✓</div>
-            <div>
-              <div class="content-lbl">KPI summary cards</div>
-              <div class="content-sub">Current, target, growth, variance</div>
-            </div>
-          </div>
-          <div class="content-item checked" onclick="toggleContent(this)">
-            <div class="check-box on">✓</div>
-            <div>
-              <div class="content-lbl">Charts & visualizations</div>
-              <div class="content-sub">Trend, comparison, distribution</div>
-            </div>
-          </div>
-          <div class="content-item checked" onclick="toggleContent(this)">
-            <div class="check-box on">✓</div>
-            <div>
-              <div class="content-lbl">Detailed data table</div>
-              <div class="content-sub">Drill-down with all dimensions</div>
-            </div>
-          </div>
-          <div class="content-item checked" onclick="toggleContent(this)">
-            <div class="check-box on">✓</div>
-            <div>
-              <div class="content-lbl">AI insights</div>
-              <div class="content-sub">Observations, risks, explanations</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Preview -->
-      <div class="preview-strip">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#1B5FCC" stroke-width="1.5">
-          <rect x="2" y="1" width="10" height="12" rx="1.5"/>
-          <line x1="4.5" y1="5" x2="9.5" y2="5"/>
-          <line x1="4.5" y1="8" x2="9.5" y2="8"/>
-          <line x1="4.5" y1="11" x2="7" y2="11"/>
-        </svg>
-        Export will include <strong id="export-count">4 sections</strong>, approx. 6 pages · <span id="export-format-label">PDF</span> · <span id="export-kpi-label">Revenue</span> KPI · FY 2024–25
-      </div>
-
-    </div>
-
-    <div class="modal-footer">
-      <span class="modal-filter-hint">Filters: All regions · FY 2024–25</span>
-      <div class="modal-actions">
-        <button class="btn btn-ghost" onclick="closeExport()">Cancel</button>
-        <button class="btn btn-blue" id="export-btn" onclick="doExport()">
-          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="white" stroke-width="1.8">
-            <path d="M7 1v7M4 5l3 3 3-3"/><path d="M1 10v1.5A1.5 1.5 0 0 0 2.5 13h9A1.5 1.5 0 0 0 13 11.5V10"/>
-          </svg>
-          Export PDF
-        </button>
-      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:14px;"><span>KPI workspace: <strong id="ws-kpi-name">Revenue</strong></span><button class="btn-ghost" onclick="showScreen('home')">← Back</button></div>
+      <div class="workspace"><div class="ws-left" id="ws-left-dynamic"></div><div class="ws-right" id="ws-right-ai"></div></div>
     </div>
   </div>
 </div>
-
-<!-- Toast -->
+<div class="kpi-catalog-toggle" onclick="toggleCatalog()">📋 KPI Catalog</div>
+<div class="kpi-catalog-panel" id="kpi-catalog"></div>
+<div class="modal-overlay" id="export-modal"><div class="modal"><div class="modal-hdr"><span>Export</span><button onclick="closeExport()">✕</button></div><div class="modal-body"><p>Export simulation ready</p></div></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
-// ─── State ─────────────────────────────────────────────
-let currentKpi = 'Revenue';
-let currentFormat = 'pdf';
-
-const kpiData = {
-  'Revenue':       { current:'₹248.3 Cr', previous:'₹220.9 Cr', growth:'+12.4%', target:'₹240.0 Cr', variance:'+₹8.3 Cr', growthDir:'up', status:'ok', statusLabel:'On track', src:'SAP ERP', owner:'Finance Manager' },
-  'Profit Margin': { current:'18.7%',     previous:'17.4%',     growth:'+1.3pp', target:'18.0%',     variance:'+0.7pp',   growthDir:'up', status:'ok', statusLabel:'On track', src:'SAP ERP', owner:'Finance Manager' },
-  'Production':    { current:'14,820 u',  previous:'13,710 u',  growth:'+8.1%',  target:'13,700 u',  variance:'+1,120 u', growthDir:'up', status:'ok', statusLabel:'Exceeded', src:'MFG System', owner:'Operations Mgr' },
-  'Inventory':     { current:'₹38.4 Cr', previous:'₹40.1 Cr',  growth:'−4.2%',  target:'₹36.0 Cr',  variance:'+₹2.4 Cr', growthDir:'down', status:'warn', statusLabel:'Under review', src:'SAP ERP', owner:'Operations Mgr' },
-  'Headcount':     { current:'1,284',    previous:'1,242',      growth:'+42',    target:'1,280',     variance:'+4',       growthDir:'up', status:'ok', statusLabel:'On track', src:'HRMS', owner:'HR Manager' },
-  'Attrition':     { current:'9.3%',     previous:'6.1%',      growth:'+3.2pp', target:'6.0%',      variance:'−3.3pp',   growthDir:'down', status:'bad', statusLabel:'Off track', src:'HRMS', owner:'HR Manager' },
-};
-
-const aiSuggestions = {
-  'Revenue':       ['📊 Compare revenue for last 3 years','📍 Which region is best performing?','📦 Revenue breakdown by product','❓ Why did March revenue dip?'],
-  'Profit Margin': ['📉 Compare profit margin trends','🎯 Compare profit against targets','❓ Explain the profit decline in Q2','🏭 Profit margin by plant'],
-  'Production':    ['🏭 Compare production across plants','⚠️ Show production bottlenecks','📊 Planned vs actual production','📈 Production efficiency trend'],
-  'Inventory':     ['📦 Show inventory ageing analysis','🔍 Identify excess stock items','🔄 Show inventory turnover ratio','⚠️ Slow-moving inventory alert'],
-  'Headcount':     ['👥 Headcount by department','📈 Hiring trend this year','🏭 Headcount by plant','📊 Compare headcount vs budget'],
-  'Attrition':     ['📉 Attrition trend by quarter','🏢 Which department has highest attrition?','💡 Root cause of attrition spike','📊 Attrition by tenure band'],
-};
-
-const aiResponses = {
-  'Revenue':       '<strong>Revenue vs last 3 years</strong><br><br>FY 24–25 revenue of ₹248.3 Cr represents a <span style="color:var(--green);font-weight:600">12.4% CAGR</span> over 3 years. South region industrial motor demand is the primary driver, contributing 33% of total revenue.<svg class="ai-mini-chart" viewBox="0 0 200 44" preserveAspectRatio="none"><rect x="12" y="24" width="38" height="16" rx="3" fill="#C8C4BB" opacity=".6"/><rect x="68" y="14" width="38" height="26" rx="3" fill="#C8C4BB" opacity=".7"/><rect x="124" y="4" width="38" height="36" rx="3" fill="#1B5FCC" opacity=".85"/><text x="31" y="44" text-anchor="middle" font-size="8" fill="#9A9690" font-family="DM Sans,sans-serif">FY 22–23</text><text x="87" y="44" text-anchor="middle" font-size="8" fill="#9A9690" font-family="DM Sans,sans-serif">FY 23–24</text><text x="143" y="44" text-anchor="middle" font-size="8" fill="#1B5FCC" font-family="DM Sans,sans-serif">FY 24–25</text></svg>South region contributed <strong>33%</strong> of total revenue — the highest on record.',
-  'Profit Margin': '<strong>Profit margin trend</strong><br><br>Margin improved from 17.4% to 18.7% — a <span style="color:var(--green);font-weight:600">+1.3pp gain</span>. Raw material cost reductions in Q3 and better fixed-cost absorption drove this. North plant contributed the highest margin improvement at +2.1pp.',
-  'Production':    '<strong>Production performance</strong><br><br>Q4 output of 14,820 units exceeded target by <span style="color:var(--green);font-weight:600">8.1%</span>. North plant led at 102% utilization. West plant is the outlier — operating at 76% due to scheduled maintenance delays.',
-  'Inventory':     '<strong>Inventory risk analysis</strong><br><br>Current inventory of ₹38.4 Cr includes <span style="color:var(--red);font-weight:600">₹4.2 Cr in slow-moving stock</span> (>90 days). Transformer category accounts for 62% of aged inventory. Turnover ratio at 3.6× is below the 4.0× threshold.',
-  'Headcount':     '<strong>Headcount analysis</strong><br><br>Net headcount grew by <span style="color:var(--green);font-weight:600">42 employees</span> this year. Production added 28 roles; R&D added 14. Current headcount of 1,284 is 4 above budget.',
-  'Attrition':     '<strong>Attrition — root causes</strong><br><br>Attrition jumped from 6.1% to <span style="color:var(--red);font-weight:600">9.3% — a 3.2pp spike</span>. Exit interview data points to compensation gaps in Engineering (67% cited) and lack of growth in Operations (54%). Q3 saw peak exits at 4.8% in a single quarter.',
-};
-
-// ─── Navigation ─────────────────────────────────────────
-function showScreen(name, kpi) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-' + name).classList.add('active');
-
-  const bc = document.getElementById('breadcrumb');
-  if (name === 'home') {
-    bc.innerHTML = '<a onclick="showScreen(\'home\')">Dashboard</a>';
-  } else if (name === 'workspace') {
-    bc.innerHTML = '<a onclick="showScreen(\'home\')">Dashboard</a> <span class="breadcrumb-sep">›</span> <span>KPI analysis</span>';
-    if (kpi) loadKpi(kpi);
+// ======================== ROLE CONFIGURATION ========================
+const roleConfigs = {
+  MD: {
+    name: "Managing Director",
+    kpis: ["Revenue", "Profit Margin", "Production", "Inventory", "Headcount", "Attrition"],
+    highlights: ["🏆 Company Performance: Revenue +12.4%, Profit +1.3pp", "⚠️ Strategic Risks: Inventory turnover below threshold, Attrition spike", "📌 Executive Summary: Strong growth, but monitor transformer category and engineering attrition."],
+    charts: ["Revenue Trend", "Production by Plant"],
+    aiTitle: "Executive Analytics Assistant",
+    aiContext: "MD Dashboard • All KPIs",
+    questions: ["What are the top business risks?", "Compare performance across regions.", "What changed this quarter?", "Which KPIs require attention?"],
+    insights: ["Revenue growth of 12.4% exceeds industry benchmark of 8%.", "Attrition at 9.3% is 3.2pp above target — immediate action recommended.", "Inventory risk flagged in South plant."],
+    risks: ["Transformer revenue down 1.2% YoY", "West plant underutilization at 76%", "Engineering attrition spike"]
+  },
+  Finance: {
+    name: "Finance Manager",
+    kpis: ["Revenue", "Profit Margin", "Cash Flow", "Receivables", "Payables", "Operating Cost"],
+    highlights: ["💰 Cash Flow improved 15% YoY", "📊 Receivables at 45 days (target 40)", "📉 Operating cost reduced 2.3% due to procurement efficiency"],
+    charts: ["Revenue Trend", "Profit Trend", "Cash Flow Trend"],
+    aiTitle: "Finance Analytics Assistant",
+    aiContext: "Finance • P&L & Cash Focus",
+    questions: ["Compare revenue over last 3 years.", "Why did profit decline in Q2?", "Show highest cost centers.", "Analyze cash flow performance.", "Compare actual vs budget."],
+    insights: ["Operating cost decreased 2.3% — sourcing savings of ₹3.2 Cr.", "Receivables DSO increased to 45 days, up from 38 last year.", "Profit margin improved 1.3pp due to lower raw material costs."],
+    risks: ["Receivables ageing >60 days increased 18%", "Cash conversion cycle extended to 52 days"]
+  },
+  Operations: {
+    name: "Operations Manager",
+    kpis: ["Production Output", "Machine Utilization", "Inventory", "Downtime", "Quality Rejections", "OTIF"],
+    highlights: ["🏭 Production exceeded target 8.1%", "⚙️ Machine utilization at 89% overall", "📦 Inventory turnover 3.6x (target 4.0x)", "✅ OTIF at 94.2%"],
+    charts: ["Production Trend", "Plant Performance", "Machine Utilization"],
+    aiTitle: "Operations Analytics Assistant",
+    aiContext: "Operations • Plant & Inventory",
+    questions: ["Which plant is underperforming?", "Show production bottlenecks.", "Compare planned vs actual output.", "Analyze machine downtime.", "Identify inventory risks."],
+    insights: ["North plant achieved 102% utilization — best performance.", "West plant downtime increased 12% due to scheduled maintenance.", "Inventory slow-moving stock: ₹4.2 Cr ageing >90 days."],
+    risks: ["Transformer category inventory aged >120 days", "West plant output 24% below target"]
+  },
+  HR: {
+    name: "HR Manager",
+    kpis: ["Headcount", "Attrition", "Hiring", "Training Hours", "Absenteeism", "Open Positions"],
+    highlights: ["👥 Headcount up 42 net new hires", "📈 Attrition increased to 9.3% (Engineering 14%)", "📚 Training hours per employee 24 (target 30)"],
+    charts: ["Attrition Trend", "Department Headcount", "Hiring Pipeline"],
+    aiTitle: "HR Analytics Assistant",
+    aiContext: "HR • Workforce & Talent",
+    questions: ["Why is attrition increasing?", "Compare departments by turnover.", "Show hiring effectiveness.", "Analyze workforce growth.", "Identify staffing risks."],
+    insights: ["Engineering attrition at 14% — compensation gaps cited in 67% exit interviews.", "Q3 hiring filled 28/40 reqs; time-to-fill at 38 days.", "Absenteeism rate 4.1% above industry norm."],
+    risks: ["Open positions for key engineering roles (12 reqs)", "Attrition impact on production line efficiency"]
   }
+};
+
+const kpiMeta = {
+  "Revenue": {current:"₹248.3 Cr", prev:"₹220.9 Cr", growth:"+12.4%", target:"₹240.0 Cr", health:"healthy", src:"ERP"},
+  "Profit Margin": {current:"18.7%", prev:"17.4%", growth:"+1.3pp", target:"18.0%", health:"healthy"},
+  "Production": {current:"14,820 u", prev:"13,710 u", growth:"+8.1%", target:"13,700 u", health:"healthy"},
+  "Inventory": {current:"₹38.4 Cr", prev:"₹40.1 Cr", growth:"−4.2%", target:"₹36.0 Cr", health:"warning"},
+  "Headcount": {current:"1,284", prev:"1,242", growth:"+42", target:"1,280", health:"healthy"},
+  "Attrition": {current:"9.3%", prev:"6.1%", growth:"+3.2pp", target:"6.0%", health:"critical"},
+  "Cash Flow": {current:"₹42.6 Cr", prev:"₹37.1 Cr", growth:"+14.8%", target:"₹40.0 Cr", health:"healthy"},
+  "Receivables": {current:"45 days", prev:"38 days", growth:"+7d", target:"40 days", health:"warning"},
+  "Payables": {current:"52 days", prev:"48 days", growth:"+4d", target:"50 days", health:"healthy"},
+  "Operating Cost": {current:"₹124.5 Cr", prev:"₹127.4 Cr", growth:"−2.3%", target:"₹126.0 Cr", health:"healthy"},
+  "Production Output": {current:"14,820 u", prev:"13,710 u", growth:"+8.1%", target:"13,700 u", health:"healthy"},
+  "Machine Utilization": {current:"89%", prev:"85%", growth:"+4%", target:"88%", health:"healthy"},
+  "Downtime": {current:"3.2%", prev:"2.8%", growth:"+0.4pp", target:"2.5%", health:"warning"},
+  "Quality Rejections": {current:"2.1%", prev:"2.4%", growth:"−0.3pp", target:"2.0%", health:"warning"},
+  "OTIF": {current:"94.2%", prev:"92.5%", growth:"+1.7%", target:"95%", health:"healthy"},
+  "Hiring": {current:"42 hires", prev:"38 hires", growth:"+10.5%", target:"45 hires", health:"healthy"},
+  "Training Hours": {current:"24 hrs", prev:"21 hrs", growth:"+14%", target:"30 hrs", health:"warning"},
+  "Absenteeism": {current:"4.1%", prev:"3.5%", growth:"+0.6pp", target:"3%", health:"critical"},
+  "Open Positions": {current:"18", prev:"12", growth:"+50%", target:"8", health:"critical"}
+};
+
+let currentRole = "MD";
+let currentKpi = "Revenue";
+
+function getHealthIcon(health) {
+  if(health === "healthy") return "🟢 Healthy";
+  if(health === "warning") return "🟡 Warning";
+  return "🔴 Critical";
 }
 
-function loadKpi(kpi) {
+function renderDashboard() {
+  const cfg = roleConfigs[currentRole];
+  const kpiGrid = document.getElementById("kpi-grid");
+  kpiGrid.innerHTML = cfg.kpis.map(k => {
+    const meta = kpiMeta[k] || {current:"—", growth:"0%", health:"warning"};
+    const healthClass = meta.health === "healthy" ? "health-healthy" : (meta.health === "warning" ? "health-warning" : "health-critical");
+    return `<div class="kpi-card" onclick="showScreen('workspace','${k}')">
+      <div class="kpi-card-header"><span class="kpi-name">${k}</span><span class="kpi-src">ERP</span></div>
+      <div class="kpi-value">${meta.current}</div>
+      <div class="kpi-sub"><span class="trend-${meta.growth.includes('+')?'up':'down'}">${meta.growth.includes('+')?'▲':'▼'} ${meta.growth}</span></div>
+      <svg class="kpi-spark" viewBox="0 0 100 32"><polyline points="0,26 100,${meta.health==='healthy'?'8':'20'}" fill="none" stroke="${meta.health==='healthy'?'#1A7A45':'#B45309'}" stroke-width="1.8"/></svg>
+      <div class="kpi-footer"><span class="health-badge ${healthClass}">${getHealthIcon(meta.health)}</span></div>
+    </div>`;
+  }).join('');
+  document.getElementById("highlights-grid").innerHTML = cfg.highlights.map(h => `<div class="highlight-card"><div class="hl-icon info">📌</div><div><div class="hl-text">${h}</div></div></div>`).join('');
+  document.getElementById("charts-row").innerHTML = `<div class="chart-card"><div class="chart-title">${cfg.charts[0] || 'Key Trend'}</div><svg viewBox="0 0 320 80"><polyline points="0,60 80,40 160,30 240,20 320,10" fill="none" stroke="#1B5FCC" stroke-width="2"/></svg></div><div class="chart-card"><div class="chart-title">${cfg.charts[1] || 'Performance'}</div><svg viewBox="0 0 320 80"><rect x="40" y="30" width="40" height="40" fill="#1B5FCC"/><rect x="140" y="20" width="40" height="50" fill="#1A7A45"/><rect x="240" y="45" width="40" height="25" fill="#B45309"/></svg></div>`;
+  document.getElementById("exec-summary-container").innerHTML = `<div class="exec-summary"><div class="exec-summary-icon">🧠</div><div class="exec-summary-content"><div class="exec-summary-title">AI Executive Summary · ${cfg.name}</div><div class="exec-summary-text">${cfg.insights.slice(0,2).join(" ")}</div></div></div>`;
+  updateAiPanelForRole();
+}
+
+function updateAiPanelForRole(kpiOverride) {
+  const cfg = roleConfigs[currentRole];
+  const targetKpi = kpiOverride || currentKpi;
+  const meta = kpiMeta[targetKpi] || {health:"healthy"};
+  const ctxTitle = `${cfg.aiTitle} · ${targetKpi}`;
+  const html = `<div class="ai-panel"><div class="ai-header"><div class="ai-title">✨ ${cfg.aiTitle} <span class="ai-badge">AI</span></div><span class="ai-ctx-chip">${targetKpi}</span></div>
+  <div class="ai-body"><textarea id="ai-input" class="ai-textarea" rows="2" placeholder="Ask about ${targetKpi}..."></textarea>
+  <button class="ai-send" onclick="sendAiQuestion()">➤</button>
+  <div class="sq-label">Suggested questions</div>
+  <div id="sq-pills">${cfg.questions.map(q => `<div class="sq-pill" onclick="askQuestion('${q.replace(/'/g, "\\'")}')">${q}</div>`).join('')}</div>
+  <div class="ai-response" id="ai-response-box"><strong>${targetKpi} analysis</strong><br>${cfg.insights[0] || "Data ready."}</div>
+  <div class="ai-response-label">Risks</div>${cfg.risks.map(r => `<div class="risk-item">⚠️ ${r}</div>`).join('')}</div></div>`;
+  const container = document.getElementById("ws-right-ai");
+  if(container) container.innerHTML = html;
+  if(document.getElementById("ai-response-box")) document.getElementById("ai-response-box").innerHTML = `<strong>${targetKpi}</strong><br>${cfg.insights.join("<br>")}`;
+}
+
+function renderWorkspace(kpi) {
   currentKpi = kpi;
-  const d = kpiData[kpi];
-  if (!d) return;
-
-  document.getElementById('ws-kpi-name').textContent = kpi;
-  document.getElementById('ws-meta-title').textContent = kpi;
-  document.getElementById('ws-current').textContent = d.current;
-  document.getElementById('ws-previous').textContent = d.previous;
-  document.getElementById('ws-growth').textContent = d.growth;
-  document.getElementById('ws-growth').className = 'sum-val ' + (d.growthDir === 'up' ? 'up' : 'down');
-  document.getElementById('ws-target').textContent = d.target;
-  document.getElementById('ws-variance').textContent = d.variance;
-  document.getElementById('ws-chart-title').textContent = kpi + ' trend';
-  document.getElementById('ai-context-chip').textContent = kpi;
-  document.getElementById('ai-footer-kpi').textContent = kpi;
-  document.getElementById('export-kpi-name').textContent = kpi + ' — KPI analysis workspace';
-  document.getElementById('export-kpi-label').textContent = kpi;
-
-  // Status badge
-  const badge = document.querySelector('.kpi-meta .status-badge');
-  badge.textContent = d.statusLabel;
-  badge.className = 'status-badge ' + d.status;
-
-  // AI suggestions
-  const pills = document.getElementById('sq-pills');
-  pills.innerHTML = (aiSuggestions[kpi] || aiSuggestions['Revenue'])
-    .map(q => `<div class="sq-pill" onclick="askQuestion(this.innerText.trim())">${q}</div>`).join('');
-
-  // AI response
-  document.getElementById('ai-response-box').innerHTML = aiResponses[kpi] || aiResponses['Revenue'];
+  const meta = kpiMeta[kpi] || {current:"—", prev:"—", growth:"0%", target:"—", health:"warning"};
+  document.getElementById("ws-kpi-name").innerText = kpi;
+  document.getElementById("ws-left-dynamic").innerHTML = `<div class="kpi-meta"><div class="kpi-meta-title">${kpi}</div><div class="kpi-meta-desc">Performance summary for ${kpi}</div><div class="sum-row"><div class="sum-card"><div class="sum-lbl">Current</div><div class="sum-val">${meta.current}</div></div><div class="sum-card"><div class="sum-lbl">Previous</div><div class="sum-val">${meta.prev}</div></div><div class="sum-card"><div class="sum-lbl">Growth</div><div class="sum-val up">${meta.growth}</div></div><div class="sum-card"><div class="sum-lbl">Target</div><div class="sum-val">${meta.target}</div></div></div></div><div class="drill-container"><div class="section-label">Drill-down</div><table class="data-table"><thead><tr><th>Category</th><th>Value</th><th>Trend</th></tr></thead><tbody><tr><td>South region</td><td>₹82.1 Cr</td><td class="trend-up">+15%</td></tr><tr><td>North region</td><td>₹68.4 Cr</td><td class="trend-up">+11%</td></tr><tr><td>West region</td><td>₹44.2 Cr</td><td class="trend-down">-2%</td></tr></tbody></table></div>`;
+  updateAiPanelForRole(kpi);
 }
 
-// ─── Chart tabs ──────────────────────────────────────────
-function selectTab(el) {
-  el.closest('.chart-tabs').querySelectorAll('.c-tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
+function switchRole(role) {
+  currentRole = role;
+  renderDashboard();
+  showScreen('home');
+  showToast(`Switched to ${roleConfigs[role].name} dashboard`);
 }
 
-// ─── Table search ─────────────────────────────────────────
-function filterTable(q) {
-  const rows = document.querySelectorAll('#drill-tbody tr');
-  rows.forEach(row => {
-    row.style.display = row.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
-  });
+function showScreen(screen, kpi=null) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(`screen-${screen}`).classList.add('active');
+  if(screen === 'workspace' && kpi) renderWorkspace(kpi);
+  else if(screen === 'home') renderDashboard();
 }
 
-// ─── AI Assistant ─────────────────────────────────────────
-function handleAiKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendAiQuestion();
-  }
-}
-
-function askQuestion(q) {
-  document.getElementById('ai-input').value = q;
-  sendAiQuestion();
-}
-
-function sendAiQuestion() {
-  const input = document.getElementById('ai-input');
-  const q = input.value.trim();
-  if (!q) return;
-  input.value = '';
-
-  const box = document.getElementById('ai-response-box');
-  box.innerHTML = '<em style="color:var(--text3);font-size:11px">Analysing data…</em>';
-
-  setTimeout(() => {
-    box.innerHTML = aiResponses[currentKpi] || aiResponses['Revenue'];
-    showToast('Insight updated for ' + currentKpi);
-  }, 900);
-}
-
-// ─── Export Modal ─────────────────────────────────────────
-function openExport() {
-  document.getElementById('export-kpi-name').textContent = currentKpi + ' — KPI analysis workspace';
-  document.getElementById('export-kpi-label').textContent = currentKpi;
-  document.getElementById('export-modal').classList.add('open');
-}
-function closeExport() {
-  document.getElementById('export-modal').classList.remove('open');
-}
-document.getElementById('export-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeExport();
-});
-
-function selectFormat(fmt) {
-  currentFormat = fmt;
-  document.getElementById('fmt-pdf').classList.toggle('active', fmt === 'pdf');
-  document.getElementById('fmt-excel').classList.toggle('active', fmt === 'excel');
-  document.getElementById('export-btn').textContent = fmt === 'pdf' ? '↓ Export PDF' : '↓ Export Excel';
-  document.getElementById('export-format-label').textContent = fmt === 'pdf' ? 'PDF' : 'Excel';
-}
-
-function toggleContent(el) {
-  el.classList.toggle('checked');
-  const cb = el.querySelector('.check-box');
-  cb.classList.toggle('on');
-  cb.textContent = cb.classList.contains('on') ? '✓' : '';
-  const count = document.querySelectorAll('.content-item.checked').length;
-  document.getElementById('export-count').textContent = count + (count === 1 ? ' section' : ' sections');
-}
-
-function doExport() {
-  closeExport();
-  showToast('Export started — your ' + (currentFormat === 'pdf' ? 'PDF' : 'Excel') + ' will be ready shortly');
-}
-
-// ─── Toast ────────────────────────────────────────────────
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = '✓ ' + msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
-}
+function askQuestion(q) { document.getElementById("ai-input").value = q; sendAiQuestion(); }
+function sendAiQuestion() { const box = document.getElementById("ai-response-box"); if(box) box.innerHTML = "✨ Analyzing based on current role & KPI...<br>Simulated AI response for " + currentKpi; showToast("AI insight updated"); }
+function showToast(msg) { const t = document.getElementById("toast"); t.innerText = msg; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 2000); }
+function toggleCatalog() { const panel = document.getElementById("kpi-catalog"); panel.classList.toggle("open"); if(panel.classList.contains("open")){ panel.innerHTML = `<div class="catalog-group"><div class="catalog-group-title">Finance</div><div class="catalog-item" onclick="showScreen('workspace','Revenue')">💰 Revenue</div><div class="catalog-item" onclick="showScreen('workspace','Profit Margin')">📈 Profit Margin</div></div><div class="catalog-group"><div class="catalog-group-title">Operations</div><div class="catalog-item" onclick="showScreen('workspace','Production Output')">🏭 Production</div><div class="catalog-item" onclick="showScreen('workspace','Inventory')">📦 Inventory</div></div><div class="catalog-group"><div class="catalog-group-title">HR</div><div class="catalog-item" onclick="showScreen('workspace','Headcount')">👥 Headcount</div><div class="catalog-item" onclick="showScreen('workspace','Attrition')">⚠️ Attrition</div></div>`; } }
+function closeExport() { document.querySelector(".modal-overlay").classList.remove("open"); }
+function updateClock() { document.getElementById("live-time").innerText = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); }
+setInterval(updateClock,1000); updateClock();
+renderDashboard();
 </script>
 </body>
 </html>
