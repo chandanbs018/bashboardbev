@@ -79,7 +79,6 @@ body {
 .breadcrumb { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text3); }
 .breadcrumb a { color: var(--blue); cursor: pointer; text-decoration: none; }
 .breadcrumb a:hover { text-decoration: underline; }
-.breadcrumb-sep { color: var(--border2); }
 .topbar-right { display: flex; align-items: center; gap: 10px; }
 .role-selector {
   background: var(--surface2);
@@ -94,14 +93,13 @@ body {
   align-items: center;
   gap: 8px;
   font-family: var(--font);
-  transition: all var(--transition);
 }
 .role-selector:hover { background: var(--surface3); }
 .avatar {
   width: 30px; height: 30px; border-radius: 50%;
   background: var(--blue); color: #fff;
   display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 600; cursor: pointer;
+  font-size: 11px; font-weight: 600;
 }
 .refresh-time { font-size: 11px; color: var(--text3); font-family: var(--mono); }
 .icon-btn {
@@ -109,6 +107,7 @@ body {
   border: 1px solid var(--border); background: transparent;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; color: var(--text2);
+  position: relative;
 }
 .notif-dot { position: absolute; top: 4px; right: 4px; width: 6px; height: 6px; border-radius: 50%; background: var(--red); border: 1.5px solid var(--surface); }
 .filters-bar {
@@ -224,16 +223,66 @@ body {
   border-radius: var(--radius-lg);
   padding: 14px 16px;
 }
-.chart-title { font-size: 13px; font-weight: 600; color: var(--text); }
-.chart-sub   { font-size: 11px; color: var(--text3); margin-bottom: 12px; }
+.chart-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
 .legend { display: flex; gap: 12px; margin-top: 8px; }
 .legend-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--text2); }
 .legend-dot  { width: 8px; height: 8px; border-radius: 50%; }
 
-/* Workspace and AI panel preserved but enhanced */
+/* Workspace styles */
 .workspace { display: grid; grid-template-columns: 65fr 35fr; gap: 14px; height: 100%; min-height: 0; }
-.ws-left { display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+.ws-left { display: flex; flex-direction: column; gap: 12px; overflow-y: auto; min-height: 0; }
 .ws-right { display: flex; flex-direction: column; min-height: 0; }
+.kpi-meta {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+}
+.kpi-meta-title { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+.kpi-meta-desc { font-size: 12px; color: var(--text2); margin-bottom: 12px; }
+.sum-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+.sum-card {
+  background: var(--surface2);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  text-align: center;
+}
+.sum-lbl { font-size: 9px; font-weight: 600; color: var(--text3); text-transform: uppercase; margin-bottom: 5px; }
+.sum-val { font-size: 17px; font-weight: 600; color: var(--text); }
+.sum-val.up { color: var(--green); }
+.sum-val.down { color: var(--red); }
+.chart-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+}
+.chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.chart-tabs { display: flex; gap: 4px; }
+.c-tab {
+  font-size: 11px; padding: 4px 11px;
+  border-radius: 20px; border: 1px solid var(--border);
+  cursor: pointer; color: var(--text2); background: transparent;
+}
+.c-tab.active { background: var(--blue-bg); border-color: var(--blue); color: var(--blue-txt); font-weight: 500; }
+.drill-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+}
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th { text-align: left; padding: 8px 10px; font-size: 10px; font-weight: 600; color: var(--text3); border-bottom: 1px solid var(--border2); }
+.data-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); font-size: 12px; }
+.data-table tr:hover td { background: var(--surface2); }
+.badge { font-size: 10px; font-weight: 500; padding: 2px 6px; border-radius: 4px; display: inline-block; }
+.badge.up { background: var(--green-bg); color: var(--green-txt); }
+.badge.dn { background: var(--red-bg); color: var(--red-txt); }
 .ai-panel {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -246,22 +295,18 @@ body {
 .ai-title { font-size: 13px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 7px; }
 .ai-badge { font-size: 9px; font-weight: 600; padding: 2px 7px; border-radius: 10px; background: var(--purple-bg); color: var(--purple-txt); }
 .ai-ctx-chip { font-size: 11px; padding: 3px 10px; border: 1px solid var(--blue); border-radius: 20px; background: var(--blue-bg); color: var(--blue-txt); }
-.ai-body { flex: 1; overflow-y: auto; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.ai-body { flex: 1; overflow-y: auto; padding: 12px 14px; display: flex; flex-direction: column; gap: 12px; }
 .ai-textarea { width: 100%; font-size: 12px; padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface2); resize: none; font-family: var(--font); outline: none; }
 .ai-textarea:focus { border-color: var(--blue); background: var(--surface); }
+.ai-input-row { display: flex; gap: 6px; }
 .ai-send { width: 34px; height: 34px; background: var(--blue); border: none; border-radius: var(--radius-sm); cursor: pointer; color: #fff; display: flex; align-items: center; justify-content: center; }
-.sq-pill { font-size: 11px; padding: 6px 11px; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; background: var(--surface2); transition: all var(--transition); }
+.sq-label { font-size: 9px; font-weight: 600; color: var(--text3); text-transform: uppercase; margin-bottom: 6px; }
+.sq-pill { font-size: 11px; padding: 6px 11px; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; background: var(--surface2); transition: all var(--transition); margin-bottom: 5px; }
 .sq-pill:hover { border-color: var(--blue); background: var(--blue-bg); color: var(--blue-txt); }
 .ai-response { background: var(--surface2); border-radius: var(--radius); padding: 11px 13px; font-size: 12px; line-height: 1.65; }
-.insight-card { border-radius: var(--radius-sm); padding: 8px 11px; font-size: 12px; margin-top: 6px; }
-.insight-card.info { background: var(--blue-bg); color: var(--blue-txt); }
-.insight-card.success { background: var(--green-bg); color: var(--green-txt); }
-.insight-card.warning { background: var(--amber-bg); color: var(--amber-txt); }
+.insight-card { border-radius: var(--radius-sm); padding: 8px 11px; font-size: 12px; }
+.insight-card.info { background: var(--blue-bg); color: var(--blue-txt); margin-top: 6px; }
 .risk-item { display: flex; align-items: center; gap: 7px; padding: 7px 11px; border-radius: var(--radius-sm); background: var(--red-bg); color: var(--red-txt); font-size: 11px; margin-top: 6px; }
-.data-table { width: 100%; border-collapse: collapse; }
-.data-table th { text-align: left; padding: 6px 10px; font-size: 10px; font-weight: 600; color: var(--text3); border-bottom: 1px solid var(--border2); }
-.data-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); font-size: 12px; }
-.drill-link { color: var(--blue); cursor: pointer; }
 .kpi-catalog-toggle { position: fixed; bottom: 20px; left: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 30px; padding: 8px 16px; font-size: 12px; cursor: pointer; z-index: 200; box-shadow: var(--shadow); }
 .kpi-catalog-panel { position: fixed; bottom: 70px; left: 20px; width: 240px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); z-index: 199; display: none; flex-direction: column; max-height: 400px; overflow-y: auto; }
 .kpi-catalog-panel.open { display: flex; }
@@ -269,7 +314,7 @@ body {
 .catalog-group-title { font-weight: 600; font-size: 11px; color: var(--text3); margin-bottom: 6px; }
 .catalog-item { padding: 6px 8px; font-size: 12px; cursor: pointer; border-radius: var(--radius-sm); }
 .catalog-item:hover { background: var(--surface2); color: var(--blue); }
-.modal-overlay { position: fixed; inset: 0; background: rgba(10,10,8,.5); display: flex; align-items: center; justify-content: center; z-index: 999; opacity: 0; pointer-events: none; transition: opacity .2s; backdrop-filter: blur(4px); }
+.modal-overlay { position: fixed; inset: 0; background: rgba(10,10,8,.5); display: flex; align-items: center; justify-content: center; z-index: 999; opacity: 0; pointer-events: none; backdrop-filter: blur(4px); }
 .modal-overlay.open { opacity: 1; pointer-events: all; }
 .modal { background: var(--surface); border-radius: var(--radius-lg); width: 500px; max-width: calc(100vw - 32px); border: 1px solid var(--border); }
 .toast { position: fixed; bottom: 24px; right: 24px; background: var(--text); color: #fff; padding: 10px 16px; border-radius: var(--radius); font-size: 12px; transform: translateY(20px); opacity: 0; transition: all .25s; z-index: 1000; }
@@ -285,7 +330,7 @@ body {
       <nav class="breadcrumb" id="breadcrumb"><a onclick="showScreen('home')">Dashboard</a></nav>
     </div>
     <div class="topbar-right">
-      <span class="refresh-time" id="live-time">--:-- --</span>
+      <span class="refresh-time" id="live-time"></span>
       <button class="icon-btn" title="Notifications"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M8 1.5a4.5 4.5 0 0 0-4.5 4.5c0 2.2-.6 3.5-1.2 4.2-.3.4-.1.8.5.8h10.4c.6 0 .8-.4.5-.8-.6-.7-1.2-2-1.2-4.2A4.5 4.5 0 0 0 8 1.5Z"/><path d="M6.5 13.5a1.5 1.5 0 0 0 3 0"/></svg><span class="notif-dot"></span></button>
       <select id="role-switcher" class="role-selector" onchange="switchRole(this.value)">
         <option value="MD">👔 Managing Director</option>
@@ -298,24 +343,19 @@ body {
   </header>
   <div class="filters-bar"><span class="filter-label">Filters</span><div class="chip active">FY 2024–25</div><div class="chip">All regions ▾</div><div class="chip">All departments ▾</div></div>
   <div class="screens">
-    <div class="screen active" id="screen-home">
-      <div id="exec-summary-container"></div>
-      <div class="section-label">Key performance indicators</div>
-      <div class="kpi-grid" id="kpi-grid"></div>
-      <div class="section-label">Business highlights</div>
-      <div class="highlights-grid" id="highlights-grid"></div>
-      <div class="section-label">Trend analysis</div>
-      <div class="charts-row" id="charts-row"></div>
-    </div>
+    <div class="screen active" id="screen-home"></div>
     <div class="screen" id="screen-workspace">
-      <div style="display:flex;justify-content:space-between;margin-bottom:14px;"><span>KPI workspace: <strong id="ws-kpi-name">Revenue</strong></span><button class="btn-ghost" onclick="showScreen('home')">← Back</button></div>
-      <div class="workspace"><div class="ws-left" id="ws-left-dynamic"></div><div class="ws-right" id="ws-right-ai"></div></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <div><span style="font-size:11px;color:var(--text3)">KPI workspace: </span><strong id="ws-kpi-name" style="font-size:14px">Revenue</strong></div>
+        <button class="chip" onclick="showScreen('home')" style="background:var(--surface2)">← Back to Dashboard</button>
+      </div>
+      <div class="workspace" id="workspace-container"></div>
     </div>
   </div>
 </div>
 <div class="kpi-catalog-toggle" onclick="toggleCatalog()">📋 KPI Catalog</div>
 <div class="kpi-catalog-panel" id="kpi-catalog"></div>
-<div class="modal-overlay" id="export-modal"><div class="modal"><div class="modal-hdr"><span>Export</span><button onclick="closeExport()">✕</button></div><div class="modal-body"><p>Export simulation ready</p></div></div></div>
+<div class="modal-overlay" id="export-modal"><div class="modal"><div class="modal-hdr" style="padding:16px"><span>Export</span><button onclick="closeExport()">✕</button></div><div class="modal-body" style="padding:16px"><p>Export simulation ready</p></div></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -324,69 +364,72 @@ const roleConfigs = {
   MD: {
     name: "Managing Director",
     kpis: ["Revenue", "Profit Margin", "Production", "Inventory", "Headcount", "Attrition"],
-    highlights: ["🏆 Company Performance: Revenue +12.4%, Profit +1.3pp", "⚠️ Strategic Risks: Inventory turnover below threshold, Attrition spike", "📌 Executive Summary: Strong growth, but monitor transformer category and engineering attrition."],
-    charts: ["Revenue Trend", "Production by Plant"],
+    highlights: ["🏆 Company Performance: Revenue +12.4%, Profit +1.3pp", "⚠️ Strategic Risks: Inventory turnover below threshold, Attrition spike", "📌 Executive Summary: Strong growth, monitor transformer category and engineering attrition."],
+    execSummary: "Revenue increased 12.4% to ₹248.3 Cr. Profit margin improved 1.3pp to 18.7%. Production exceeded target by 8.1%. ⚠️ Inventory risk in South plant. 🔴 Attrition increased 3.2pp to 9.3%.",
     aiTitle: "Executive Analytics Assistant",
-    aiContext: "MD Dashboard • All KPIs",
     questions: ["What are the top business risks?", "Compare performance across regions.", "What changed this quarter?", "Which KPIs require attention?"],
-    insights: ["Revenue growth of 12.4% exceeds industry benchmark of 8%.", "Attrition at 9.3% is 3.2pp above target — immediate action recommended.", "Inventory risk flagged in South plant."],
-    risks: ["Transformer revenue down 1.2% YoY", "West plant underutilization at 76%", "Engineering attrition spike"]
+    insights: ["Revenue growth of 12.4% exceeds industry benchmark of 8%.", "Attrition at 9.3% is 3.2pp above target — immediate action.", "Inventory turnover below 4.0x threshold in South plant."],
+    risks: ["Transformer revenue down 1.2% YoY", "West plant underutilization at 76%", "Engineering attrition spike 14%"]
   },
   Finance: {
     name: "Finance Manager",
     kpis: ["Revenue", "Profit Margin", "Cash Flow", "Receivables", "Payables", "Operating Cost"],
-    highlights: ["💰 Cash Flow improved 15% YoY", "📊 Receivables at 45 days (target 40)", "📉 Operating cost reduced 2.3% due to procurement efficiency"],
-    charts: ["Revenue Trend", "Profit Trend", "Cash Flow Trend"],
+    highlights: ["💰 Cash Flow improved 14.8% YoY", "📊 Receivables at 45 days (target 40)", "📉 Operating cost reduced 2.3%"],
+    execSummary: "Revenue ₹248.3 Cr (+12.4%). Profit margin 18.7% (+1.3pp). Cash flow ₹42.6 Cr (+14.8%). ⚠️ Receivables DSO increased to 45 days. Operating cost reduced 2.3% due to procurement savings.",
     aiTitle: "Finance Analytics Assistant",
-    aiContext: "Finance • P&L & Cash Focus",
-    questions: ["Compare revenue over last 3 years.", "Why did profit decline in Q2?", "Show highest cost centers.", "Analyze cash flow performance.", "Compare actual vs budget."],
+    questions: ["Compare revenue over last 3 years.", "Why did operating cost decrease?", "Show highest cost centers.", "Analyze cash flow performance.", "Compare actual vs budget."],
     insights: ["Operating cost decreased 2.3% — sourcing savings of ₹3.2 Cr.", "Receivables DSO increased to 45 days, up from 38 last year.", "Profit margin improved 1.3pp due to lower raw material costs."],
     risks: ["Receivables ageing >60 days increased 18%", "Cash conversion cycle extended to 52 days"]
   },
   Operations: {
     name: "Operations Manager",
     kpis: ["Production Output", "Machine Utilization", "Inventory", "Downtime", "Quality Rejections", "OTIF"],
-    highlights: ["🏭 Production exceeded target 8.1%", "⚙️ Machine utilization at 89% overall", "📦 Inventory turnover 3.6x (target 4.0x)", "✅ OTIF at 94.2%"],
-    charts: ["Production Trend", "Plant Performance", "Machine Utilization"],
+    highlights: ["🏭 Production exceeded target 8.1%", "⚙️ Machine utilization at 89%", "📦 Inventory turnover 3.6x", "✅ OTIF at 94.2%"],
+    execSummary: "Production 14,820 units (+8.1% vs target). Machine utilization 89% (+4pp). ⚠️ Downtime increased to 3.2%. Inventory turnover below 4.0x threshold. West plant underperforming at 76% utilization.",
     aiTitle: "Operations Analytics Assistant",
-    aiContext: "Operations • Plant & Inventory",
     questions: ["Which plant is underperforming?", "Show production bottlenecks.", "Compare planned vs actual output.", "Analyze machine downtime.", "Identify inventory risks."],
-    insights: ["North plant achieved 102% utilization — best performance.", "West plant downtime increased 12% due to scheduled maintenance.", "Inventory slow-moving stock: ₹4.2 Cr ageing >90 days."],
+    insights: ["North plant achieved 102% utilization — best performance.", "West plant downtime increased 12% due to maintenance.", "Inventory slow-moving stock: ₹4.2 Cr ageing >90 days."],
     risks: ["Transformer category inventory aged >120 days", "West plant output 24% below target"]
   },
   HR: {
     name: "HR Manager",
     kpis: ["Headcount", "Attrition", "Hiring", "Training Hours", "Absenteeism", "Open Positions"],
-    highlights: ["👥 Headcount up 42 net new hires", "📈 Attrition increased to 9.3% (Engineering 14%)", "📚 Training hours per employee 24 (target 30)"],
-    charts: ["Attrition Trend", "Department Headcount", "Hiring Pipeline"],
+    highlights: ["👥 Headcount up 42 net new hires", "📈 Attrition increased to 9.3%", "📚 Training hours per employee 24"],
+    execSummary: "Headcount 1,284 (+42 net hires). 🔴 Attrition 9.3% (+3.2pp) — Engineering at 14%. ⚠️ Training hours 24/30 target. Open positions 18 (+50%). Absenteeism 4.1% above target.",
     aiTitle: "HR Analytics Assistant",
-    aiContext: "HR • Workforce & Talent",
     questions: ["Why is attrition increasing?", "Compare departments by turnover.", "Show hiring effectiveness.", "Analyze workforce growth.", "Identify staffing risks."],
-    insights: ["Engineering attrition at 14% — compensation gaps cited in 67% exit interviews.", "Q3 hiring filled 28/40 reqs; time-to-fill at 38 days.", "Absenteeism rate 4.1% above industry norm."],
+    insights: ["Engineering attrition at 14% — compensation gaps cited in 67% exit interviews.", "Time-to-fill at 38 days, above target of 30.", "Absenteeism rate 4.1% above industry norm."],
     risks: ["Open positions for key engineering roles (12 reqs)", "Attrition impact on production line efficiency"]
   }
 };
 
 const kpiMeta = {
-  "Revenue": {current:"₹248.3 Cr", prev:"₹220.9 Cr", growth:"+12.4%", target:"₹240.0 Cr", health:"healthy", src:"ERP"},
-  "Profit Margin": {current:"18.7%", prev:"17.4%", growth:"+1.3pp", target:"18.0%", health:"healthy"},
-  "Production": {current:"14,820 u", prev:"13,710 u", growth:"+8.1%", target:"13,700 u", health:"healthy"},
-  "Inventory": {current:"₹38.4 Cr", prev:"₹40.1 Cr", growth:"−4.2%", target:"₹36.0 Cr", health:"warning"},
-  "Headcount": {current:"1,284", prev:"1,242", growth:"+42", target:"1,280", health:"healthy"},
-  "Attrition": {current:"9.3%", prev:"6.1%", growth:"+3.2pp", target:"6.0%", health:"critical"},
-  "Cash Flow": {current:"₹42.6 Cr", prev:"₹37.1 Cr", growth:"+14.8%", target:"₹40.0 Cr", health:"healthy"},
-  "Receivables": {current:"45 days", prev:"38 days", growth:"+7d", target:"40 days", health:"warning"},
-  "Payables": {current:"52 days", prev:"48 days", growth:"+4d", target:"50 days", health:"healthy"},
-  "Operating Cost": {current:"₹124.5 Cr", prev:"₹127.4 Cr", growth:"−2.3%", target:"₹126.0 Cr", health:"healthy"},
-  "Production Output": {current:"14,820 u", prev:"13,710 u", growth:"+8.1%", target:"13,700 u", health:"healthy"},
-  "Machine Utilization": {current:"89%", prev:"85%", growth:"+4%", target:"88%", health:"healthy"},
-  "Downtime": {current:"3.2%", prev:"2.8%", growth:"+0.4pp", target:"2.5%", health:"warning"},
-  "Quality Rejections": {current:"2.1%", prev:"2.4%", growth:"−0.3pp", target:"2.0%", health:"warning"},
-  "OTIF": {current:"94.2%", prev:"92.5%", growth:"+1.7%", target:"95%", health:"healthy"},
-  "Hiring": {current:"42 hires", prev:"38 hires", growth:"+10.5%", target:"45 hires", health:"healthy"},
-  "Training Hours": {current:"24 hrs", prev:"21 hrs", growth:"+14%", target:"30 hrs", health:"warning"},
-  "Absenteeism": {current:"4.1%", prev:"3.5%", growth:"+0.6pp", target:"3%", health:"critical"},
-  "Open Positions": {current:"18", prev:"12", growth:"+50%", target:"8", health:"critical"}
+  "Revenue": {current:"₹248.3 Cr", prev:"₹220.9 Cr", growth:"+12.4%", target:"₹240.0 Cr", health:"healthy", desc:"Total revenue from all business units."},
+  "Profit Margin": {current:"18.7%", prev:"17.4%", growth:"+1.3pp", target:"18.0%", health:"healthy", desc:"Net profit as percentage of revenue."},
+  "Production Output": {current:"14,820 u", prev:"13,710 u", growth:"+8.1%", target:"13,700 u", health:"healthy", desc:"Total manufacturing output in units."},
+  "Production": {current:"14,820 u", prev:"13,710 u", growth:"+8.1%", target:"13,700 u", health:"healthy", desc:"Total manufacturing output."},
+  "Inventory": {current:"₹38.4 Cr", prev:"₹40.1 Cr", growth:"−4.2%", target:"₹36.0 Cr", health:"warning", desc:"Current inventory value."},
+  "Headcount": {current:"1,284", prev:"1,242", growth:"+42", target:"1,280", health:"healthy", desc:"Total active employees."},
+  "Attrition": {current:"9.3%", prev:"6.1%", growth:"+3.2pp", target:"6.0%", health:"critical", desc:"Voluntary turnover rate YTD."},
+  "Cash Flow": {current:"₹42.6 Cr", prev:"₹37.1 Cr", growth:"+14.8%", target:"₹40.0 Cr", health:"healthy", desc:"Operating cash flow."},
+  "Receivables": {current:"45 days", prev:"38 days", growth:"+7d", target:"40 days", health:"warning", desc:"Average collection period."},
+  "Payables": {current:"52 days", prev:"48 days", growth:"+4d", target:"50 days", health:"healthy", desc:"Average payment period."},
+  "Operating Cost": {current:"₹124.5 Cr", prev:"₹127.4 Cr", growth:"−2.3%", target:"₹126.0 Cr", health:"healthy", desc:"Total operating expenses."},
+  "Machine Utilization": {current:"89%", prev:"85%", growth:"+4%", target:"88%", health:"healthy", desc:"Manufacturing asset utilization."},
+  "Downtime": {current:"3.2%", prev:"2.8%", growth:"+0.4pp", target:"2.5%", health:"warning", desc:"Unplanned downtime percentage."},
+  "Quality Rejections": {current:"2.1%", prev:"2.4%", growth:"−0.3pp", target:"2.0%", health:"warning", desc:"Defect rate at QC."},
+  "OTIF": {current:"94.2%", prev:"92.5%", growth:"+1.7%", target:"95%", health:"healthy", desc:"On-time in-full delivery rate."},
+  "Hiring": {current:"42 hires", prev:"38 hires", growth:"+10.5%", target:"45 hires", health:"healthy", desc:"New hires this quarter."},
+  "Training Hours": {current:"24 hrs", prev:"21 hrs", growth:"+14%", target:"30 hrs", health:"warning", desc:"Avg training per employee."},
+  "Absenteeism": {current:"4.1%", prev:"3.5%", growth:"+0.6pp", target:"3%", health:"critical", desc:"Employee absence rate."},
+  "Open Positions": {current:"18", prev:"12", growth:"+50%", target:"8", health:"critical", desc:"Unfilled headcount requisitions."}
+};
+
+const drillData = {
+  "Revenue": [{"dimension":"South Region","value":"₹82.1 Cr","trend":"+15%","trendDir":"up"},{"dimension":"North Region","value":"₹68.4 Cr","trend":"+11%","trendDir":"up"},{"dimension":"East Region","value":"₹53.6 Cr","trend":"+9%","trendDir":"up"},{"dimension":"West Region","value":"₹44.2 Cr","trend":"-2%","trendDir":"down"}],
+  "Inventory": [{"dimension":"Raw Materials","value":"₹18.2 Cr","trend":"-5%","trendDir":"down"},{"dimension":"WIP","value":"₹12.4 Cr","trend":"-3%","trendDir":"down"},{"dimension":"Finished Goods","value":"₹7.8 Cr","trend":"-4%","trendDir":"down"}],
+  "Attrition": [{"dimension":"Engineering","value":"14%","trend":"+5pp","trendDir":"up"},{"dimension":"Operations","value":"11%","trend":"+3pp","trendDir":"up"},{"dimension":"Sales","value":"7%","trend":"+1pp","trendDir":"up"}],
+  "default": [{"dimension":"Category A","value":"45%","trend":"+5%","trendDir":"up"},{"dimension":"Category B","value":"32%","trend":"+2%","trendDir":"up"},{"dimension":"Category C","value":"23%","trend":"-3%","trendDir":"down"}]
 };
 
 let currentRole = "MD";
@@ -400,47 +443,97 @@ function getHealthIcon(health) {
 
 function renderDashboard() {
   const cfg = roleConfigs[currentRole];
-  const kpiGrid = document.getElementById("kpi-grid");
-  kpiGrid.innerHTML = cfg.kpis.map(k => {
-    const meta = kpiMeta[k] || {current:"—", growth:"0%", health:"warning"};
-    const healthClass = meta.health === "healthy" ? "health-healthy" : (meta.health === "warning" ? "health-warning" : "health-critical");
-    return `<div class="kpi-card" onclick="showScreen('workspace','${k}')">
+  const homeScreen = document.getElementById("screen-home");
+  const kpisHtml = `<div class="exec-summary"><div class="exec-summary-icon">🧠</div><div class="exec-summary-content"><div class="exec-summary-title">AI Executive Summary · ${cfg.name}</div><div class="exec-summary-text">${cfg.execSummary}</div></div></div>
+  <div class="section-label">Key performance indicators</div>
+  <div class="kpi-grid" id="kpi-grid">${cfg.kpis.map(k => {
+    const meta = kpiMeta[k] || {current:"—", growth:"0%", health:"warning", prev:"—", target:"—"};
+    const healthClass = `health-${meta.health}`;
+    return `<div class="kpi-card" onclick="showWorkspace('${k}')">
       <div class="kpi-card-header"><span class="kpi-name">${k}</span><span class="kpi-src">ERP</span></div>
       <div class="kpi-value">${meta.current}</div>
       <div class="kpi-sub"><span class="trend-${meta.growth.includes('+')?'up':'down'}">${meta.growth.includes('+')?'▲':'▼'} ${meta.growth}</span></div>
       <svg class="kpi-spark" viewBox="0 0 100 32"><polyline points="0,26 100,${meta.health==='healthy'?'8':'20'}" fill="none" stroke="${meta.health==='healthy'?'#1A7A45':'#B45309'}" stroke-width="1.8"/></svg>
       <div class="kpi-footer"><span class="health-badge ${healthClass}">${getHealthIcon(meta.health)}</span></div>
     </div>`;
-  }).join('');
-  document.getElementById("highlights-grid").innerHTML = cfg.highlights.map(h => `<div class="highlight-card"><div class="hl-icon info">📌</div><div><div class="hl-text">${h}</div></div></div>`).join('');
-  document.getElementById("charts-row").innerHTML = `<div class="chart-card"><div class="chart-title">${cfg.charts[0] || 'Key Trend'}</div><svg viewBox="0 0 320 80"><polyline points="0,60 80,40 160,30 240,20 320,10" fill="none" stroke="#1B5FCC" stroke-width="2"/></svg></div><div class="chart-card"><div class="chart-title">${cfg.charts[1] || 'Performance'}</div><svg viewBox="0 0 320 80"><rect x="40" y="30" width="40" height="40" fill="#1B5FCC"/><rect x="140" y="20" width="40" height="50" fill="#1A7A45"/><rect x="240" y="45" width="40" height="25" fill="#B45309"/></svg></div>`;
-  document.getElementById("exec-summary-container").innerHTML = `<div class="exec-summary"><div class="exec-summary-icon">🧠</div><div class="exec-summary-content"><div class="exec-summary-title">AI Executive Summary · ${cfg.name}</div><div class="exec-summary-text">${cfg.insights.slice(0,2).join(" ")}</div></div></div>`;
-  updateAiPanelForRole();
+  }).join('')}</div>
+  <div class="section-label">Business highlights</div>
+  <div class="highlights-grid">${cfg.highlights.map(h => `<div class="highlight-card"><div class="hl-icon info">📌</div><div><div class="hl-text">${h}</div></div></div>`).join('')}</div>
+  <div class="section-label">Trend analysis</div>
+  <div class="charts-row">
+    <div class="chart-card"><div class="chart-title">Revenue Trend (Monthly)</div><svg viewBox="0 0 320 100" style="width:100%"><polyline points="0,75 40,65 80,70 120,55 160,48 200,42 240,38 280,28 320,18" fill="none" stroke="#1B5FCC" stroke-width="2"/><polyline points="0,72 40,68 80,67 120,65 160,64 200,62 240,61 280,60 320,58" fill="none" stroke="#C8C4BB" stroke-width="1.5" stroke-dasharray="4 3"/><text x="10" y="90" font-size="8" fill="#9A9690">Apr</text><text x="90" y="90" font-size="8" fill="#9A9690">Jul</text><text x="170" y="90" font-size="8" fill="#9A9690">Oct</text><text x="250" y="90" font-size="8" fill="#9A9690">Jan</text></svg><div class="legend"><div class="legend-item"><div class="legend-dot" style="background:#1B5FCC"></div>FY 2024–25</div><div class="legend-item"><div class="legend-dot" style="background:#C8C4BB"></div>FY 2023–24</div></div></div>
+    <div class="chart-card"><div class="chart-title">Performance by Plant</div><svg viewBox="0 0 320 100" style="width:100%"><rect x="30" y="25" width="50" height="55" rx="4" fill="#1B5FCC" opacity=".85"/><rect x="120" y="40" width="50" height="40" rx="4" fill="#1A7A45" opacity=".8"/><rect x="210" y="50" width="50" height="30" rx="4" fill="#B45309" opacity=".8"/><text x="55" y="90" text-anchor="middle" font-size="9" fill="#5C5A55">North</text><text x="145" y="90" text-anchor="middle" font-size="9" fill="#5C5A55">South</text><text x="235" y="90" text-anchor="middle" font-size="9" fill="#5C5A55">West</text></svg><div class="legend"><div class="legend-item"><div class="legend-dot" style="background:#1B5FCC"></div>Actual</div><div class="legend-item"><div class="legend-dot" style="background:#C8C4BB"></div>Target</div></div></div>
+  </div>`;
+  homeScreen.innerHTML = kpisHtml;
 }
 
-function updateAiPanelForRole(kpiOverride) {
-  const cfg = roleConfigs[currentRole];
-  const targetKpi = kpiOverride || currentKpi;
-  const meta = kpiMeta[targetKpi] || {health:"healthy"};
-  const ctxTitle = `${cfg.aiTitle} · ${targetKpi}`;
-  const html = `<div class="ai-panel"><div class="ai-header"><div class="ai-title">✨ ${cfg.aiTitle} <span class="ai-badge">AI</span></div><span class="ai-ctx-chip">${targetKpi}</span></div>
-  <div class="ai-body"><textarea id="ai-input" class="ai-textarea" rows="2" placeholder="Ask about ${targetKpi}..."></textarea>
-  <button class="ai-send" onclick="sendAiQuestion()">➤</button>
-  <div class="sq-label">Suggested questions</div>
-  <div id="sq-pills">${cfg.questions.map(q => `<div class="sq-pill" onclick="askQuestion('${q.replace(/'/g, "\\'")}')">${q}</div>`).join('')}</div>
-  <div class="ai-response" id="ai-response-box"><strong>${targetKpi} analysis</strong><br>${cfg.insights[0] || "Data ready."}</div>
-  <div class="ai-response-label">Risks</div>${cfg.risks.map(r => `<div class="risk-item">⚠️ ${r}</div>`).join('')}</div></div>`;
-  const container = document.getElementById("ws-right-ai");
-  if(container) container.innerHTML = html;
-  if(document.getElementById("ai-response-box")) document.getElementById("ai-response-box").innerHTML = `<strong>${targetKpi}</strong><br>${cfg.insights.join("<br>")}`;
-}
-
-function renderWorkspace(kpi) {
+function showWorkspace(kpi) {
   currentKpi = kpi;
-  const meta = kpiMeta[kpi] || {current:"—", prev:"—", growth:"0%", target:"—", health:"warning"};
+  const meta = kpiMeta[kpi] || {current:"—", prev:"—", growth:"0%", target:"—", health:"warning", desc:"KPI performance data"};
+  const cfg = roleConfigs[currentRole];
+  const drillRows = drillData[kpi] || drillData.default;
+  
   document.getElementById("ws-kpi-name").innerText = kpi;
-  document.getElementById("ws-left-dynamic").innerHTML = `<div class="kpi-meta"><div class="kpi-meta-title">${kpi}</div><div class="kpi-meta-desc">Performance summary for ${kpi}</div><div class="sum-row"><div class="sum-card"><div class="sum-lbl">Current</div><div class="sum-val">${meta.current}</div></div><div class="sum-card"><div class="sum-lbl">Previous</div><div class="sum-val">${meta.prev}</div></div><div class="sum-card"><div class="sum-lbl">Growth</div><div class="sum-val up">${meta.growth}</div></div><div class="sum-card"><div class="sum-lbl">Target</div><div class="sum-val">${meta.target}</div></div></div></div><div class="drill-container"><div class="section-label">Drill-down</div><table class="data-table"><thead><tr><th>Category</th><th>Value</th><th>Trend</th></tr></thead><tbody><tr><td>South region</td><td>₹82.1 Cr</td><td class="trend-up">+15%</td></tr><tr><td>North region</td><td>₹68.4 Cr</td><td class="trend-up">+11%</td></tr><tr><td>West region</td><td>₹44.2 Cr</td><td class="trend-down">-2%</td></tr></tbody></table></div>`;
-  updateAiPanelForRole(kpi);
+  document.getElementById("breadcrumb").innerHTML = '<a onclick="showScreen(\'home\')">Dashboard</a> <span class="breadcrumb-sep">›</span> <span>' + kpi + '</span>';
+  
+  const workspaceHtml = `<div class="ws-left">
+    <div class="kpi-meta">
+      <div class="kpi-meta-title">${kpi}</div>
+      <div class="kpi-meta-desc">${meta.desc || "Detailed performance analysis with trends and breakdowns."}</div>
+      <div class="sum-row">
+        <div class="sum-card"><div class="sum-lbl">Current</div><div class="sum-val">${meta.current}</div></div>
+        <div class="sum-card"><div class="sum-lbl">Previous</div><div class="sum-val">${meta.prev}</div></div>
+        <div class="sum-card"><div class="sum-lbl">Growth</div><div class="sum-val ${meta.growth.includes('+')?'up':'down'}">${meta.growth}</div></div>
+        <div class="sum-card"><div class="sum-lbl">Target</div><div class="sum-val">${meta.target}</div></div>
+      </div>
+    </div>
+    <div class="chart-container">
+      <div class="chart-header"><div class="chart-title">${kpi} Trend</div><div class="chart-tabs"><div class="c-tab active" onclick="switchChartTab(this, 'trend')">Trend</div><div class="c-tab" onclick="switchChartTab(this, 'compare')">Comparison</div><div class="c-tab" onclick="switchChartTab(this, 'region')">By Region</div></div></div>
+      <div id="chart-svg-container"><svg width="100%" viewBox="0 0 460 100" style="height:110px"><line x1="0" y1="25" x2="460" y2="25" stroke="#E8E6E0" stroke-width="0.5"/><line x1="0" y1="55" x2="460" y2="55" stroke="#E8E6E0" stroke-width="0.5"/><line x1="0" y1="85" x2="460" y2="85" stroke="#E8E6E0" stroke-width="0.5"/><polyline points="0,85 50,75 100,80 150,60 200,50 250,42 300,35 350,25 400,18 460,12" fill="none" stroke="#1B5FCC" stroke-width="2.2"/><polyline points="0,82 50,80 100,79 150,77 200,76 250,74 300,73 350,72 400,71 460,70" fill="none" stroke="#C8C4BB" stroke-width="1.5" stroke-dasharray="4 3"/></svg></div>
+      <div class="legend"><div class="legend-item"><div class="legend-dot" style="background:#1B5FCC"></div>FY 2024–25</div><div class="legend-item"><div class="legend-dot" style="background:#C8C4BB"></div>FY 2023–24</div></div>
+    </div>
+    <div class="drill-container">
+      <div class="section-label">Drill-down: ${kpi} breakdown</div>
+      <table class="data-table"><thead><tr><th>Dimension</th><th>Value</th><th>Trend</th></tr></thead><tbody>${drillRows.map(r => `<tr><td>${r.dimension}</td><td><strong>${r.value}</strong></td><td><span class="badge ${r.trendDir === 'up' ? 'up' : 'dn'}">${r.trend.includes('+')?'▲':'▼'} ${r.trend}</span></td></tr>`).join('')}</tbody></table>
+    </div>
+  </div>
+  <div class="ws-right">
+    <div class="ai-panel">
+      <div class="ai-header"><div class="ai-title">✨ ${cfg.aiTitle} <span class="ai-badge">AI</span></div><span class="ai-ctx-chip">${kpi}</span></div>
+      <div class="ai-body">
+        <div class="ai-input-row"><textarea id="ai-input" class="ai-textarea" rows="2" placeholder="Ask about ${kpi}..."></textarea><button class="ai-send" onclick="sendAiQuestion()">➤</button></div>
+        <div><div class="sq-label">Suggested questions</div>${cfg.questions.map(q => `<div class="sq-pill" onclick="askQuestion('${q.replace(/'/g, "\\'")}')">${q}</div>`).join('')}</div>
+        <div class="ai-response" id="ai-response-box"><strong>${kpi} analysis</strong><br>${cfg.insights.slice(0,2).join("<br>")}</div>
+        <div class="sq-label">Risk indicators</div>${cfg.risks.map(r => `<div class="risk-item">⚠️ ${r}</div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+  
+  document.getElementById("workspace-container").innerHTML = workspaceHtml;
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-workspace').classList.add('active');
+}
+
+function switchChartTab(tab, type) {
+  const container = document.getElementById("chart-svg-container");
+  if(type === 'trend') {
+    container.innerHTML = `<svg width="100%" viewBox="0 0 460 100" style="height:110px"><line x1="0" y1="25" x2="460" y2="25" stroke="#E8E6E0" stroke-width="0.5"/><line x1="0" y1="55" x2="460" y2="55" stroke="#E8E6E0" stroke-width="0.5"/><line x1="0" y1="85" x2="460" y2="85" stroke="#E8E6E0" stroke-width="0.5"/><polyline points="0,85 50,75 100,80 150,60 200,50 250,42 300,35 350,25 400,18 460,12" fill="none" stroke="#1B5FCC" stroke-width="2.2"/><polyline points="0,82 50,80 100,79 150,77 200,76 250,74 300,73 350,72 400,71 460,70" fill="none" stroke="#C8C4BB" stroke-width="1.5" stroke-dasharray="4 3"/></svg>`;
+  } else if(type === 'compare') {
+    container.innerHTML = `<svg width="100%" viewBox="0 0 460 100" style="height:110px"><rect x="40" y="45" width="45" height="40" rx="3" fill="#1B5FCC" opacity=".8"/><rect x="115" y="30" width="45" height="55" rx="3" fill="#1A7A45" opacity=".8"/><rect x="190" y="55" width="45" height="30" rx="3" fill="#B45309" opacity=".8"/><rect x="265" y="20" width="45" height="65" rx="3" fill="#5B3FA8" opacity=".8"/><text x="62" y="95" text-anchor="middle" font-size="8">Q1</text><text x="137" y="95" text-anchor="middle" font-size="8">Q2</text><text x="212" y="95" text-anchor="middle" font-size="8">Q3</text><text x="287" y="95" text-anchor="middle" font-size="8">Q4</text></svg>`;
+  } else {
+    container.innerHTML = `<svg width="100%" viewBox="0 0 460 100" style="height:110px"><rect x="50" y="35" width="70" height="45" rx="4" fill="#1B5FCC" opacity=".85"/><rect x="150" y="50" width="70" height="30" rx="4" fill="#1A7A45" opacity=".8"/><rect x="250" y="60" width="70" height="20" rx="4" fill="#B45309" opacity=".8"/><text x="85" y="92" text-anchor="middle" font-size="9">South</text><text x="185" y="92" text-anchor="middle" font-size="9">North</text><text x="285" y="92" text-anchor="middle" font-size="9">West</text></svg>`;
+  }
+  tab.closest('.chart-tabs').querySelectorAll('.c-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+}
+
+function showScreen(screen) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(`screen-${screen}`).classList.add('active');
+  if(screen === 'home') {
+    renderDashboard();
+    document.getElementById("breadcrumb").innerHTML = '<a onclick="showScreen(\'home\')">Dashboard</a>';
+  }
 }
 
 function switchRole(role) {
@@ -450,20 +543,38 @@ function switchRole(role) {
   showToast(`Switched to ${roleConfigs[role].name} dashboard`);
 }
 
-function showScreen(screen, kpi=null) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(`screen-${screen}`).classList.add('active');
-  if(screen === 'workspace' && kpi) renderWorkspace(kpi);
-  else if(screen === 'home') renderDashboard();
+function askQuestion(q) { 
+  document.getElementById("ai-input").value = q; 
+  sendAiQuestion(); 
 }
 
-function askQuestion(q) { document.getElementById("ai-input").value = q; sendAiQuestion(); }
-function sendAiQuestion() { const box = document.getElementById("ai-response-box"); if(box) box.innerHTML = "✨ Analyzing based on current role & KPI...<br>Simulated AI response for " + currentKpi; showToast("AI insight updated"); }
-function showToast(msg) { const t = document.getElementById("toast"); t.innerText = msg; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 2000); }
-function toggleCatalog() { const panel = document.getElementById("kpi-catalog"); panel.classList.toggle("open"); if(panel.classList.contains("open")){ panel.innerHTML = `<div class="catalog-group"><div class="catalog-group-title">Finance</div><div class="catalog-item" onclick="showScreen('workspace','Revenue')">💰 Revenue</div><div class="catalog-item" onclick="showScreen('workspace','Profit Margin')">📈 Profit Margin</div></div><div class="catalog-group"><div class="catalog-group-title">Operations</div><div class="catalog-item" onclick="showScreen('workspace','Production Output')">🏭 Production</div><div class="catalog-item" onclick="showScreen('workspace','Inventory')">📦 Inventory</div></div><div class="catalog-group"><div class="catalog-group-title">HR</div><div class="catalog-item" onclick="showScreen('workspace','Headcount')">👥 Headcount</div><div class="catalog-item" onclick="showScreen('workspace','Attrition')">⚠️ Attrition</div></div>`; } }
+function sendAiQuestion() { 
+  const box = document.getElementById("ai-response-box"); 
+  if(box) box.innerHTML = "✨ Analyzing based on " + currentKpi + " data...<br><br>According to current trends, " + currentKpi + " shows " + (kpiMeta[currentKpi]?.growth || "stable") + " performance versus targets."; 
+  showToast("AI insight updated for " + currentKpi); 
+}
+
+function showToast(msg) { 
+  const t = document.getElementById("toast"); 
+  t.innerText = "✓ " + msg; 
+  t.classList.add("show"); 
+  setTimeout(() => t.classList.remove("show"), 2000); 
+}
+
+function toggleCatalog() { 
+  const panel = document.getElementById("kpi-catalog"); 
+  panel.classList.toggle("open"); 
+  if(panel.classList.contains("open")){ 
+    panel.innerHTML = `<div class="catalog-group"><div class="catalog-group-title">Finance</div><div class="catalog-item" onclick="showWorkspace('Revenue')">💰 Revenue</div><div class="catalog-item" onclick="showWorkspace('Profit Margin')">📈 Profit Margin</div><div class="catalog-item" onclick="showWorkspace('Cash Flow')">💵 Cash Flow</div></div>
+    <div class="catalog-group"><div class="catalog-group-title">Operations</div><div class="catalog-item" onclick="showWorkspace('Production Output')">🏭 Production</div><div class="catalog-item" onclick="showWorkspace('Inventory')">📦 Inventory</div><div class="catalog-item" onclick="showWorkspace('Machine Utilization')">⚙️ Utilization</div></div>
+    <div class="catalog-group"><div class="catalog-group-title">HR</div><div class="catalog-item" onclick="showWorkspace('Headcount')">👥 Headcount</div><div class="catalog-item" onclick="showWorkspace('Attrition')">⚠️ Attrition</div><div class="catalog-item" onclick="showWorkspace('Open Positions')">📋 Open Positions</div></div>`; 
+  } 
+}
+
 function closeExport() { document.querySelector(".modal-overlay").classList.remove("open"); }
 function updateClock() { document.getElementById("live-time").innerText = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); }
-setInterval(updateClock,1000); updateClock();
+setInterval(updateClock,1000); 
+updateClock();
 renderDashboard();
 </script>
 </body>
