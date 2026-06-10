@@ -4,269 +4,243 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BEV Enterprise Dashboard</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-:root {
-  --bg0:#080b12;--bg1:#0d1120;--bg2:#111827;--bg3:#161e2e;--bg4:#1c2538;--bg5:#222c3d;
-  --b1:rgba(255,255,255,0.06);--b2:rgba(255,255,255,0.10);--b3:rgba(255,255,255,0.16);
-  --t1:#f0f2f8;--t2:#8892a8;--t3:#4e5a72;--t4:#2e3a52;
-  --blue:#3b7ff5;--blue2:#2563d4;--blue-dim:rgba(59,127,245,0.12);
-  --green:#16a34a;--green-l:#22c55e;--green-dim:rgba(34,197,94,0.10);
-  --amber:#c27c0a;--amber-l:#f59e0b;--amber-dim:rgba(245,158,11,0.10);
-  --red:#dc2626;--red-l:#ef4444;--red-dim:rgba(239,68,68,0.10);
-  --teal:#0d9488;--teal-l:#14b8a6;--teal-dim:rgba(20,184,166,0.10);
-  --purple:#7c3aed;--purple-l:#a78bfa;--purple-dim:rgba(167,139,250,0.10);
-  --slate:#475569;
-  --sw:228px;--hh:52px;
-  --r:6px;--r2:10px;--r3:14px;
+:root{
+  --bg0:#070a10;--bg1:#0c1119;--bg2:#101622;--bg3:#141c2c;--bg4:#192034;--bg5:#1f2840;
+  --b1:rgba(255,255,255,0.055);--b2:rgba(255,255,255,0.10);--b3:rgba(255,255,255,0.18);
+  --t1:#edf0f8;--t2:#8490aa;--t3:#4a5570;--t4:#2a3348;
+  --blue:#3b7ef4;--blue2:#2460d0;--bdim:rgba(59,126,244,0.13);
+  --green-l:#22c55e;--gdim:rgba(34,197,94,0.11);
+  --amber-l:#f59e0b;--adim:rgba(245,158,11,0.11);
+  --red-l:#ef4444;--rdim:rgba(239,68,68,0.11);
+  --teal-l:#14b8a6;--tdim:rgba(20,184,166,0.11);
+  --purple-l:#a78bfa;--pdim:rgba(167,139,250,0.11);
+  --sw:234px;--hh:52px;--r:6px;--r2:10px;--r3:14px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg0);color:var(--t1);min-height:100vh;overflow-x:hidden;font-size:13px;line-height:1.5;}
-button{font-family:inherit;cursor:pointer;}
-input,select{font-family:inherit;}
+button{font-family:inherit;cursor:pointer;} input,select{font-family:inherit;}
+::-webkit-scrollbar{width:3px;} ::-webkit-scrollbar-track{background:transparent;} ::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:2px;}
 
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:3px;height:3px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:2px;}
-
-/* ── LOGIN ── */
+/* LOGIN */
 #login{position:fixed;inset:0;background:var(--bg0);display:flex;align-items:center;justify-content:center;z-index:999;}
 .lc{width:420px;background:var(--bg2);border:1px solid var(--b2);border-radius:var(--r3);padding:36px;}
 .lc-brand{display:flex;align-items:center;gap:12px;margin-bottom:32px;}
-.lc-mark{width:36px;height:36px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;letter-spacing:0.05em;color:#fff;flex-shrink:0;}
-.lc-name{font-size:15px;font-weight:600;letter-spacing:-0.01em;}
-.lc-sub{font-size:11px;color:var(--t3);margin-top:1px;}
-.lc h2{font-size:20px;font-weight:600;letter-spacing:-0.02em;margin-bottom:4px;}
-.lc-lead{font-size:13px;color:var(--t2);margin-bottom:24px;}
-.lc-label{font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:var(--t3);margin-bottom:10px;font-weight:500;}
+.lc-mark{width:34px;height:34px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:12px;letter-spacing:.06em;color:#fff;flex-shrink:0;}
+.lc-nm{font-size:14px;font-weight:600;} .lc-sub{font-size:11px;color:var(--t3);margin-top:1px;}
+.lc h2{font-size:19px;font-weight:600;letter-spacing:-.02em;margin-bottom:4px;}
+.lc-lead{font-size:12px;color:var(--t2);margin-bottom:22px;}
+.lc-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.9px;color:var(--t3);margin-bottom:10px;font-weight:500;}
 .roles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px;}
-.role-card{background:var(--bg3);border:1px solid var(--b1);border-radius:var(--r2);padding:14px 16px;cursor:pointer;transition:border-color 0.15s,background 0.15s;text-align:left;}
-.role-card:hover{border-color:var(--b3);}
-.role-card.sel{border-color:var(--blue);background:var(--blue-dim);}
-.role-card .rc-title{font-size:13px;font-weight:500;color:var(--t1);margin-bottom:2px;}
-.role-card .rc-sub{font-size:11px;color:var(--t3);}
-.role-card .rc-icon{font-size:15px;color:var(--t3);margin-bottom:8px;}
-.role-card.sel .rc-icon{color:var(--blue);}
-.login-btn{width:100%;padding:11px;background:var(--blue);color:#fff;border:none;border-radius:var(--r);font-size:13px;font-weight:500;transition:background 0.15s;letter-spacing:0.01em;}
-.login-btn:hover{background:var(--blue2);}
-.login-btn:disabled{opacity:0.35;cursor:not-allowed;}
+.rc{background:var(--bg3);border:1px solid var(--b1);border-radius:var(--r2);padding:14px 16px;cursor:pointer;transition:border-color .15s,background .15s;text-align:left;}
+.rc:hover{border-color:var(--b2);} .rc.sel{border-color:var(--blue);background:var(--bdim);}
+.rc-icon{font-size:14px;color:var(--t3);margin-bottom:8px;} .rc.sel .rc-icon{color:var(--blue);}
+.rc-title{font-size:13px;font-weight:500;} .rc-sub{font-size:11px;color:var(--t3);margin-top:2px;}
+.lbtn{width:100%;padding:11px;background:var(--blue);color:#fff;border:none;border-radius:var(--r);font-size:13px;font-weight:500;transition:background .15s;}
+.lbtn:hover{background:var(--blue2);} .lbtn:disabled{opacity:.35;cursor:not-allowed;}
 
-/* ── LAYOUT ── */
+/* LAYOUT */
 #app{display:none;}
 .sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sw);background:var(--bg1);border-right:1px solid var(--b1);display:flex;flex-direction:column;z-index:100;}
 .sb-top{padding:0 16px;height:var(--hh);display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--b1);flex-shrink:0;}
-.sb-mark{width:28px;height:28px;background:var(--blue);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff;flex-shrink:0;letter-spacing:0.05em;}
-.sb-name{font-size:13px;font-weight:500;}
-.sb-tagline{font-size:10px;color:var(--t3);}
-.sb-nav{flex:1;overflow-y:auto;padding:16px 8px;}
-.nav-sec{margin-bottom:20px;}
-.nav-sec-lbl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--t4);font-weight:600;padding:0 10px;margin-bottom:6px;}
-.ni{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:var(--r);cursor:pointer;color:var(--t2);transition:all 0.12s;position:relative;}
+.sb-mk{width:28px;height:28px;background:var(--blue);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff;flex-shrink:0;}
+.sb-nm{font-size:13px;font-weight:500;} .sb-tg{font-size:10px;color:var(--t3);}
+.sb-nav{flex:1;overflow-y:auto;padding:14px 8px;}
+.nsec{margin-bottom:18px;}
+.nsec-lbl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--t4);font-weight:600;padding:0 10px;margin-bottom:5px;}
+.ni{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:var(--r);cursor:pointer;color:var(--t2);transition:all .12s;}
 .ni:hover{background:var(--bg3);color:var(--t1);}
-.ni.active{background:var(--blue-dim);color:var(--blue);}
-.ni .ni-icon{font-size:15px;flex-shrink:0;}
-.ni .ni-label{font-size:12px;font-weight:400;}
-.ni .ni-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:600;padding:2px 6px;border-radius:20px;}
-.ni.locked{opacity:0.3;pointer-events:none;}
-.ni .ni-lock{margin-left:auto;font-size:12px;color:var(--t4);}
+.ni.active{background:var(--bdim);color:var(--blue);}
+.ni-ic{font-size:15px;flex-shrink:0;} .ni-lbl{font-size:12px;}
+.ni-badge{margin-left:auto;background:var(--red-l);color:#fff;font-size:9px;font-weight:600;padding:2px 6px;border-radius:20px;}
+.ni.locked{opacity:.28;pointer-events:none;}
 .sb-foot{padding:12px 16px;border-top:1px solid var(--b1);flex-shrink:0;}
-.user-row{display:flex;align-items:center;gap:10px;}
-.u-av{width:28px;height:28px;border-radius:50%;background:var(--bg4);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--blue);flex-shrink:0;letter-spacing:0.05em;}
-.u-name{font-size:12px;font-weight:500;}
-.u-role{font-size:10px;color:var(--t3);}
-.u-logout{margin-left:auto;background:none;border:none;color:var(--t3);font-size:14px;padding:4px;border-radius:4px;transition:color 0.12s;}
-.u-logout:hover{color:var(--red-l);}
+.urow{display:flex;align-items:center;gap:10px;}
+.uav{width:28px;height:28px;border-radius:50%;background:var(--bg4);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--blue);flex-shrink:0;}
+.unm{font-size:12px;font-weight:500;} .urole{font-size:10px;color:var(--t3);}
+.uout{margin-left:auto;background:none;border:none;color:var(--t3);font-size:14px;padding:4px;border-radius:4px;transition:color .12s;}
+.uout:hover{color:var(--red-l);}
 
-/* ── MAIN ── */
+/* MAIN */
 .main{margin-left:var(--sw);min-height:100vh;display:flex;flex-direction:column;}
 .topbar{height:var(--hh);background:var(--bg1);border-bottom:1px solid var(--b1);display:flex;align-items:center;padding:0 24px;gap:12px;position:sticky;top:0;z-index:50;flex-shrink:0;}
 .bc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--t3);}
-.bc .bc-sep{font-size:10px;}
-.bc .bc-now{color:var(--t1);font-weight:500;}
-.tb-actions{margin-left:auto;display:flex;gap:8px;}
-.tbtn{background:var(--bg3);border:1px solid var(--b1);border-radius:var(--r);padding:6px 14px;font-size:12px;font-weight:400;color:var(--t2);display:flex;align-items:center;gap:6px;transition:all 0.12s;}
+.bc-now{color:var(--t1);font-weight:500;}
+.tba{margin-left:auto;display:flex;gap:8px;}
+.tbtn{background:var(--bg3);border:1px solid var(--b1);border-radius:var(--r);padding:6px 14px;font-size:12px;color:var(--t2);display:flex;align-items:center;gap:6px;transition:all .12s;}
 .tbtn:hover{border-color:var(--b2);color:var(--t1);}
 .tbtn i{font-size:13px;}
-.tbtn.ai-btn{border-color:rgba(167,139,250,0.25);color:var(--purple-l);background:rgba(167,139,250,0.06);}
-.tbtn.ai-btn:hover{border-color:rgba(167,139,250,0.45);background:rgba(167,139,250,0.12);}
+.tbtn.ai{border-color:rgba(167,139,250,.25);color:var(--purple-l);background:rgba(167,139,250,.06);}
+.tbtn.ai:hover{border-color:rgba(167,139,250,.45);background:rgba(167,139,250,.12);}
 
-/* ── CONTENT ── */
+/* CONTENT */
 .content{flex:1;padding:24px;overflow-y:auto;}
-.page{display:none;}
-.page.active{display:block;}
-.pg-head{margin-bottom:24px;}
-.pg-title{font-size:18px;font-weight:600;letter-spacing:-0.02em;}
+.page{display:none;} .page.active{display:block;}
+.pgh{margin-bottom:22px;display:flex;align-items:flex-end;justify-content:space-between;}
+.pg-title{font-size:18px;font-weight:600;letter-spacing:-.02em;}
 .pg-sub{font-size:12px;color:var(--t3);margin-top:3px;}
 
-/* ── KPI CARDS ── */
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(176px,1fr));gap:14px;margin-bottom:22px;}
-.kc{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);padding:18px 20px;cursor:pointer;transition:border-color 0.15s,transform 0.15s;position:relative;overflow:hidden;}
-.kc:hover{border-color:var(--b2);transform:translateY(-1px);}
-.kc-accent{position:absolute;top:0;left:0;right:0;height:1.5px;}
-.kc.c-blue .kc-accent{background:var(--blue);}
-.kc.c-green .kc-accent{background:var(--green-l);}
-.kc.c-amber .kc-accent{background:var(--amber-l);}
-.kc.c-teal .kc-accent{background:var(--teal-l);}
-.kc.c-purple .kc-accent{background:var(--purple-l);}
-.kc.c-red .kc-accent{background:var(--red-l);}
-.kc-label{font-size:10px;text-transform:uppercase;letter-spacing:0.7px;color:var(--t3);font-weight:500;margin-bottom:10px;}
-.kc-val{font-size:24px;font-weight:600;letter-spacing:-0.02em;margin-bottom:6px;}
-.kc.c-blue .kc-val{color:var(--blue);}
-.kc.c-green .kc-val{color:var(--green-l);}
-.kc.c-amber .kc-val{color:var(--amber-l);}
-.kc.c-teal .kc-val{color:var(--teal-l);}
-.kc.c-purple .kc-val{color:var(--purple-l);}
-.kc.c-red .kc-val{color:var(--red-l);}
-.kc-delta{font-size:11px;display:flex;align-items:center;gap:4px;margin-bottom:6px;}
-.kc-delta.up{color:var(--green-l);}
-.kc-delta.dn{color:var(--red-l);}
-.kc-delta.ne{color:var(--t3);}
-.kc-drill{font-size:10px;color:var(--t4);display:flex;align-items:center;gap:3px;margin-top:2px;}
+/* ── KPI LIBRARY ── */
+.klib-bar{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+.klib-search{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--b2);border-radius:var(--r);padding:8px 14px;flex:1;min-width:220px;transition:border-color .12s;}
+.klib-search:focus-within{border-color:rgba(59,126,244,.5);}
+.klib-search i{font-size:15px;color:var(--t3);flex-shrink:0;}
+.klib-search input{background:none;border:none;outline:none;font-size:13px;color:var(--t1);width:100%;}
+.klib-search input::placeholder{color:var(--t3);}
+.klib-tabs{display:flex;gap:4px;flex-wrap:wrap;}
+.ktab{background:var(--bg3);border:1px solid var(--b1);border-radius:20px;padding:5px 13px;font-size:11px;color:var(--t2);transition:all .12s;white-space:nowrap;}
+.ktab:hover{border-color:var(--b2);color:var(--t1);}
+.ktab.active{background:var(--bdim);border-color:rgba(59,126,244,.4);color:var(--blue);}
 
-/* ── GRID ── */
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px;}
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px;}
-.g-full{grid-column:1/-1;}
+/* FAV SECTION */
+.fav-section{margin-bottom:24px;}
+.fav-hd{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);font-weight:500;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.fav-hd span{color:var(--amber-l);}
+.fav-empty{background:var(--bg2);border:1px dashed var(--b2);border-radius:var(--r2);padding:18px 20px;font-size:12px;color:var(--t3);text-align:center;}
+.fav-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;}
+
+/* KPI ROW (library) */
+.kpi-section-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);font-weight:500;margin-bottom:10px;margin-top:4px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:20px;}
+.kcard{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);padding:16px 18px;cursor:pointer;transition:border-color .15s,transform .12s;position:relative;overflow:hidden;}
+.kcard:hover{border-color:var(--b2);transform:translateY(-1px);}
+.kcard .kc-bar{position:absolute;top:0;left:0;right:0;height:1.5px;}
+.kcard.c-blue .kc-bar{background:var(--blue);}
+.kcard.c-green .kc-bar{background:var(--green-l);}
+.kcard.c-amber .kc-bar{background:var(--amber-l);}
+.kcard.c-teal .kc-bar{background:var(--teal-l);}
+.kcard.c-purple .kc-bar{background:var(--purple-l);}
+.kcard.c-red .kc-bar{background:var(--red-l);}
+.kc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;}
+.kc-fav{background:none;border:none;font-size:14px;color:var(--t4);padding:2px;border-radius:3px;line-height:1;transition:color .12s;}
+.kc-fav:hover{color:var(--amber-l);}
+.kc-fav.on{color:var(--amber-l);}
+.kc-label{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);font-weight:500;margin-bottom:6px;}
+.kc-val{font-size:22px;font-weight:600;letter-spacing:-.02em;margin-bottom:5px;}
+.kcard.c-blue .kc-val{color:var(--blue);}
+.kcard.c-green .kc-val{color:var(--green-l);}
+.kcard.c-amber .kc-val{color:var(--amber-l);}
+.kcard.c-teal .kc-val{color:var(--teal-l);}
+.kcard.c-purple .kc-val{color:var(--purple-l);}
+.kcard.c-red .kc-val{color:var(--red-l);}
+.kc-delta{font-size:11px;display:flex;align-items:center;gap:4px;margin-bottom:5px;}
+.kc-delta.up{color:var(--green-l);} .kc-delta.dn{color:var(--red-l);} .kc-delta.ne{color:var(--t3);}
+.kc-dept{font-size:10px;color:var(--t4);margin-top:4px;}
+.kc-drill{font-size:10px;color:var(--t4);display:flex;align-items:center;gap:3px;}
+.kc-no-results{grid-column:1/-1;background:var(--bg2);border:1px dashed var(--b1);border-radius:var(--r2);padding:32px;text-align:center;color:var(--t3);font-size:13px;}
+
+/* CARDS & CHARTS */
 .card{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);padding:20px;}
-.card-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;}
-.card-title{font-size:13px;font-weight:500;color:var(--t1);}
-.card-sub{font-size:11px;color:var(--t3);margin-top:2px;}
+.card-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;}
+.card-title{font-size:13px;font-weight:500;} .card-sub{font-size:11px;color:var(--t3);margin-top:2px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+.g-full{grid-column:1/-1;}
 .cw{position:relative;}
 
-/* ── TABLE ── */
-.tbl-card{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);overflow:hidden;margin-bottom:22px;}
-.tbl-head{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--b1);}
+/* TABLE */
+.tbl-card{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);overflow:hidden;margin-bottom:20px;}
+.tbl-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--b1);}
 .tbl-title{font-size:13px;font-weight:500;}
 .tlink{font-size:11px;color:var(--blue);display:flex;align-items:center;gap:4px;cursor:pointer;border:none;background:none;padding:0;}
-.tlink:hover{opacity:0.8;}
 table{width:100%;border-collapse:collapse;}
-th{font-size:9px;text-transform:uppercase;letter-spacing:0.7px;color:var(--t4);padding:9px 20px;text-align:left;border-bottom:1px solid var(--b1);background:var(--bg3);font-weight:500;}
-td{font-size:12px;color:var(--t1);padding:11px 20px;border-bottom:1px solid rgba(255,255,255,0.03);}
+th{font-size:9px;text-transform:uppercase;letter-spacing:.7px;color:var(--t4);padding:9px 20px;text-align:left;border-bottom:1px solid var(--b1);background:var(--bg3);font-weight:500;}
+td{font-size:12px;color:var(--t1);padding:11px 20px;border-bottom:1px solid rgba(255,255,255,.03);}
 tr:last-child td{border-bottom:none;}
-tr.clickable:hover td{background:rgba(255,255,255,0.015);cursor:pointer;}
-.chip{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:500;letter-spacing:0.02em;}
-.chip.g{background:var(--green-dim);color:var(--green-l);}
-.chip.a{background:var(--amber-dim);color:var(--amber-l);}
-.chip.r{background:var(--red-dim);color:var(--red-l);}
-.chip.b{background:var(--blue-dim);color:var(--blue);}
-.chip.p{background:var(--purple-dim);color:var(--purple-l);}
-.chip.t{background:var(--teal-dim);color:var(--teal-l);}
-.chip.s{background:rgba(71,85,105,0.2);color:#64748b;}
-.pbar-wrap{background:rgba(255,255,255,0.06);border-radius:3px;height:4px;width:100px;overflow:hidden;display:inline-block;vertical-align:middle;}
-.pbar-fill{height:4px;border-radius:3px;}
+tr.cl:hover td{background:rgba(255,255,255,.015);cursor:pointer;}
+.chip{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:500;}
+.chip.g{background:var(--gdim);color:var(--green-l);}
+.chip.a{background:var(--adim);color:var(--amber-l);}
+.chip.r{background:var(--rdim);color:var(--red-l);}
+.chip.b{background:var(--bdim);color:var(--blue);}
+.chip.p{background:var(--pdim);color:var(--purple-l);}
+.chip.t{background:var(--tdim);color:var(--teal-l);}
+.pb-w{background:rgba(255,255,255,.06);border-radius:3px;height:4px;width:90px;overflow:hidden;display:inline-block;vertical-align:middle;}
+.pb-f{height:4px;border-radius:3px;}
 
-/* ── MODAL ── */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(2px);z-index:300;display:none;align-items:center;justify-content:center;}
+/* INSIGHT */
+.insight{background:var(--bg3);border-left:2px solid var(--blue);border-radius:0 var(--r) var(--r) 0;padding:11px 15px;font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:18px;}
+.insight strong{color:var(--t1);}
+.insight.warn{border-left-color:var(--amber-l);}
+.insight.danger{border-left-color:var(--red-l);}
+.insight.ok{border-left-color:var(--green-l);}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(3px);z-index:300;display:none;align-items:center;justify-content:center;}
 .overlay.open{display:flex;}
 .modal{background:var(--bg2);border:1px solid var(--b2);border-radius:var(--r3);width:660px;max-height:88vh;overflow-y:auto;display:flex;flex-direction:column;}
-.modal-hd{display:flex;align-items:center;gap:14px;padding:20px 24px;border-bottom:1px solid var(--b1);position:sticky;top:0;background:var(--bg2);z-index:1;flex-shrink:0;}
-.modal-ic{width:34px;height:34px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
-.modal-ttl{font-size:14px;font-weight:600;letter-spacing:-0.01em;}
+.modal-hd{display:flex;align-items:center;gap:14px;padding:19px 24px;border-bottom:1px solid var(--b1);position:sticky;top:0;background:var(--bg2);z-index:1;flex-shrink:0;}
+.modal-ic{width:32px;height:32px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.modal-ttl{font-size:14px;font-weight:600;letter-spacing:-.01em;}
 .modal-st{font-size:11px;color:var(--t3);margin-top:1px;}
-.modal-close{margin-left:auto;background:none;border:none;color:var(--t2);font-size:16px;padding:4px;border-radius:4px;transition:color 0.12s;}
+.modal-close{margin-left:auto;background:none;border:none;color:var(--t2);font-size:16px;padding:4px;border-radius:4px;}
 .modal-close:hover{color:var(--t1);}
 .modal-bd{padding:24px;}
 .m-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
 .m-kpi{background:var(--bg3);border-radius:var(--r);padding:12px 14px;}
-.m-kpi-l{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;}
+.m-kpi-l{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
 .m-kpi-v{font-size:18px;font-weight:600;}
-.bc-trail{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t3);background:var(--bg3);border-radius:var(--r);padding:8px 12px;margin-bottom:18px;}
-.bc-trail .bcl{color:var(--blue);cursor:pointer;}
-.bc-trail .bcl:hover{text-decoration:underline;}
+.bc-trail{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t3);background:var(--bg3);border-radius:var(--r);padding:7px 12px;margin-bottom:18px;}
+.bc-trail .bcl{color:var(--blue);cursor:pointer;} .bc-trail .bcl:hover{text-decoration:underline;}
 
-/* ── INSIGHT BOX ── */
-.insight{background:var(--bg3);border-left:2px solid var(--blue);border-radius:0 var(--r) var(--r) 0;padding:12px 16px;font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:18px;}
-.insight strong{color:var(--t1);}
-.warn{border-left-color:var(--amber-l);}
-.danger{border-left-color:var(--red-l);}
-.success{border-left-color:var(--green-l);}
-
-/* ── CAPABILITY TABLE ── */
-.cap-table{width:100%;border-collapse:collapse;margin-bottom:0;}
-.cap-table th{font-size:10px;text-transform:uppercase;letter-spacing:0.7px;color:var(--t3);padding:10px 16px;text-align:center;border-bottom:1px solid var(--b1);background:var(--bg3);}
-.cap-table th:first-child{text-align:left;}
-.cap-table td{font-size:12px;color:var(--t1);padding:10px 16px;border-bottom:1px solid rgba(255,255,255,0.03);text-align:center;}
-.cap-table td:first-child{text-align:left;color:var(--t2);}
-.cap-table tr:last-child td{border-bottom:none;}
-.cap-table tr:hover td{background:rgba(255,255,255,0.015);}
-.tick{color:var(--green-l);font-size:14px;}
-.cross{color:var(--t4);font-size:14px;}
-
-/* ── AI PANEL ── */
-.ai-panel{position:fixed;right:0;top:0;bottom:0;width:360px;background:var(--bg1);border-left:1px solid var(--b2);display:flex;flex-direction:column;z-index:200;transform:translateX(100%);transition:transform 0.22s ease;}
+/* AI PANEL */
+.ai-panel{position:fixed;right:0;top:0;bottom:0;width:356px;background:var(--bg1);border-left:1px solid var(--b2);display:flex;flex-direction:column;z-index:200;transform:translateX(100%);transition:transform .22s ease;}
 .ai-panel.open{transform:translateX(0);}
 .ai-ph{padding:0 20px;height:var(--hh);display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--b1);flex-shrink:0;}
-.ai-av{width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;flex-shrink:0;}
-.ai-ptitle{font-size:13px;font-weight:500;}
-.ai-psub{font-size:10px;color:var(--t3);}
-.ai-close{margin-left:auto;background:none;border:none;color:var(--t2);font-size:16px;padding:4px;border-radius:4px;}
+.ai-av{width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,#4338ca,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;flex-shrink:0;}
+.ai-ptitle{font-size:13px;font-weight:500;} .ai-psub{font-size:10px;color:var(--t3);}
+.ai-close{margin-left:auto;background:none;border:none;color:var(--t2);font-size:16px;padding:4px;}
 .ai-close:hover{color:var(--t1);}
 .ai-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;}
-.msg{max-width:90%;}
-.msg.from-ai{align-self:flex-start;}
-.msg.from-user{align-self:flex-end;}
+.msg{max-width:90%;} .msg.from-ai{align-self:flex-start;} .msg.from-user{align-self:flex-end;}
 .bubble{padding:10px 13px;border-radius:var(--r2);font-size:12px;line-height:1.55;}
 .msg.from-ai .bubble{background:var(--bg3);border:1px solid var(--b1);color:var(--t1);}
 .msg.from-user .bubble{background:var(--blue);color:#fff;}
-.ai-chips{display:flex;flex-direction:column;gap:5px;margin-top:6px;}
-.ai-chip{background:var(--bg3);border:1px solid var(--b1);border-radius:var(--r);padding:7px 11px;font-size:11px;color:var(--t2);cursor:pointer;text-align:left;transition:all 0.12s;}
-.ai-chip:hover{border-color:rgba(59,127,245,0.4);color:var(--blue);}
+.ai-chips{display:flex;flex-direction:column;gap:5px;margin-top:7px;}
+.ai-chip{background:var(--bg3);border:1px solid var(--b1);border-radius:var(--r);padding:7px 11px;font-size:11px;color:var(--t2);cursor:pointer;text-align:left;transition:all .12s;}
+.ai-chip:hover{border-color:rgba(59,126,244,.4);color:var(--blue);}
 .ai-foot{padding:12px 16px;border-top:1px solid var(--b1);display:flex;gap:8px;flex-shrink:0;}
-.ai-in{flex:1;background:var(--bg3);border:1px solid var(--b1);border-radius:var(--r);padding:8px 12px;font-size:12px;color:var(--t1);outline:none;transition:border-color 0.12s;}
-.ai-in:focus{border-color:rgba(59,127,245,0.5);}
-.ai-send{background:var(--blue);border:none;border-radius:var(--r);width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;flex-shrink:0;transition:background 0.12s;}
+.ai-in{flex:1;background:var(--bg3);border:1px solid var(--b1);border-radius:var(--r);padding:8px 12px;font-size:12px;color:var(--t1);outline:none;transition:border-color .12s;}
+.ai-in:focus{border-color:rgba(59,126,244,.5);}
+.ai-send{background:var(--blue);border:none;border-radius:var(--r);width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;flex-shrink:0;}
 .ai-send:hover{background:var(--blue2);}
 .dots{display:flex;gap:4px;align-items:center;}
 .dot{width:5px;height:5px;background:var(--t2);border-radius:50%;animation:bop 1.1s infinite;}
-.dot:nth-child(2){animation-delay:.18s;}.dot:nth-child(3){animation-delay:.36s;}
+.dot:nth-child(2){animation-delay:.18s;} .dot:nth-child(3){animation-delay:.36s;}
 @keyframes bop{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
 
-/* ── REPORT MODAL ── */
+/* REPORT MODAL */
 .rpt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
-.rpt-opt{background:var(--bg3);border:1px solid var(--b1);border-radius:var(--r2);padding:14px 16px;cursor:pointer;transition:all 0.12s;text-align:left;}
-.rpt-opt:hover{border-color:var(--b2);}
-.rpt-opt.sel{border-color:rgba(59,127,245,0.5);background:var(--blue-dim);}
-.rpt-opt-icon{font-size:16px;color:var(--t3);margin-bottom:8px;}
-.rpt-opt.sel .rpt-opt-icon{color:var(--blue);}
-.rpt-opt-name{font-size:12px;font-weight:500;}
-.rpt-opt-desc{font-size:11px;color:var(--t3);margin-top:2px;}
-.prog-wrap{background:var(--bg3);border-radius:var(--r);padding:14px 16px;display:none;margin-bottom:16px;}
+.ro{background:var(--bg3);border:1px solid var(--b1);border-radius:var(--r2);padding:14px 16px;cursor:pointer;transition:all .12s;text-align:left;}
+.ro:hover{border-color:var(--b2);} .ro.sel{border-color:rgba(59,126,244,.5);background:var(--bdim);}
+.ro-icon{font-size:15px;color:var(--t3);margin-bottom:8px;} .ro.sel .ro-icon{color:var(--blue);}
+.ro-name{font-size:12px;font-weight:500;} .ro-desc{font-size:11px;color:var(--t3);margin-top:2px;}
+.prog-w{background:var(--bg3);border-radius:var(--r);padding:14px 16px;display:none;margin-bottom:16px;}
 .prog-bar{background:var(--bg4);border-radius:2px;height:3px;margin-top:10px;overflow:hidden;}
-.prog-fill{background:var(--blue);height:3px;width:0%;transition:width 0.3s;}
+.prog-fill{background:var(--blue);height:3px;width:0%;transition:width .3s;}
 
-/* ── AUDIT LOG ── */
+/* AUDIT */
 .audit-list{display:flex;flex-direction:column;}
-.audit-item{display:flex;align-items:flex-start;gap:14px;padding:13px 20px;border-bottom:1px solid rgba(255,255,255,0.03);}
-.audit-item:last-child{border-bottom:none;}
-.a-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px;}
-.a-dot.view{background:var(--blue);}
-.a-dot.export{background:var(--green-l);}
-.a-dot.alert{background:var(--amber-l);}
-.a-dot.login{background:var(--teal-l);}
-.a-dot.drill{background:var(--purple-l);}
-.a-action{font-size:12px;font-weight:500;}
-.a-meta{font-size:11px;color:var(--t3);margin-top:2px;}
-.a-time{font-size:10px;color:var(--t4);margin-left:auto;white-space:nowrap;padding-top:1px;}
+.ai-t{display:flex;align-items:flex-start;gap:14px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,.03);}
+.ai-t:last-child{border-bottom:none;}
+.a-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.a-dot.view{background:var(--blue);} .a-dot.export{background:var(--green-l);}
+.a-dot.alert{background:var(--amber-l);} .a-dot.login{background:var(--teal-l);} .a-dot.drill{background:var(--purple-l);}
+.a-action{font-size:12px;font-weight:500;} .a-meta{font-size:11px;color:var(--t3);margin-top:2px;}
+.a-time{font-size:10px;color:var(--t4);margin-left:auto;white-space:nowrap;}
 
-/* ── DENIED ── */
+/* DENIED */
 .denied{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:50vh;text-align:center;gap:10px;}
-.denied-icon{font-size:32px;color:var(--t4);}
-.denied h3{font-size:16px;font-weight:500;}
-.denied p{font-size:12px;color:var(--t3);max-width:320px;line-height:1.6;}
+.denied-ic{font-size:30px;color:var(--t4);}
+.denied h3{font-size:16px;font-weight:500;} .denied p{font-size:12px;color:var(--t3);max-width:300px;line-height:1.6;}
 
-/* ── TOAST ── */
-.toast{position:fixed;bottom:24px;right:24px;background:var(--bg3);border:1px solid var(--b2);border-radius:var(--r2);padding:11px 16px;font-size:12px;z-index:600;transform:translateY(60px);opacity:0;transition:all 0.25s;display:flex;align-items:center;gap:10px;max-width:300px;}
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg3);border:1px solid var(--b2);border-radius:var(--r2);padding:10px 16px;font-size:12px;z-index:600;transform:translateY(60px);opacity:0;transition:all .25s;display:flex;align-items:center;gap:9px;max-width:280px;}
 .toast.show{transform:translateY(0);opacity:1;}
 .toast i{font-size:14px;flex-shrink:0;}
 .toast.ok i{color:var(--green-l);}
-.toast.warn i{color:var(--amber-l);}
-
-/* ── DIVIDER ── */
-.divider{height:1px;background:var(--b1);margin:20px 0;}
 </style>
 </head>
 <body>
@@ -276,262 +250,119 @@ tr.clickable:hover td{background:rgba(255,255,255,0.015);cursor:pointer;}
   <div class="lc">
     <div class="lc-brand">
       <div class="lc-mark">BEV</div>
-      <div>
-        <div class="lc-name">Enterprise Dashboard</div>
-        <div class="lc-sub">Baroda Equipment and Vessels Pvt. Ltd.</div>
-      </div>
+      <div><div class="lc-nm">Enterprise Dashboard</div><div class="lc-sub">Baroda Equipment and Vessels Pvt. Ltd.</div></div>
     </div>
     <h2>Sign in to your workspace</h2>
-    <p class="lc-lead">Select your role to access your permitted dashboards</p>
-    <div class="lc-label">Select role</div>
+    <p class="lc-lead">Select your role to access your permitted dashboards and KPIs</p>
+    <div class="lc-lbl">Select role</div>
     <div class="roles">
-      <div class="role-card" onclick="pickRole(this,'md')">
-        <div class="rc-icon"><i class="ti ti-briefcase"></i></div>
-        <div class="rc-title">Managing Director</div>
-        <div class="rc-sub">Full access — all modules</div>
-      </div>
-      <div class="role-card" onclick="pickRole(this,'finance')">
-        <div class="rc-icon"><i class="ti ti-chart-bar"></i></div>
-        <div class="rc-title">Finance</div>
-        <div class="rc-sub">Financial KPIs · Estimation · ERP</div>
-      </div>
-      <div class="role-card" onclick="pickRole(this,'hr')">
-        <div class="rc-icon"><i class="ti ti-users"></i></div>
-        <div class="rc-title">HR</div>
-        <div class="rc-sub">HR KPIs · Workforce analytics</div>
-      </div>
-      <div class="role-card" onclick="pickRole(this,'ops')">
-        <div class="rc-icon"><i class="ti ti-settings-2"></i></div>
-        <div class="rc-title">Operations</div>
-        <div class="rc-sub">Operational KPIs · Production</div>
-      </div>
+      <div class="rc" onclick="pickRole(this,'md')"><div class="rc-icon"><i class="ti ti-briefcase"></i></div><div class="rc-title">Managing Director</div><div class="rc-sub">All KPIs, audit, full access</div></div>
+      <div class="rc" onclick="pickRole(this,'finance')"><div class="rc-icon"><i class="ti ti-chart-bar"></i></div><div class="rc-title">Finance</div><div class="rc-sub">Financial KPIs only</div></div>
+      <div class="rc" onclick="pickRole(this,'hr')"><div class="rc-icon"><i class="ti ti-users"></i></div><div class="rc-title">HR</div><div class="rc-sub">HR KPIs only</div></div>
+      <div class="rc" onclick="pickRole(this,'ops')"><div class="rc-icon"><i class="ti ti-settings-2"></i></div><div class="rc-title">Operations</div><div class="rc-sub">Operational KPIs only</div></div>
     </div>
-    <button class="login-btn" id="login-btn" disabled onclick="doLogin()">Select a role to continue</button>
+    <button class="lbtn" id="lbtn" disabled onclick="doLogin()">Select a role to continue</button>
   </div>
 </div>
 
-<!-- APP SHELL -->
+<!-- APP -->
 <div id="app">
   <aside class="sidebar">
     <div class="sb-top">
-      <div class="sb-mark">BEV</div>
-      <div>
-        <div class="sb-name">BEV Portal</div>
-        <div class="sb-tagline">Enterprise Dashboard</div>
-      </div>
+      <div class="sb-mk">BEV</div>
+      <div><div class="sb-nm">BEV Portal</div><div class="sb-tg">Enterprise Dashboard</div></div>
     </div>
     <nav class="sb-nav" id="sb-nav"></nav>
     <div class="sb-foot">
-      <div class="user-row">
-        <div class="u-av" id="u-av">--</div>
-        <div>
-          <div class="u-name" id="u-name">—</div>
-          <div class="u-role" id="u-role">—</div>
-        </div>
-        <button class="u-logout" onclick="logout()" title="Sign out"><i class="ti ti-logout"></i></button>
+      <div class="urow">
+        <div class="uav" id="u-av">--</div>
+        <div><div class="unm" id="u-nm">—</div><div class="urole" id="u-rl">—</div></div>
+        <button class="uout" onclick="logout()" title="Sign out"><i class="ti ti-logout"></i></button>
       </div>
     </div>
   </aside>
 
   <div class="main">
     <header class="topbar">
-      <div class="bc"><span>BEV Portal</span><span class="bc-sep"><i class="ti ti-chevron-right"></i></span><span class="bc-now" id="bc-now">Overview</span></div>
-      <div class="tb-actions">
-        <button class="tbtn" onclick="openRptModal()"><i class="ti ti-download"></i> Download Report</button>
-        <button class="tbtn ai-btn" onclick="toggleAI()"><i class="ti ti-sparkles"></i> AI Assistant</button>
+      <div class="bc">
+        <span>BEV Portal</span>
+        <span style="font-size:10px;color:var(--t4);"><i class="ti ti-chevron-right"></i></span>
+        <span class="bc-now" id="bc-now">KPI Library</span>
+      </div>
+      <div class="tba">
+        <button class="tbtn" onclick="openRpt()"><i class="ti ti-download"></i> Download Report</button>
+        <button class="tbtn ai" onclick="toggleAI()"><i class="ti ti-sparkles"></i> AI Assistant</button>
       </div>
     </header>
 
     <div class="content">
 
-      <!-- ===== PAGE: MD OVERVIEW ===== -->
-      <div class="page" id="page-overview">
-        <div class="pg-head">
-          <div class="pg-title">Company Overview</div>
-          <div class="pg-sub">All departments · Updated today · FY 2024–25</div>
-        </div>
-        <div class="kpi-row">
-          <div class="kc c-blue" onclick="drill('revenue')"><div class="kc-accent"></div><div class="kc-label">Total Revenue</div><div class="kc-val">&#8377;4.7 Cr</div><div class="kc-delta up"><i class="ti ti-trending-up"></i>+12.4% vs last month</div><div class="kc-drill"><i class="ti ti-zoom-in"></i> Drill through</div></div>
-          <div class="kc c-green" onclick="drill('orders')"><div class="kc-accent"></div><div class="kc-label">Active Orders</div><div class="kc-val">38</div><div class="kc-delta up"><i class="ti ti-trending-up"></i>+5 new this week</div><div class="kc-drill"><i class="ti ti-zoom-in"></i> Drill through</div></div>
-          <div class="kc c-amber" onclick="drill('estimation')"><div class="kc-accent"></div><div class="kc-label">Pending Quotes</div><div class="kc-val">14</div><div class="kc-delta ne"><i class="ti ti-minus"></i>3 awaiting approval</div><div class="kc-drill"><i class="ti ti-zoom-in"></i> Drill through</div></div>
-          <div class="kc c-teal" onclick="drill('headcount')"><div class="kc-accent"></div><div class="kc-label">Headcount</div><div class="kc-val">187</div><div class="kc-delta up"><i class="ti ti-trending-up"></i>+4 hired this month</div><div class="kc-drill"><i class="ti ti-zoom-in"></i> Drill through</div></div>
-          <div class="kc c-red" onclick="drill('overdue')"><div class="kc-accent"></div><div class="kc-label">Overdue Invoices</div><div class="kc-val">&#8377;62 L</div><div class="kc-delta dn"><i class="ti ti-trending-down"></i>+&#8377;8 L this week</div><div class="kc-drill"><i class="ti ti-zoom-in"></i> Drill through</div></div>
-          <div class="kc c-purple" onclick="drill('production')"><div class="kc-accent"></div><div class="kc-label">Production Efficiency</div><div class="kc-val">87%</div><div class="kc-delta up"><i class="ti ti-trending-up"></i>+3 pts vs target</div><div class="kc-drill"><i class="ti ti-zoom-in"></i> Drill through</div></div>
-        </div>
-        <div class="g2">
-          <div class="card">
-            <div class="card-head"><div><div class="card-title">Revenue vs Target</div><div class="card-sub">Monthly performance · FY 2024–25</div></div></div>
-            <div class="cw" style="height:210px;"><canvas id="ch-rev"></canvas></div>
+      <!-- KPI LIBRARY PAGE -->
+      <div class="page" id="page-kpis">
+        <div class="pgh">
+          <div>
+            <div class="pg-title">KPI Library</div>
+            <div class="pg-sub" id="klib-sub">All KPIs available to your role</div>
           </div>
-          <div class="card">
-            <div class="card-head"><div><div class="card-title">Order Category Mix</div><div class="card-sub">By product segment this quarter</div></div></div>
-            <div class="cw" style="height:210px;"><canvas id="ch-mix"></canvas></div>
-          </div>
-          <div class="card g-full">
-            <div class="card-head"><div><div class="card-title">Department Cost vs Budget</div><div class="card-sub">Actual spend · All departments · &#8377; Lakhs</div></div></div>
-            <div class="cw" style="height:160px;"><canvas id="ch-dept"></canvas></div>
-          </div>
+          <div style="font-size:11px;color:var(--t3);" id="klib-count"></div>
         </div>
-        <div class="tbl-card">
-          <div class="tbl-head"><span class="tbl-title">High-Value Active Orders</span><button class="tlink" onclick="nav('financial')">View full ERP <i class="ti ti-arrow-right" style="font-size:11px;"></i></button></div>
-          <table>
-            <thead><tr><th>Order ID</th><th>Client</th><th>Product</th><th>Value</th><th>Status</th><th>Delivery</th></tr></thead>
-            <tbody>
-              <tr class="clickable" onclick="drill('order-detail')"><td style="color:var(--blue)">#BEV-2847</td><td>ONGC Ltd</td><td>Pressure Vessel</td><td>&#8377;48.2 L</td><td><span class="chip g">On Track</span></td><td style="color:var(--t2)">14 Feb</td></tr>
-              <tr class="clickable" onclick="drill('order-detail')"><td style="color:var(--blue)">#BEV-2841</td><td>BPCL Mumbai</td><td>Heat Exchanger</td><td>&#8377;31.5 L</td><td><span class="chip a">At Risk</span></td><td style="color:var(--t2)">8 Feb</td></tr>
-              <tr class="clickable" onclick="drill('order-detail')"><td style="color:var(--blue)">#BEV-2836</td><td>L&T Constructions</td><td>Storage Tank</td><td>&#8377;27.1 L</td><td><span class="chip g">On Track</span></td><td style="color:var(--t2)">2 Mar</td></tr>
-              <tr class="clickable" onclick="drill('order-detail')"><td style="color:var(--blue)">#BEV-2829</td><td>Adani Gas</td><td>Skid Assembly</td><td>&#8377;19.8 L</td><td><span class="chip b">In Fabrication</span></td><td style="color:var(--t2)">18 Mar</td></tr>
-              <tr class="clickable" onclick="drill('order-detail')"><td style="color:var(--blue)">#BEV-2821</td><td>Indian Oil Corp</td><td>Pressure Piping</td><td>&#8377;14.3 L</td><td><span class="chip r">Delayed</span></td><td style="color:var(--t2)">31 Jan</td></tr>
-            </tbody>
-          </table>
+
+        <!-- Search + Category Filter -->
+        <div class="klib-bar">
+          <div class="klib-search">
+            <i class="ti ti-search"></i>
+            <input type="text" id="klib-q" placeholder="Search KPIs by name, category or metric..." oninput="filterKPIs()">
+          </div>
+          <div class="klib-tabs" id="klib-tabs"></div>
         </div>
+
+        <!-- Favourites -->
+        <div class="fav-section" id="fav-section">
+          <div class="fav-hd"><span><i class="ti ti-star-filled"></i></span> Pinned KPIs <span style="color:var(--t3);font-weight:400;" id="fav-count"></span></div>
+          <div id="fav-container"></div>
+        </div>
+
+        <!-- All KPIs grouped -->
+        <div id="klib-body"></div>
       </div>
 
-      <!-- ===== PAGE: FINANCIAL ===== -->
-      <div class="page" id="page-financial">
-        <div class="pg-head">
-          <div class="pg-title">Financial KPIs</div>
-          <div class="pg-sub">Revenue · Costing · Invoice performance · Estimation pipeline</div>
-        </div>
-        <div class="insight warn"><strong>Action needed:</strong> Overdue invoices have risen &#8377;8 L this week to &#8377;62 L. Two orders (#BEV-2821, #BEV-2818) past delivery date are blocking billing cycles. Escalate collections on IOC and Adani accounts.</div>
-        <div class="kpi-row">
-          <div class="kc c-blue" onclick="drill('revenue')"><div class="kc-accent"></div><div class="kc-label">Monthly Revenue</div><div class="kc-val">&#8377;4.7 Cr</div><div class="kc-delta up"><i class="ti ti-trending-up"></i>+12.4%</div><div class="kc-drill"><i class="ti ti-zoom-in"></i> Drill through</div></div>
-          <div class="kc c-red" onclick="drill('overdue')"><div class="kc-accent"></div><div class="kc-label">Overdue Invoices</div><div class="kc-val">&#8377;62 L</div><div class="kc-delta dn"><i class="ti ti-trending-down"></i>+&#8377;8 L this week</div><div class="kc-drill"><i class="ti ti-zoom-in"></i> Aging detail</div></div>
-          <div class="kc c-amber" onclick="drill('estimation')"><div class="kc-accent"></div><div class="kc-label">Quote Pipeline</div><div class="kc-val">&#8377;9.2 Cr</div><div class="kc-delta up"><i class="ti ti-trending-up"></i>+&#8377;1.1 Cr this week</div><div class="kc-drill"><i class="ti ti-zoom-in"></i> Drill through</div></div>
-          <div class="kc c-green" onclick="drill('winrate')"><div class="kc-accent"></div><div class="kc-label">Quote Win Rate</div><div class="kc-val">68%</div><div class="kc-delta up"><i class="ti ti-trending-up"></i>+4 pts vs Q3</div><div class="kc-drill"><i class="ti ti-zoom-in"></i> Drill through</div></div>
-          <div class="kc c-purple"><div class="kc-accent"></div><div class="kc-label">Gross Margin</div><div class="kc-val">24.3%</div><div class="kc-delta up"><i class="ti ti-trending-up"></i>+1.2 pts vs target</div></div>
-        </div>
-        <div class="g2">
-          <div class="card">
-            <div class="card-head"><div><div class="card-title">Revenue vs Target</div><div class="card-sub">Monthly · FY 2024–25 · &#8377; Cr</div></div></div>
-            <div class="cw" style="height:210px;"><canvas id="ch-rev2"></canvas></div>
+      <!-- DASHBOARD VIEW PAGE (opens when a KPI is clicked) -->
+      <div class="page" id="page-dash">
+        <div class="pgh">
+          <div>
+            <div class="pg-title" id="dash-title">Dashboard</div>
+            <div class="pg-sub" id="dash-sub">—</div>
           </div>
-          <div class="card">
-            <div class="card-head"><div><div class="card-title">Invoice Aging Breakdown</div><div class="card-sub">Outstanding by bucket · &#8377; Lakhs</div></div></div>
-            <div class="cw" style="height:210px;"><canvas id="ch-aging"></canvas></div>
-          </div>
-          <div class="card g-full">
-            <div class="card-head"><div><div class="card-title">Quote Win / Loss Trend</div><div class="card-sub">Monthly outcomes · Estimation pipeline</div></div></div>
-            <div class="cw" style="height:160px;"><canvas id="ch-wl"></canvas></div>
-          </div>
+          <button class="tbtn" onclick="nav('kpis')" style="font-size:11px;"><i class="ti ti-arrow-left" style="font-size:12px;"></i> Back to KPI Library</button>
         </div>
-        <div class="tbl-card">
-          <div class="tbl-head"><span class="tbl-title">Active Quote Pipeline</span></div>
-          <table>
-            <thead><tr><th>Quote #</th><th>Client</th><th>Product</th><th>Value</th><th>Stage</th><th>Expires</th></tr></thead>
-            <tbody>
-              <tr><td style="color:var(--amber-l)">#Q-1182</td><td>Reliance Industries</td><td>Heat Exchanger Set</td><td>&#8377;1.4 Cr</td><td><span class="chip b">Under Review</span></td><td style="color:var(--t2)">20 Feb</td></tr>
-              <tr><td style="color:var(--amber-l)">#Q-1179</td><td>NTPC Power</td><td>Boiler Pressure Parts</td><td>&#8377;88 L</td><td><span class="chip a">Awaiting Approval</span></td><td style="color:var(--t2)">15 Feb</td></tr>
-              <tr><td style="color:var(--amber-l)">#Q-1176</td><td>Vedanta Resources</td><td>Pressure Vessels ×4</td><td>&#8377;2.1 Cr</td><td><span class="chip g">Submitted</span></td><td style="color:var(--t2)">1 Mar</td></tr>
-              <tr><td style="color:var(--amber-l)">#Q-1171</td><td>HPCL Gujarat</td><td>Storage Tank</td><td>&#8377;45 L</td><td><span class="chip p">Negotiation</span></td><td style="color:var(--t2)">10 Feb</td></tr>
-              <tr><td style="color:var(--amber-l)">#Q-1168</td><td>Tata Projects</td><td>Offshore Container</td><td>&#8377;62 L</td><td><span class="chip r">Revision Needed</span></td><td style="color:var(--red-l)">7 Feb</td></tr>
-            </tbody>
-          </table>
-        </div>
+        <div id="dash-body"></div>
       </div>
 
-      <!-- ===== PAGE: HR ===== -->
-      <div class="page" id="page-hr">
-        <div class="pg-head">
-          <div class="pg-title">HR KPIs</div>
-          <div class="pg-sub">Workforce · Attendance · Attrition · Hiring pipeline</div>
-        </div>
-        <div class="kpi-row">
-          <div class="kc c-teal" onclick="drill('headcount')"><div class="kc-accent"></div><div class="kc-label">Total Headcount</div><div class="kc-val">187</div><div class="kc-delta up"><i class="ti ti-trending-up"></i>+4 this month</div><div class="kc-drill"><i class="ti ti-zoom-in"></i> By department</div></div>
-          <div class="kc c-amber"><div class="kc-accent"></div><div class="kc-label">Open Positions</div><div class="kc-val">12</div><div class="kc-delta ne"><i class="ti ti-minus"></i>5 in final stage</div></div>
-          <div class="kc c-green"><div class="kc-accent"></div><div class="kc-label">Attendance Rate</div><div class="kc-val">94.2%</div><div class="kc-delta up"><i class="ti ti-trending-up"></i>+0.8 pts</div></div>
-          <div class="kc c-red" onclick="drill('attrition')"><div class="kc-accent"></div><div class="kc-label">Attrition YTD</div><div class="kc-val">8.3%</div><div class="kc-delta up"><i class="ti ti-trending-up" style="transform:rotate(180deg)"></i>Below industry 12%</div><div class="kc-drill"><i class="ti ti-zoom-in"></i> By department</div></div>
-          <div class="kc c-blue"><div class="kc-accent"></div><div class="kc-label">Avg Time to Hire</div><div class="kc-val">22d</div><div class="kc-delta dn"><i class="ti ti-trending-down"></i>+3d vs last quarter</div></div>
-        </div>
-        <div class="g2">
-          <div class="card">
-            <div class="card-head"><div><div class="card-title">Headcount by Department</div><div class="card-sub">Current workforce distribution</div></div></div>
-            <div class="cw" style="height:210px;"><canvas id="ch-hc"></canvas></div>
-          </div>
-          <div class="card">
-            <div class="card-head"><div><div class="card-title">Hiring Funnel</div><div class="card-sub">Applicants through to joined · This quarter</div></div></div>
-            <div class="cw" style="height:210px;"><canvas id="ch-hire"></canvas></div>
-          </div>
-        </div>
-        <div class="tbl-card">
-          <div class="tbl-head"><span class="tbl-title">Upcoming Employee Milestones</span></div>
-          <table>
-            <thead><tr><th>Employee</th><th>Department</th><th>Event</th><th>Date</th><th>Action Required</th></tr></thead>
-            <tbody>
-              <tr><td>Ramesh Patel</td><td style="color:var(--t2)">Fabrication</td><td><span class="chip b">Appraisal Due</span></td><td style="color:var(--t2)">10 Feb</td><td style="color:var(--blue);cursor:pointer;">Initiate Review</td></tr>
-              <tr><td>Sunita Sharma</td><td style="color:var(--t2)">Quality</td><td><span class="chip g">Probation End</span></td><td style="color:var(--t2)">15 Feb</td><td style="color:var(--blue);cursor:pointer;">Confirm</td></tr>
-              <tr><td>Ajay Gupta</td><td style="color:var(--t2)">Design</td><td><span class="chip a">Contract Renewal</span></td><td style="color:var(--t2)">20 Feb</td><td style="color:var(--blue);cursor:pointer;">Review Terms</td></tr>
-              <tr><td>Priya Mehta</td><td style="color:var(--t2)">Finance</td><td><span class="chip b">Appraisal Due</span></td><td style="color:var(--t2)">22 Feb</td><td style="color:var(--blue);cursor:pointer;">Initiate Review</td></tr>
-              <tr><td>Kiran Rao</td><td style="color:var(--t2)">HR</td><td><span class="chip t">Training Completion</span></td><td style="color:var(--t2)">28 Feb</td><td style="color:var(--blue);cursor:pointer;">Issue Certificate</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- ===== PAGE: OPERATIONAL ===== -->
-      <div class="page" id="page-operational">
-        <div class="pg-head">
-          <div class="pg-title">Operational KPIs</div>
-          <div class="pg-sub">Production · Fabrication · Inventory · Dispatch</div>
-        </div>
-        <div class="insight danger"><strong>Alert:</strong> 2 orders (#BEV-2821, #BEV-2818) are past their due date. Blasting work centre at 76% efficiency — below the 90% threshold. Dispatch rate has fallen 2 pts this month.</div>
-        <div class="kpi-row">
-          <div class="kc c-green" onclick="drill('orders')"><div class="kc-accent"></div><div class="kc-label">Active Orders</div><div class="kc-val">38</div><div class="kc-delta up"><i class="ti ti-trending-up"></i>+5 this week</div><div class="kc-drill"><i class="ti ti-zoom-in"></i> Order breakdown</div></div>
-          <div class="kc c-purple" onclick="drill('production')"><div class="kc-accent"></div><div class="kc-label">Fabrication Efficiency</div><div class="kc-val">87%</div><div class="kc-delta up"><i class="ti ti-trending-up"></i>+3 pts vs target</div><div class="kc-drill"><i class="ti ti-zoom-in"></i> By work centre</div></div>
-          <div class="kc c-amber" onclick="drill('inventory')"><div class="kc-accent"></div><div class="kc-label">Raw Material Stock</div><div class="kc-val">&#8377;1.2 Cr</div><div class="kc-delta dn"><i class="ti ti-alert-triangle"></i>3 items critical</div><div class="kc-drill"><i class="ti ti-zoom-in"></i> Inventory alerts</div></div>
-          <div class="kc c-teal" onclick="drill('dispatch')"><div class="kc-accent"></div><div class="kc-label">On-Time Dispatch</div><div class="kc-val">83%</div><div class="kc-delta dn"><i class="ti ti-trending-down"></i>-2 pts this month</div><div class="kc-drill"><i class="ti ti-zoom-in"></i> Analyse delays</div></div>
-          <div class="kc c-blue"><div class="kc-accent"></div><div class="kc-label">Avg Fab Cycle</div><div class="kc-val">42d</div><div class="kc-delta dn"><i class="ti ti-trending-down"></i>Target: 38 days</div></div>
-        </div>
-        <div class="g2">
-          <div class="card">
-            <div class="card-head"><div><div class="card-title">Order Pipeline by Stage</div><div class="card-sub">All 38 active orders</div></div></div>
-            <div class="cw" style="height:210px;"><canvas id="ch-pipeline"></canvas></div>
-          </div>
-          <div class="card">
-            <div class="card-head"><div><div class="card-title">Monthly Dispatch Volume</div><div class="card-sub">Tonnes dispatched · Last 6 months</div></div></div>
-            <div class="cw" style="height:210px;"><canvas id="ch-disp"></canvas></div>
-          </div>
-        </div>
-        <div class="tbl-card">
-          <div class="tbl-head"><span class="tbl-title">Order Tracker</span></div>
-          <table>
-            <thead><tr><th>Order</th><th>Client</th><th>Product</th><th>Stage</th><th>Progress</th><th>Due</th></tr></thead>
-            <tbody id="ops-tbody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- ===== PAGE: AUDIT ===== -->
+      <!-- AUDIT PAGE -->
       <div class="page" id="page-audit">
-        <div class="pg-head">
-          <div class="pg-title">Audit Logs</div>
-          <div class="pg-sub">Complete access trail — MD access only</div>
+        <div class="pgh">
+          <div><div class="pg-title">Audit Logs</div><div class="pg-sub">Complete access trail — MD access only</div></div>
         </div>
-        <div class="insight"><strong>Why audit logs matter:</strong> Every page view, KPI drill-down, and report export is recorded. This lets management detect if estimation cost data was accessed before a competitor submission, flag after-hours access to financial dashboards, verify compliance during internal audits, and track whether department heads are using the data they are given access to.</div>
-        <div class="kpi-row" style="margin-bottom:20px;">
-          <div class="kc c-blue"><div class="kc-accent"></div><div class="kc-label">Events (30 days)</div><div class="kc-val">1,284</div></div>
-          <div class="kc c-green"><div class="kc-accent"></div><div class="kc-label">Active Users</div><div class="kc-val">24</div></div>
-          <div class="kc c-teal"><div class="kc-accent"></div><div class="kc-label">Reports Exported</div><div class="kc-val">47</div></div>
-          <div class="kc c-amber"><div class="kc-accent"></div><div class="kc-label">After-Hours Events</div><div class="kc-val">6</div></div>
+        <div class="insight"><strong>Why audit logs matter:</strong> Every page view, KPI drill-down, and report export is recorded here with the user, department, timestamp, and action. This lets management detect if sensitive estimation data was accessed before a competitor bid, flag after-hours access to financial dashboards, verify compliance in internal audits, and track whether department heads are actually using the intelligence available to them.</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
+          <div class="card" style="padding:16px 18px;"><div style="font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin-bottom:8px;">Events (30d)</div><div style="font-size:22px;font-weight:600;color:var(--blue);">1,284</div></div>
+          <div class="card" style="padding:16px 18px;"><div style="font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin-bottom:8px;">Active Users</div><div style="font-size:22px;font-weight:600;color:var(--green-l);">24</div></div>
+          <div class="card" style="padding:16px 18px;"><div style="font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin-bottom:8px;">Reports Exported</div><div style="font-size:22px;font-weight:600;color:var(--amber-l);">47</div></div>
+          <div class="card" style="padding:16px 18px;"><div style="font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin-bottom:8px;">After-Hours Events</div><div style="font-size:22px;font-weight:600;color:var(--red-l);">6</div></div>
         </div>
         <div class="tbl-card">
-          <div class="tbl-head">
+          <div class="tbl-hd">
             <span class="tbl-title">Access Timeline</span>
             <div style="display:flex;gap:8px;align-items:center;">
               <select id="af-dept" onchange="renderAudit()" style="background:var(--bg3);border:1px solid var(--b1);border-radius:var(--r);padding:5px 10px;font-size:11px;color:var(--t1);outline:none;">
                 <option value="all">All Departments</option>
-                <option value="Finance">Finance</option>
-                <option value="HR">HR</option>
-                <option value="Operations">Operations</option>
-                <option value="MD">MD</option>
+                <option value="Finance">Finance</option><option value="HR">HR</option>
+                <option value="Operations">Operations</option><option value="MD">MD</option>
               </select>
               <select id="af-type" onchange="renderAudit()" style="background:var(--bg3);border:1px solid var(--b1);border-radius:var(--r);padding:5px 10px;font-size:11px;color:var(--t1);outline:none;">
                 <option value="all">All Actions</option>
-                <option value="view">Page Views</option>
-                <option value="export">Exports</option>
-                <option value="drill">Drill-throughs</option>
-                <option value="login">Logins</option>
-                <option value="alert">Alerts</option>
+                <option value="view">Page Views</option><option value="export">Exports</option>
+                <option value="drill">Drill-throughs</option><option value="login">Logins</option><option value="alert">Alerts</option>
               </select>
               <button class="tlink" onclick="exportAudit()"><i class="ti ti-download" style="font-size:11px;"></i> Export CSV</button>
             </div>
@@ -540,60 +371,24 @@ tr.clickable:hover td{background:rgba(255,255,255,0.015);cursor:pointer;}
         </div>
       </div>
 
-      <!-- ===== PAGE: ACCESS MATRIX ===== -->
-      <div class="page" id="page-matrix">
-        <div class="pg-head">
-          <div class="pg-title">Access Capability Matrix</div>
-          <div class="pg-sub">Role-based permissions across all dashboard modules</div>
-        </div>
-        <div class="card" style="margin-bottom:22px;">
-          <table class="cap-table">
-            <thead>
-              <tr>
-                <th style="width:240px;">Capability</th>
-                <th>MD</th>
-                <th>Finance</th>
-                <th>HR</th>
-                <th>Operations</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>Dashboard Access</td><td><i class="ti ti-check tick"></i></td><td><i class="ti ti-check tick"></i></td><td><i class="ti ti-check tick"></i></td><td><i class="ti ti-check tick"></i></td></tr>
-              <tr><td>Financial KPIs</td><td><i class="ti ti-check tick"></i></td><td><i class="ti ti-check tick"></i></td><td><i class="ti ti-x cross"></i></td><td><i class="ti ti-x cross"></i></td></tr>
-              <tr><td>HR KPIs</td><td><i class="ti ti-check tick"></i></td><td><i class="ti ti-x cross"></i></td><td><i class="ti ti-check tick"></i></td><td><i class="ti ti-x cross"></i></td></tr>
-              <tr><td>Operational KPIs</td><td><i class="ti ti-check tick"></i></td><td><i class="ti ti-x cross"></i></td><td><i class="ti ti-x cross"></i></td><td><i class="ti ti-check tick"></i></td></tr>
-              <tr><td>KPI Drill Down</td><td><i class="ti ti-check tick"></i></td><td><i class="ti ti-check tick"></i></td><td><i class="ti ti-check tick"></i></td><td><i class="ti ti-check tick"></i></td></tr>
-              <tr><td>KPI Analysis Assistant</td><td><i class="ti ti-check tick"></i></td><td><i class="ti ti-check tick"></i></td><td><i class="ti ti-check tick"></i></td><td><i class="ti ti-check tick"></i></td></tr>
-              <tr><td>Export Reports</td><td><i class="ti ti-check tick"></i></td><td><i class="ti ti-check tick"></i></td><td><i class="ti ti-check tick"></i></td><td><i class="ti ti-check tick"></i></td></tr>
-              <tr><td>Audit Logs</td><td><i class="ti ti-check tick"></i></td><td><i class="ti ti-x cross"></i></td><td><i class="ti ti-x cross"></i></td><td><i class="ti ti-x cross"></i></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="insight">Permissions are enforced at login. Locked sections show a restricted state — users cannot view data outside their role. All access attempts (including blocked ones) are recorded in the audit log.</div>
-      </div>
-
-      <!-- ===== PAGE: DENIED ===== -->
+      <!-- DENIED -->
       <div class="page" id="page-denied">
-        <div class="denied">
-          <div class="denied-icon"><i class="ti ti-lock"></i></div>
-          <h3>Access Restricted</h3>
-          <p>Your role does not have permission to view this section. Contact your system administrator to request elevated access.</p>
-        </div>
+        <div class="denied"><div class="denied-ic"><i class="ti ti-lock"></i></div><h3>Access Restricted</h3><p>Your role does not have permission to view this section. Contact your system administrator.</p></div>
       </div>
 
-    </div>
-  </div>
-</div>
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
 
 <!-- DRILL MODAL -->
 <div class="overlay" id="drill-overlay">
-  <div class="modal" id="drill-modal">
+  <div class="modal">
     <div class="modal-hd">
       <div class="modal-ic" id="d-ic"></div>
-      <div><div class="modal-ttl" id="d-title">Detail</div><div class="modal-st" id="d-sub">Drill-through</div></div>
+      <div><div class="modal-ttl" id="d-ttl">Detail</div><div class="modal-st" id="d-st">—</div></div>
       <button class="modal-close" onclick="closeDrill()"><i class="ti ti-x"></i></button>
     </div>
-    <div class="modal-bd" id="d-body"></div>
+    <div class="modal-bd" id="d-bd"></div>
   </div>
 </div>
 
@@ -601,37 +396,34 @@ tr.clickable:hover td{background:rgba(255,255,255,0.015);cursor:pointer;}
 <div class="overlay" id="rpt-overlay">
   <div class="modal">
     <div class="modal-hd">
-      <div class="modal-ic" style="background:var(--green-dim);color:var(--green-l);"><i class="ti ti-download"></i></div>
+      <div class="modal-ic" style="background:var(--gdim);color:var(--green-l);"><i class="ti ti-download"></i></div>
       <div><div class="modal-ttl">Download Report</div><div class="modal-st">Choose type, range and format</div></div>
       <button class="modal-close" onclick="closeModal('rpt-overlay')"><i class="ti ti-x"></i></button>
     </div>
     <div class="modal-bd">
-      <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:var(--t3);margin-bottom:10px;font-weight:500;">Report Type</div>
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:.9px;color:var(--t3);margin-bottom:10px;font-weight:500;">Report Type</div>
       <div class="rpt-grid">
-        <div class="rpt-opt sel" onclick="selRpt(this,'exec')"><div class="rpt-opt-icon"><i class="ti ti-report-analytics"></i></div><div class="rpt-opt-name">Executive Summary</div><div class="rpt-opt-desc">All-department KPI overview</div></div>
-        <div class="rpt-opt" onclick="selRpt(this,'fin')"><div class="rpt-opt-icon"><i class="ti ti-chart-bar"></i></div><div class="rpt-opt-name">Financial Report</div><div class="rpt-opt-desc">Revenue, margins, invoice aging</div></div>
-        <div class="rpt-opt" onclick="selRpt(this,'hr')"><div class="rpt-opt-icon"><i class="ti ti-users"></i></div><div class="rpt-opt-name">HR Analytics</div><div class="rpt-opt-desc">Headcount, attrition, hiring</div></div>
-        <div class="rpt-opt" onclick="selRpt(this,'audit')"><div class="rpt-opt-icon"><i class="ti ti-shield-check"></i></div><div class="rpt-opt-name">Audit Log Export</div><div class="rpt-opt-desc">Full access trail — compliance</div></div>
+        <div class="ro sel" onclick="selRo(this)"><div class="ro-icon"><i class="ti ti-report-analytics"></i></div><div class="ro-name">Executive Summary</div><div class="ro-desc">All-department KPI overview</div></div>
+        <div class="ro" onclick="selRo(this)"><div class="ro-icon"><i class="ti ti-chart-bar"></i></div><div class="ro-name">Financial Report</div><div class="ro-desc">Revenue, margins, invoice aging</div></div>
+        <div class="ro" onclick="selRo(this)"><div class="ro-icon"><i class="ti ti-users"></i></div><div class="ro-name">HR Analytics</div><div class="ro-desc">Headcount, attrition, hiring</div></div>
+        <div class="ro" onclick="selRo(this)"><div class="ro-icon"><i class="ti ti-shield-check"></i></div><div class="ro-name">Audit Log Export</div><div class="ro-desc">Full access trail — compliance</div></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
         <div>
-          <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:var(--t3);margin-bottom:8px;font-weight:500;">Date Range</div>
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:.9px;color:var(--t3);margin-bottom:8px;font-weight:500;">Date Range</div>
           <select style="width:100%;background:var(--bg3);border:1px solid var(--b1);border-radius:var(--r);padding:8px 12px;font-size:12px;color:var(--t1);outline:none;">
-            <option>Last 30 days</option><option>Last 90 days</option><option>This FY</option>
+            <option>Last 30 days</option><option>Last 90 days</option><option>This Financial Year</option>
           </select>
         </div>
         <div>
-          <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:var(--t3);margin-bottom:8px;font-weight:500;">Format</div>
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:.9px;color:var(--t3);margin-bottom:8px;font-weight:500;">Format</div>
           <select style="width:100%;background:var(--bg3);border:1px solid var(--b1);border-radius:var(--r);padding:8px 12px;font-size:12px;color:var(--t1);outline:none;">
             <option>PDF Report</option><option>Excel (.xlsx)</option><option>CSV</option>
           </select>
         </div>
       </div>
-      <div class="prog-wrap" id="prog-wrap">
-        <div style="font-size:12px;font-weight:500;" id="prog-status">Preparing report...</div>
-        <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
-      </div>
-      <button class="login-btn" id="dl-btn" onclick="startDownload()">Generate and Download</button>
+      <div class="prog-w" id="prog-w"><div style="font-size:12px;font-weight:500;" id="prog-st">Preparing report...</div><div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div></div>
+      <button class="lbtn" id="dl-btn" onclick="startDl()">Generate and Download</button>
     </div>
   </div>
 </div>
@@ -639,13 +431,13 @@ tr.clickable:hover td{background:rgba(255,255,255,0.015);cursor:pointer;}
 <!-- AI PANEL -->
 <div class="ai-panel" id="ai-panel">
   <div class="ai-ph">
-    <div class="ai-av"><i class="ti ti-sparkles" style="font-size:13px;"></i></div>
-    <div><div class="ai-ptitle">KPI Analysis Assistant</div><div class="ai-psub">Ask anything about your dashboard</div></div>
+    <div class="ai-av"><i class="ti ti-sparkles" style="font-size:12px;"></i></div>
+    <div><div class="ai-ptitle">KPI Analysis Assistant</div><div class="ai-psub">Ask anything about your metrics</div></div>
     <button class="ai-close" onclick="toggleAI()"><i class="ti ti-x"></i></button>
   </div>
   <div class="ai-msgs" id="ai-msgs">
     <div class="msg from-ai">
-      <div class="bubble">Hello. I can explain any KPI, surface trends across departments, flag anomalies, or help you decide what to investigate next. What would you like to understand?</div>
+      <div class="bubble">Hello. I can explain any KPI, surface trends, flag anomalies, or help you decide what to investigate next. What would you like to understand?</div>
       <div class="ai-chips">
         <button class="ai-chip" onclick="askAI('Why are overdue invoices increasing?')">Why are overdue invoices increasing?</button>
         <button class="ai-chip" onclick="askAI('Which department has the highest cost variance?')">Which department has the highest cost variance?</button>
@@ -660,402 +452,566 @@ tr.clickable:hover td{background:rgba(255,255,255,0.015);cursor:pointer;}
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"><i class="ti ti-check"></i><span id="toast-msg">Done</span></div>
 
 <script>
-// ─── ROLE CONFIG ───────────────────────────────────────────
-const ROLES={
-  md:{name:'Rajiv Shah',initials:'RS',title:'Managing Director',
-    access:['overview','financial','hr','operational','audit','matrix'],
-    nav:[
-      {sec:'Overview',items:[{id:'overview',icon:'ti-layout-dashboard',lbl:'Company Overview'}]},
-      {sec:'Dashboards',items:[
-        {id:'financial',icon:'ti-chart-line',lbl:'Financial KPIs'},
-        {id:'hr',icon:'ti-users',lbl:'HR KPIs'},
-        {id:'operational',icon:'ti-settings-2',lbl:'Operational KPIs'},
-      ]},
-      {sec:'Governance',items:[
-        {id:'audit',icon:'ti-shield-check',lbl:'Audit Logs',badge:'6'},
-        {id:'matrix',icon:'ti-table',lbl:'Access Matrix'},
-      ]}
-    ]},
-  finance:{name:'Anita Mehta',initials:'AM',title:'Finance Head',
-    access:['financial','matrix'],
-    nav:[
-      {sec:'Dashboards',items:[
-        {id:'financial',icon:'ti-chart-line',lbl:'Financial KPIs'},
-        {id:'hr',icon:'ti-users',lbl:'HR KPIs',locked:true},
-        {id:'operational',icon:'ti-settings-2',lbl:'Operational KPIs',locked:true},
-      ]},
-      {sec:'Reference',items:[{id:'matrix',icon:'ti-table',lbl:'Access Matrix'}]}
-    ]},
-  hr:{name:'Deepa Joshi',initials:'DJ',title:'HR Manager',
-    access:['hr','matrix'],
-    nav:[
-      {sec:'Dashboards',items:[
-        {id:'financial',icon:'ti-chart-line',lbl:'Financial KPIs',locked:true},
-        {id:'hr',icon:'ti-users',lbl:'HR KPIs'},
-        {id:'operational',icon:'ti-settings-2',lbl:'Operational KPIs',locked:true},
-      ]},
-      {sec:'Reference',items:[{id:'matrix',icon:'ti-table',lbl:'Access Matrix'}]}
-    ]},
-  ops:{name:'Suresh Kumar',initials:'SK',title:'Operations Manager',
-    access:['operational','matrix'],
-    nav:[
-      {sec:'Dashboards',items:[
-        {id:'financial',icon:'ti-chart-line',lbl:'Financial KPIs',locked:true},
-        {id:'hr',icon:'ti-users',lbl:'HR KPIs',locked:true},
-        {id:'operational',icon:'ti-settings-2',lbl:'Operational KPIs'},
-      ]},
-      {sec:'Reference',items:[{id:'matrix',icon:'ti-table',lbl:'Access Matrix'}]}
-    ]}
+// ═══════════════════════════════════════════════════════════
+// KPI MASTER CATALOGUE
+// Each KPI has: id, label, value, delta, dir(up/dn/ne), dept(category),
+//              color, drillKey, description
+// ═══════════════════════════════════════════════════════════
+const ALL_KPIS = [
+  // FINANCIAL
+  { id:'rev',       label:'Monthly Revenue',        value:'₹4.7 Cr',  delta:'+12.4% vs last month',   dir:'up', dept:'Financial', color:'c-blue',   drill:'revenue',    desc:'Total invoiced revenue this calendar month across all customers' },
+  { id:'ytd-rev',   label:'YTD Revenue',            value:'₹36.4 Cr', delta:'+9.1% vs same period LY', dir:'up', dept:'Financial', color:'c-blue',   drill:'revenue',    desc:'Year-to-date revenue from April 2024' },
+  { id:'overdue',   label:'Overdue Invoices',       value:'₹62 L',    delta:'+₹8 L this week',         dir:'dn', dept:'Financial', color:'c-red',    drill:'overdue',    desc:'Total value of invoices past their due date across all customers' },
+  { id:'margin',    label:'Gross Margin',           value:'24.3%',    delta:'+1.2 pts vs target',      dir:'up', dept:'Financial', color:'c-green',  drill:null,         desc:'Gross margin after direct material and fabrication costs' },
+  { id:'pipeline',  label:'Quote Pipeline Value',   value:'₹9.2 Cr',  delta:'+₹1.1 Cr this week',      dir:'up', dept:'Financial', color:'c-amber',  drill:'estimation', desc:'Total value of active quotes currently in the estimation pipeline' },
+  { id:'winrate',   label:'Quote Win Rate',         value:'68%',      delta:'+4 pts vs Q3',            dir:'up', dept:'Financial', color:'c-green',  drill:'winrate',    desc:'Percentage of submitted quotes converted to confirmed orders' },
+  { id:'qta',       label:'Avg Quote Turnaround',   value:'4.2 days', delta:'Target: 3 days',          dir:'dn', dept:'Financial', color:'c-amber',  drill:null,         desc:'Average time from client inquiry to submitted quotation' },
+  { id:'pending-q', label:'Pending Quotes',         value:'14',       delta:'3 awaiting approval',     dir:'ne', dept:'Financial', color:'c-amber',  drill:'estimation', desc:'Number of quotes currently in draft, review or approval stage' },
+  { id:'cost-var',  label:'Cost Variance (Fab)',    value:'+14%',     delta:'₹38 L over budget',       dir:'dn', dept:'Financial', color:'c-red',    drill:null,         desc:'Fabrication department actual spend vs approved budget this period' },
+  { id:'overdueag', label:'Invoices 60+ Days',      value:'₹12 L',    delta:'Critical — 2 accounts',   dir:'dn', dept:'Financial', color:'c-red',    drill:'overdue',    desc:'Invoice value overdue beyond 60 days — highest collection risk' },
+
+  // HR
+  { id:'headcount', label:'Total Headcount',        value:'187',      delta:'+4 hired this month',     dir:'up', dept:'HR', color:'c-teal',   drill:'headcount',  desc:'Total employees including permanent, contract and trainee staff' },
+  { id:'openpos',   label:'Open Positions',         value:'12',       delta:'5 in final stage',        dir:'ne', dept:'HR', color:'c-amber',  drill:null,         desc:'Active job requisitions across all departments' },
+  { id:'attend',    label:'Attendance Rate',        value:'94.2%',    delta:'+0.8 pts vs last month',  dir:'up', dept:'HR', color:'c-green',  drill:null,         desc:'Average daily attendance rate across all employees this month' },
+  { id:'attr',      label:'Attrition YTD',          value:'8.3%',     delta:'Industry avg: 12%',       dir:'up', dept:'HR', color:'c-green',  drill:'attrition',  desc:'Year-to-date voluntary and involuntary attrition as a percentage of total headcount' },
+  { id:'tth',       label:'Avg Time to Hire',       value:'22 days',  delta:'+3 days vs Q3',           dir:'dn', dept:'HR', color:'c-amber',  drill:null,         desc:'Average number of days from job posting to offer acceptance' },
+  { id:'milestone', label:'Upcoming Milestones',    value:'5',        delta:'Due this month',          dir:'ne', dept:'HR', color:'c-blue',   drill:null,         desc:'Appraisals, confirmations, renewals and training completions due within 30 days' },
+  { id:'trainee',   label:'Trainees On-board',      value:'7',        delta:'2 completions this month',dir:'ne', dept:'HR', color:'c-teal',   drill:null,         desc:'Apprentices and graduate trainees currently in structured programmes' },
+  { id:'perm',      label:'Permanent Staff',        value:'152',      delta:'81% of headcount',        dir:'ne', dept:'HR', color:'c-teal',   drill:'headcount',  desc:'Full-time permanent employees on BEV payroll' },
+
+  // OPERATIONAL
+  { id:'active-ord',label:'Active Orders',          value:'38',       delta:'+5 new this week',        dir:'up', dept:'Operational', color:'c-green',  drill:'orders',     desc:'Total orders currently in engineering, fabrication, QC or dispatch stage' },
+  { id:'fab-eff',   label:'Fabrication Efficiency', value:'87%',      delta:'+3 pts vs target',        dir:'up', dept:'Operational', color:'c-purple', drill:'production', desc:'Overall plant efficiency index across all fabrication work centres' },
+  { id:'disp-ot',   label:'On-Time Dispatch',       value:'83%',      delta:'-2 pts this month',       dir:'dn', dept:'Operational', color:'c-teal',   drill:'dispatch',   desc:'Percentage of orders dispatched on or before the committed delivery date' },
+  { id:'rm-stock',  label:'Raw Material Stock',     value:'₹1.2 Cr',  delta:'3 items below minimum',   dir:'dn', dept:'Operational', color:'c-amber',  drill:'inventory',  desc:'Total value of raw materials currently in stores; includes critical stock alert' },
+  { id:'fab-cycle', label:'Avg Fabrication Cycle',  value:'42 days',  delta:'Target: 38 days',         dir:'dn', dept:'Operational', color:'c-red',    drill:null,         desc:'Average number of working days from BOM release to quality clearance' },
+  { id:'at-risk',   label:'Orders At Risk',         value:'3',        delta:'Delayed or material hold', dir:'dn', dept:'Operational', color:'c-red',    drill:'orders',     desc:'Active orders where delivery is at risk due to fabrication delays or material shortage' },
+  { id:'wc-roll',   label:'Rolling Centre Eff.',    value:'92%',      delta:'Above 90% target',        dir:'up', dept:'Operational', color:'c-green',  drill:'production', desc:'Efficiency of the plate rolling work centre — highest-performing unit this period' },
+  { id:'wc-blast',  label:'Blasting Centre Eff.',   value:'76%',      delta:'Below 90% target',        dir:'dn', dept:'Operational', color:'c-red',    drill:'production', desc:'Efficiency of the blasting work centre — current bottleneck requiring immediate attention' },
+  { id:'weld',      label:'Welding Centre Eff.',    value:'84%',      delta:'Within acceptable range',  dir:'ne', dept:'Operational', color:'c-amber',  drill:'production', desc:'Efficiency of the welding work centre; some rework noted this month' },
+  { id:'dispatch-v',label:'Dispatch Volume',        value:'163 T',    delta:'+9% vs last month',       dir:'up', dept:'Operational', color:'c-teal',   drill:'dispatch',   desc:'Total weight of finished goods dispatched this month in metric tonnes' },
+];
+
+// Role → permitted departments
+const ROLE_DEPTS = {
+  md:      ['Financial','HR','Operational'],
+  finance: ['Financial'],
+  hr:      ['HR'],
+  ops:     ['Operational'],
 };
 
-let CUR=null,selRole=null,charts={};
+const ROLE_CONFIG = {
+  md:      { name:'Rajiv Shah',   initials:'RS', title:'Managing Director',  access:['kpis','audit'], nav:[
+    { sec:'Dashboards', items:[{ id:'kpis',  icon:'ti-layout-grid',  lbl:'KPI Library' }] },
+    { sec:'Governance', items:[{ id:'audit', icon:'ti-shield-check', lbl:'Audit Logs', badge:'6' }] }
+  ]},
+  finance: { name:'Anita Mehta',  initials:'AM', title:'Finance Head',       access:['kpis'], nav:[
+    { sec:'Dashboards', items:[{ id:'kpis', icon:'ti-layout-grid', lbl:'KPI Library' }] }
+  ]},
+  hr:      { name:'Deepa Joshi',  initials:'DJ', title:'HR Manager',         access:['kpis'], nav:[
+    { sec:'Dashboards', items:[{ id:'kpis', icon:'ti-layout-grid', lbl:'KPI Library' }] }
+  ]},
+  ops:     { name:'Suresh Kumar', initials:'SK', title:'Operations Manager', access:['kpis'], nav:[
+    { sec:'Dashboards', items:[{ id:'kpis', icon:'ti-layout-grid', lbl:'KPI Library' }] }
+  ]},
+};
 
-// ─── LOGIN ─────────────────────────────────────────────────
-function pickRole(el,r){
-  document.querySelectorAll('.role-card').forEach(c=>c.classList.remove('sel'));
-  el.classList.add('sel'); selRole=r;
-  const btn=document.getElementById('login-btn');
-  btn.disabled=false;
-  btn.textContent='Continue as '+ROLES[r].title;
+let CUR = null, selRole = null, FAVS = [], CHARTS = {}, activeTab = 'All';
+
+// ─── LOGIN ────────────────────────────────────────────────
+function pickRole(el, r) {
+  document.querySelectorAll('.rc').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel'); selRole = r;
+  const b = document.getElementById('lbtn');
+  b.disabled = false; b.textContent = 'Continue as ' + ROLE_CONFIG[r].title;
 }
-function doLogin(){
-  if(!selRole)return;
-  CUR=ROLES[selRole];
-  document.getElementById('login').style.display='none';
-  document.getElementById('app').style.display='block';
-  document.getElementById('u-av').textContent=CUR.initials;
-  document.getElementById('u-name').textContent=CUR.name;
-  document.getElementById('u-role').textContent=CUR.title;
-  buildNav(); nav(CUR.access[0]);
-  logEvt('login','Signed in',CUR.access[0]);
-  setTimeout(initCharts,120);
+function doLogin() {
+  if (!selRole) return;
+  CUR = { ...ROLE_CONFIG[selRole], role: selRole };
+  FAVS = [];
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('u-av').textContent = CUR.initials;
+  document.getElementById('u-nm').textContent = CUR.name;
+  document.getElementById('u-rl').textContent = CUR.title;
+  buildNav(); nav('kpis');
+  logEvt('login', 'Signed in', 'KPI Library');
 }
-function logout(){
-  document.getElementById('login').style.display='flex';
-  document.getElementById('app').style.display='none';
-  document.querySelectorAll('.role-card').forEach(c=>c.classList.remove('sel'));
-  document.getElementById('login-btn').disabled=true;
-  document.getElementById('login-btn').textContent='Select a role to continue';
-  selRole=null;CUR=null;
-  Object.values(charts).forEach(c=>{try{c.destroy();}catch(e){}});charts={};
-  document.getElementById('ai-msgs').innerHTML='';
+function logout() {
+  document.getElementById('login').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.querySelectorAll('.rc').forEach(c => c.classList.remove('sel'));
+  document.getElementById('lbtn').disabled = true;
+  document.getElementById('lbtn').textContent = 'Select a role to continue';
+  selRole = null; CUR = null; FAVS = [];
+  Object.values(CHARTS).forEach(c => { try { c.destroy(); } catch(e){} }); CHARTS = {};
+  document.getElementById('ai-msgs').innerHTML = '';
   document.getElementById('ai-panel').classList.remove('open');
 }
 
-// ─── NAV ──────────────────────────────────────────────────
-function buildNav(){
-  const container=document.getElementById('sb-nav');container.innerHTML='';
-  CUR.nav.forEach(sec=>{
-    const s=document.createElement('div');s.className='nav-sec';
-    s.innerHTML=`<div class="nav-sec-lbl">${sec.sec}</div>`;
-    sec.items.forEach(item=>{
-      const el=document.createElement('div');
-      el.className='ni'+(item.locked?' locked':'');
-      el.id='ni-'+item.id;
-      el.innerHTML=`<i class="ti ${item.icon} ni-icon"></i><span class="ni-label">${item.lbl}</span>${item.badge?`<span class="ni-badge">${item.badge}</span>`:''}${item.locked?`<i class="ti ti-lock ni-lock"></i>`:''}`;
-      if(!item.locked)el.onclick=()=>nav(item.id);
+// ─── NAV ─────────────────────────────────────────────────
+function buildNav() {
+  const c = document.getElementById('sb-nav'); c.innerHTML = '';
+  CUR.nav.forEach(sec => {
+    const s = document.createElement('div'); s.className = 'nsec';
+    s.innerHTML = `<div class="nsec-lbl">${sec.sec}</div>`;
+    sec.items.forEach(item => {
+      const el = document.createElement('div');
+      el.className = 'ni' + (item.locked ? ' locked' : '');
+      el.id = 'ni-' + item.id;
+      el.innerHTML = `<i class="ti ${item.icon} ni-ic"></i><span class="ni-lbl">${item.lbl}</span>${item.badge ? `<span class="ni-badge">${item.badge}</span>` : ''}`;
+      if (!item.locked) el.onclick = () => nav(item.id);
       s.appendChild(el);
     });
-    container.appendChild(s);
+    c.appendChild(s);
   });
 }
-function nav(id){
-  if(!CUR.access.includes(id)){id='denied';}
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  const pg=document.getElementById('page-'+id);
-  if(pg)pg.classList.add('active');
-  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
-  const ni=document.getElementById('ni-'+id);if(ni)ni.classList.add('active');
-  const labels={overview:'Company Overview',financial:'Financial KPIs',hr:'HR KPIs',operational:'Operational KPIs',audit:'Audit Logs',matrix:'Access Matrix'};
-  document.getElementById('bc-now').textContent=labels[id]||id;
-  if(id==='audit')renderAudit();
-  if(id!=='denied')logEvt('view','Viewed page',labels[id]||id);
-  setTimeout(()=>redrawCharts(id),60);
+function nav(id) {
+  if (!CUR.access.includes(id)) { id = 'denied'; }
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const pg = document.getElementById('page-' + id);
+  if (pg) pg.classList.add('active');
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
+  const ni = document.getElementById('ni-' + id); if (ni) ni.classList.add('active');
+  const labels = { kpis:'KPI Library', audit:'Audit Logs', dash:'Dashboard' };
+  document.getElementById('bc-now').textContent = labels[id] || id;
+  if (id === 'kpis') renderKPILibrary();
+  if (id === 'audit') renderAudit();
+  if (id !== 'denied') logEvt('view', 'Viewed page', labels[id] || id);
 }
 
-// ─── CHARTS ───────────────────────────────────────────────
-const GC='rgba(255,255,255,0.05)';const TC='#4e5a72';
-const MN=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
-
-function mk(id,cfg){
-  if(charts[id])try{charts[id].destroy();}catch(e){}
-  const el=document.getElementById(id);if(!el)return;
-  charts[id]=new Chart(el.getContext('2d'),cfg);
-}
-function baseOpts(ylabel,legend){
-  return{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:!!legend,labels:{color:TC,font:{size:10},boxWidth:9,padding:14}}},
-    scales:{x:{ticks:{color:TC,font:{size:10}},grid:{color:GC}},
-      y:{ticks:{color:TC,font:{size:10},callback:v=>ylabel?v+ylabel:v},grid:{color:GC}}}};
+// ─── KPI LIBRARY ─────────────────────────────────────────
+function getMyKPIs() {
+  const depts = ROLE_DEPTS[CUR.role];
+  return ALL_KPIS.filter(k => depts.includes(k.dept));
 }
 
-function initCharts(){buildAll('overview');buildAll('financial');buildAll('hr');buildAll('operational');}
-function redrawCharts(pg){if(['overview','financial','hr','operational'].includes(pg))buildAll(pg);}
+function renderKPILibrary() {
+  const myKPIs = getMyKPIs();
+  const q = (document.getElementById('klib-q') || {}).value || '';
+  const depts = ['All', ...new Set(myKPIs.map(k => k.dept))];
 
-function buildAll(pg){
-  if(pg==='overview'){
-    mk('ch-rev',{type:'bar',data:{labels:MN,datasets:[
-      {label:'Revenue (Cr)',data:[2.8,3.1,3.4,2.9,3.6,3.8,4.1,3.7,4.3,4.7,null,null],backgroundColor:'rgba(59,127,245,0.65)',borderRadius:3,borderSkipped:false},
-      {label:'Target',data:[3,3,3.5,3.5,3.5,4,4,4,4.2,4.5,4.5,4.5],type:'line',borderColor:'rgba(245,158,11,0.7)',pointRadius:2,fill:false,tension:0.3,borderDash:[4,3],borderWidth:1.5}
+  // subtitle
+  document.getElementById('klib-sub').textContent =
+    `${myKPIs.length} KPIs available to ${CUR.title} · Search, pin, and drill through any metric`;
+
+  // tabs
+  const tabsEl = document.getElementById('klib-tabs');
+  tabsEl.innerHTML = depts.map(d =>
+    `<button class="ktab${activeTab===d?' active':''}" onclick="setTab('${d}')">${d}</button>`
+  ).join('');
+
+  // filter
+  let filtered = myKPIs.filter(k => {
+    const matchTab = activeTab === 'All' || k.dept === activeTab;
+    const matchQ = !q || k.label.toLowerCase().includes(q.toLowerCase()) ||
+                        k.dept.toLowerCase().includes(q.toLowerCase()) ||
+                        k.desc.toLowerCase().includes(q.toLowerCase());
+    return matchTab && matchQ;
+  });
+
+  document.getElementById('klib-count').textContent = `Showing ${filtered.length} of ${myKPIs.length} KPIs`;
+
+  // FAVOURITES
+  const favKPIs = myKPIs.filter(k => FAVS.includes(k.id));
+  const favEl = document.getElementById('fav-container');
+  document.getElementById('fav-count').textContent = favKPIs.length ? `(${favKPIs.length})` : '';
+  if (favKPIs.length === 0) {
+    favEl.innerHTML = `<div class="fav-empty"><i class="ti ti-star" style="font-size:16px;display:block;margin-bottom:6px;color:var(--t4);"></i>Pin any KPI using the star icon to keep it here for quick access</div>`;
+  } else {
+    favEl.innerHTML = `<div class="fav-row">${favKPIs.map(k => kpiCardHTML(k)).join('')}</div>`;
+  }
+
+  // GROUPED BY DEPT
+  const body = document.getElementById('klib-body');
+  if (filtered.length === 0) {
+    body.innerHTML = `<div class="kpi-grid"><div class="kc-no-results"><i class="ti ti-search" style="font-size:20px;display:block;margin-bottom:8px;color:var(--t3);"></i>No KPIs match your search. Try a different term.</div></div>`;
+    return;
+  }
+
+  const groups = {};
+  filtered.forEach(k => {
+    if (!groups[k.dept]) groups[k.dept] = [];
+    groups[k.dept].push(k);
+  });
+
+  body.innerHTML = Object.entries(groups).map(([dept, kpis]) =>
+    `<div class="kpi-section-lbl">${dept} KPIs</div>
+     <div class="kpi-grid">${kpis.map(k => kpiCardHTML(k)).join('')}</div>`
+  ).join('');
+}
+
+function kpiCardHTML(k) {
+  const isFav = FAVS.includes(k.id);
+  const deltaIcon = k.dir === 'up' ? 'ti-trending-up' : k.dir === 'dn' ? 'ti-trending-down' : 'ti-minus';
+  const drillHint = k.drill ? `<div class="kc-drill"><i class="ti ti-zoom-in"></i> Drill through</div>` : '';
+  return `
+    <div class="kcard ${k.color}" onclick="openKPI('${k.id}')">
+      <div class="kc-bar"></div>
+      <div class="kc-top">
+        <div class="kc-label">${k.label}</div>
+        <button class="kc-fav${isFav?' on':''}" onclick="event.stopPropagation();toggleFav('${k.id}')" title="${isFav?'Remove from pinned':'Pin this KPI'}">
+          <i class="ti ${isFav?'ti-star-filled':'ti-star'}"></i>
+        </button>
+      </div>
+      <div class="kc-val">${k.value}</div>
+      <div class="kc-delta ${k.dir}"><i class="ti ${deltaIcon}"></i>${k.delta}</div>
+      ${drillHint}
+      <div class="kc-dept">${k.dept}</div>
+    </div>`;
+}
+
+function setTab(t) {
+  activeTab = t;
+  renderKPILibrary();
+}
+function filterKPIs() {
+  renderKPILibrary();
+}
+function toggleFav(id) {
+  if (FAVS.includes(id)) {
+    FAVS = FAVS.filter(f => f !== id);
+    showToast('Removed from pinned KPIs', 'ok');
+  } else {
+    FAVS.push(id);
+    showToast('KPI pinned to favourites', 'ok');
+  }
+  renderKPILibrary();
+  logEvt('view', FAVS.includes(id) ? 'Pinned KPI: ' : 'Unpinned KPI: ' + id, 'KPI Library');
+}
+
+// ─── OPEN KPI → DASHBOARD VIEW ───────────────────────────
+function openKPI(id) {
+  const kpi = ALL_KPIS.find(k => k.id === id);
+  if (!kpi) return;
+  logEvt('view', 'Opened KPI: ' + kpi.label, 'KPI Library');
+
+  document.getElementById('dash-title').textContent = kpi.label;
+  document.getElementById('dash-sub').textContent = kpi.desc;
+
+  const body = document.getElementById('dash-body');
+  Object.values(CHARTS).forEach(c => { try { c.destroy(); } catch(e){} }); CHARTS = {};
+
+  // Build dashboard around this KPI's department
+  body.innerHTML = buildDashForKPI(kpi);
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-dash').classList.add('active');
+  document.getElementById('bc-now').textContent = kpi.label;
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
+
+  setTimeout(() => drawDashCharts(kpi), 80);
+}
+
+function buildDashForKPI(kpi) {
+  // Show the focused KPI prominently, plus related KPIs from same department
+  const related = getMyKPIs().filter(k => k.dept === kpi.dept && k.id !== kpi.id).slice(0, 5);
+  const deltaIcon = kpi.dir === 'up' ? 'ti-trending-up' : kpi.dir === 'dn' ? 'ti-trending-down' : 'ti-minus';
+  const drillBtn = kpi.drill
+    ? `<button class="tbtn" style="margin-top:16px;" onclick="drill('${kpi.drill}')"><i class="ti ti-zoom-in" style="font-size:13px;"></i> Drill-through Analysis</button>`
+    : '';
+
+  // Primary KPI hero block
+  let heroHTML = `
+    <div class="card" style="padding:22px 24px;margin-bottom:20px;background:var(--bg2);border-color:var(--b2);">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px;">
+        <div>
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--t3);margin-bottom:10px;font-weight:500;">${kpi.dept} · Selected KPI</div>
+          <div style="font-size:13px;font-weight:500;color:var(--t2);margin-bottom:8px;">${kpi.label}</div>
+          <div style="font-size:36px;font-weight:700;letter-spacing:-.03em;margin-bottom:8px;" class="kcard ${kpi.color}" style="background:none;border:none;padding:0;">${kpi.value}</div>
+          <div style="font-size:12px;color:${kpi.dir==='up'?'var(--green-l)':kpi.dir==='dn'?'var(--red-l)':'var(--t3)'};" >
+            <i class="ti ${deltaIcon}"></i> ${kpi.delta}
+          </div>
+          ${drillBtn}
+        </div>
+        <div style="max-width:340px;">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--t3);margin-bottom:8px;font-weight:500;">About this KPI</div>
+          <div style="font-size:13px;color:var(--t2);line-height:1.7;">${kpi.desc}</div>
+        </div>
+      </div>
+    </div>`;
+
+  // Related KPIs
+  const relHTML = related.length ? `
+    <div style="font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--t3);font-weight:500;margin-bottom:12px;">Related ${kpi.dept} KPIs</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-bottom:22px;">
+      ${related.map(k => kpiCardHTML(k)).join('')}
+    </div>` : '';
+
+  // Charts section based on dept
+  const chartHTML = `
+    <div class="g2" id="dash-charts">
+      <div class="card">
+        <div class="card-hd"><div><div class="card-title" id="dc-t1">Trend — Last 10 Months</div></div></div>
+        <div class="cw" style="height:200px;"><canvas id="dash-c1"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div><div class="card-title" id="dc-t2">Breakdown</div></div></div>
+        <div class="cw" style="height:200px;"><canvas id="dash-c2"></canvas></div>
+      </div>
+    </div>`;
+
+  // Table based on dept
+  const tableHTML = deptTable(kpi.dept);
+
+  return heroHTML + relHTML + chartHTML + tableHTML;
+}
+
+function deptTable(dept) {
+  if (dept === 'Financial') return `
+    <div class="tbl-card">
+      <div class="tbl-hd"><span class="tbl-title">Active Quote Pipeline</span></div>
+      <table><thead><tr><th>Quote</th><th>Client</th><th>Product</th><th>Value</th><th>Stage</th><th>Expires</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--amber-l)">#Q-1182</td><td>Reliance Industries</td><td>Heat Exchanger Set</td><td>₹1.4 Cr</td><td><span class="chip b">Under Review</span></td><td style="color:var(--t2)">20 Feb</td></tr>
+        <tr><td style="color:var(--amber-l)">#Q-1179</td><td>NTPC Power</td><td>Boiler Pressure Parts</td><td>₹88 L</td><td><span class="chip a">Awaiting Approval</span></td><td style="color:var(--t2)">15 Feb</td></tr>
+        <tr><td style="color:var(--amber-l)">#Q-1176</td><td>Vedanta Resources</td><td>Pressure Vessels ×4</td><td>₹2.1 Cr</td><td><span class="chip g">Submitted</span></td><td style="color:var(--t2)">1 Mar</td></tr>
+        <tr><td style="color:var(--amber-l)">#Q-1171</td><td>HPCL Gujarat</td><td>Storage Tank</td><td>₹45 L</td><td><span class="chip p">Negotiation</span></td><td style="color:var(--t2)">10 Feb</td></tr>
+        <tr><td style="color:var(--amber-l)">#Q-1168</td><td>Tata Projects</td><td>Offshore Container</td><td>₹62 L</td><td><span class="chip r">Revision Needed</span></td><td style="color:var(--red-l)">7 Feb</td></tr>
+      </tbody></table>
+    </div>`;
+  if (dept === 'HR') return `
+    <div class="tbl-card">
+      <div class="tbl-hd"><span class="tbl-title">Upcoming Employee Milestones</span></div>
+      <table><thead><tr><th>Employee</th><th>Department</th><th>Event</th><th>Date</th></tr></thead>
+      <tbody>
+        <tr><td>Ramesh Patel</td><td style="color:var(--t2)">Fabrication</td><td><span class="chip b">Appraisal Due</span></td><td style="color:var(--t2)">10 Feb</td></tr>
+        <tr><td>Sunita Sharma</td><td style="color:var(--t2)">Quality</td><td><span class="chip g">Probation End</span></td><td style="color:var(--t2)">15 Feb</td></tr>
+        <tr><td>Ajay Gupta</td><td style="color:var(--t2)">Design</td><td><span class="chip a">Contract Renewal</span></td><td style="color:var(--t2)">20 Feb</td></tr>
+        <tr><td>Priya Mehta</td><td style="color:var(--t2)">Finance</td><td><span class="chip b">Appraisal Due</span></td><td style="color:var(--t2)">22 Feb</td></tr>
+        <tr><td>Kiran Rao</td><td style="color:var(--t2)">HR</td><td><span class="chip t">Training Completion</span></td><td style="color:var(--t2)">28 Feb</td></tr>
+      </tbody></table>
+    </div>`;
+  if (dept === 'Operational') return `
+    <div class="tbl-card">
+      <div class="tbl-hd"><span class="tbl-title">Active Order Tracker</span></div>
+      <table><thead><tr><th>Order</th><th>Client</th><th>Product</th><th>Stage</th><th>Progress</th><th>Due</th></tr></thead>
+      <tbody>
+        <tr class="cl" onclick="drill('order-detail')"><td style="color:var(--blue)">#BEV-2847</td><td>ONGC</td><td>Pressure Vessel</td><td><span class="chip g">Fabrication</span></td><td><div class="pb-w"><div class="pb-f" style="width:72%;background:var(--green-l);"></div></div></td><td style="color:var(--t2)">14 Feb</td></tr>
+        <tr class="cl" onclick="drill('order-detail')"><td style="color:var(--blue)">#BEV-2841</td><td>BPCL</td><td>Heat Exchanger</td><td><span class="chip a">QC Check</span></td><td><div class="pb-w"><div class="pb-f" style="width:55%;background:var(--amber-l);"></div></div></td><td style="color:var(--t2)">8 Feb</td></tr>
+        <tr class="cl" onclick="drill('order-detail')"><td style="color:var(--blue)">#BEV-2836</td><td>L&T</td><td>Storage Tank</td><td><span class="chip g">Assembly</span></td><td><div class="pb-w"><div class="pb-f" style="width:38%;background:var(--green-l);"></div></div></td><td style="color:var(--t2)">2 Mar</td></tr>
+        <tr class="cl" onclick="drill('order-detail')"><td style="color:var(--blue)">#BEV-2829</td><td>Adani Gas</td><td>Skid Assembly</td><td><span class="chip b">Fabrication</span></td><td><div class="pb-w"><div class="pb-f" style="width:25%;background:var(--blue);"></div></div></td><td style="color:var(--t2)">18 Mar</td></tr>
+        <tr class="cl" onclick="drill('order-detail')"><td style="color:var(--blue)">#BEV-2821</td><td>IOCL</td><td>Pressure Piping</td><td><span class="chip r">Delayed</span></td><td><div class="pb-w"><div class="pb-f" style="width:95%;background:var(--red-l);"></div></div></td><td style="color:var(--red-l)">31 Jan</td></tr>
+      </tbody></table>
+    </div>`;
+  return '';
+}
+
+// ─── CHARTS FOR DASH VIEW ────────────────────────────────
+const GC='rgba(255,255,255,0.05)', TC='#4a5570';
+const MN=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan'];
+function mkC(id,cfg){if(CHARTS[id])try{CHARTS[id].destroy();}catch(e){}; const el=document.getElementById(id);if(!el)return;CHARTS[id]=new Chart(el.getContext('2d'),cfg);}
+function baseOpts(u,leg){return{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:!!leg,labels:{color:TC,font:{size:10},boxWidth:8,padding:12}}},scales:{x:{ticks:{color:TC,font:{size:10}},grid:{color:GC}},y:{ticks:{color:TC,font:{size:10},callback:v=>u?v+u:v},grid:{color:GC}}}};}
+
+function drawDashCharts(kpi) {
+  const d = kpi.dept;
+  if (d === 'Financial') {
+    document.getElementById('dc-t1').textContent = 'Revenue vs Target (₹ Cr)';
+    document.getElementById('dc-t2').textContent = 'Invoice Aging Breakdown';
+    mkC('dash-c1',{type:'bar',data:{labels:MN,datasets:[
+      {label:'Revenue',data:[2.8,3.1,3.4,2.9,3.6,3.8,4.1,3.7,4.3,4.7],backgroundColor:'rgba(59,126,244,0.65)',borderRadius:3},
+      {label:'Target',data:[3,3,3.5,3.5,3.5,4,4,4,4.2,4.5],type:'line',borderColor:'rgba(245,158,11,.7)',pointRadius:2,fill:false,tension:.3,borderDash:[4,3],borderWidth:1.5}
     ]},options:baseOpts('',true)});
-    mk('ch-mix',{type:'doughnut',data:{labels:['Pressure Vessels','Heat Exchangers','Storage Tanks','Piping','Other'],datasets:[{data:[34,28,18,12,8],backgroundColor:['#3b7ff5','#22c55e','#f59e0b','#14b8a6','#a78bfa'],borderWidth:0,hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{position:'bottom',labels:{color:TC,font:{size:10},boxWidth:9,padding:10}}}}});
-    mk('ch-dept',{type:'bar',data:{labels:['Fabrication','Quality','Design','Finance','HR','Admin'],datasets:[
-      {label:'Budget',data:[38,12,18,8,5,4],backgroundColor:'rgba(255,255,255,0.08)',borderRadius:3},
-      {label:'Actual',data:[43,11,18,7,5,3],backgroundColor:'rgba(59,127,245,0.65)',borderRadius:3}
-    ]},options:{...baseOpts('L',true),indexAxis:'y'}});
+    mkC('dash-c2',{type:'bar',data:{labels:['0–30d','31–60d','61–90d','90+d'],datasets:[{label:'₹ L',data:[28,22,8,4],backgroundColor:['rgba(245,158,11,.6)','rgba(239,68,68,.55)','rgba(239,68,68,.7)','rgba(239,68,68,.85)'],borderRadius:3}]},options:baseOpts('L',false)});
   }
-  if(pg==='financial'){
-    mk('ch-rev2',{type:'bar',data:{labels:MN,datasets:[
-      {label:'Revenue',data:[2.8,3.1,3.4,2.9,3.6,3.8,4.1,3.7,4.3,4.7,null,null],backgroundColor:'rgba(59,127,245,0.65)',borderRadius:3},
-      {label:'Target',data:[3,3,3.5,3.5,3.5,4,4,4,4.2,4.5,4.5,4.5],type:'line',borderColor:'rgba(245,158,11,0.7)',pointRadius:2,fill:false,tension:0.3,borderDash:[4,3],borderWidth:1.5}
-    ]},options:baseOpts('',true)});
-    mk('ch-aging',{type:'bar',data:{labels:['0–30 days','31–60 days','61–90 days','90+ days'],datasets:[{label:'&#8377; Lakhs',data:[28,22,8,4],backgroundColor:['rgba(245,158,11,0.6)','rgba(239,68,68,0.55)','rgba(239,68,68,0.7)','rgba(239,68,68,0.85)'],borderRadius:3}]},options:baseOpts('L',false)});
-    mk('ch-wl',{type:'bar',data:{labels:['Aug','Sep','Oct','Nov','Dec','Jan'],datasets:[
-      {label:'Won',data:[8,7,9,11,8,10],backgroundColor:'rgba(34,197,94,0.65)',borderRadius:3},
-      {label:'Lost',data:[4,5,3,4,4,3],backgroundColor:'rgba(239,68,68,0.45)',borderRadius:3}
-    ]},options:baseOpts('',true)});
+  if (d === 'HR') {
+    document.getElementById('dc-t1').textContent = 'Headcount by Department';
+    document.getElementById('dc-t2').textContent = 'Hiring Funnel — This Quarter';
+    mkC('dash-c1',{type:'bar',data:{labels:['Fabrication','Quality','Design','Finance','HR','Admin','Stores'],datasets:[{data:[74,22,28,14,8,19,22],backgroundColor:'rgba(20,184,166,.65)',borderRadius:3}]},options:baseOpts('',false)});
+    mkC('dash-c2',{type:'bar',data:{labels:['Applied','Screened','Interview','Offered','Joined'],datasets:[{data:[148,62,34,18,12],backgroundColor:['rgba(59,126,244,.45)','rgba(59,126,244,.55)','rgba(59,126,244,.65)','rgba(59,126,244,.78)','rgba(34,197,94,.72)'],borderRadius:3}]},options:baseOpts('',false)});
   }
-  if(pg==='hr'){
-    mk('ch-hc',{type:'bar',data:{labels:['Fabrication','Quality','Design','Finance','HR','Admin','Stores'],datasets:[{label:'Headcount',data:[74,22,28,14,8,19,22],backgroundColor:'rgba(20,184,166,0.65)',borderRadius:3}]},options:baseOpts('',false)});
-    mk('ch-hire',{type:'bar',data:{labels:['Applied','Screened','Interviewed','Offered','Joined'],datasets:[{label:'Candidates',data:[148,62,34,18,12],backgroundColor:['rgba(59,127,245,0.45)','rgba(59,127,245,0.55)','rgba(59,127,245,0.65)','rgba(59,127,245,0.78)','rgba(34,197,94,0.72)'],borderRadius:3}]},options:baseOpts('',false)});
-  }
-  if(pg==='operational'){
-    // populate ops table
-    const tb=document.getElementById('ops-tbody');
-    if(tb){const rows=[
-      ['#BEV-2847','ONGC','Pressure Vessel','Fabrication',72,'14 Feb','g'],
-      ['#BEV-2841','BPCL','Heat Exchanger','Quality Check',55,'8 Feb','a'],
-      ['#BEV-2836','L&T','Storage Tank','Assembly',38,'2 Mar','g'],
-      ['#BEV-2829','Adani Gas','Skid Assembly','Fabrication',25,'18 Mar','b'],
-      ['#BEV-2821','IOCL','Pressure Piping','Delayed',95,'31 Jan','r'],
-    ];
-    const colorMap={g:'var(--green-l)',a:'var(--amber-l)',b:'var(--blue)',r:'var(--red-l)'};
-    tb.innerHTML=rows.map(([id,cl,pr,st,pct,due,col])=>`<tr class="clickable" onclick="drill('order-detail')">
-      <td style="color:var(--blue)">${id}</td><td>${cl}</td><td>${pr}</td>
-      <td><span class="chip ${col}">${st}</span></td>
-      <td><div class="pbar-wrap"><div class="pbar-fill" style="width:${pct}%;background:${colorMap[col]};"></div></div></td>
-      <td style="color:var(--t2)">${due}</td></tr>`).join('');}
-    mk('ch-pipeline',{type:'doughnut',data:{labels:['Engineering','Fabrication','Quality','Dispatch','Complete'],datasets:[{data:[6,18,8,4,2],backgroundColor:['#3b7ff5','#22c55e','#f59e0b','#14b8a6','#a78bfa'],borderWidth:0,hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,cutout:'66%',plugins:{legend:{position:'bottom',labels:{color:TC,font:{size:10},boxWidth:9,padding:10}}}}});
-    mk('ch-disp',{type:'bar',data:{labels:['Aug','Sep','Oct','Nov','Dec','Jan'],datasets:[{label:'Tonnes',data:[142,158,134,171,149,163],backgroundColor:'rgba(20,184,166,0.65)',borderRadius:3}]},options:baseOpts('T',false)});
+  if (d === 'Operational') {
+    document.getElementById('dc-t1').textContent = 'Monthly Dispatch Volume (Tonnes)';
+    document.getElementById('dc-t2').textContent = 'Order Pipeline by Stage';
+    mkC('dash-c1',{type:'bar',data:{labels:['Aug','Sep','Oct','Nov','Dec','Jan'],datasets:[{label:'Tonnes',data:[142,158,134,171,149,163],backgroundColor:'rgba(20,184,166,.65)',borderRadius:3}]},options:baseOpts('T',false)});
+    mkC('dash-c2',{type:'doughnut',data:{labels:['Engineering','Fabrication','Quality','Dispatch','Complete'],datasets:[{data:[6,18,8,4,2],backgroundColor:['#3b7ef4','#22c55e','#f59e0b','#14b8a6','#a78bfa'],borderWidth:0,hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,cutout:'66%',plugins:{legend:{position:'right',labels:{color:TC,font:{size:10},boxWidth:8}}}}});
   }
 }
 
-// ─── DRILL THROUGH ─────────────────────────────────────────
-const DRILLS={
-  revenue:{title:'Revenue Deep Dive',sub:'Overview → Financial KPIs → Revenue',ic:'<i class="ti ti-chart-line"></i>',icBg:'var(--blue-dim)',icCol:'var(--blue)',
+// ─── DRILL THROUGH ───────────────────────────────────────
+const DRILLS = {
+  revenue:{ttl:'Revenue Deep Dive',st:'Financial KPIs → Revenue → By Client',ic:'<i class="ti ti-chart-line"></i>',bg:'var(--bdim)',cl:'var(--blue)',
     html:`<div class="bc-trail"><span class="bcl" onclick="closeDrill()">Financial KPIs</span><span>›</span>Revenue<span>›</span>By Client</div>
-    <div class="m-kpis"><div class="m-kpi"><div class="m-kpi-l">This Month</div><div class="m-kpi-v" style="color:var(--blue)">&#8377;4.7 Cr</div></div><div class="m-kpi"><div class="m-kpi-l">Last Month</div><div class="m-kpi-v">&#8377;4.2 Cr</div></div><div class="m-kpi"><div class="m-kpi-l">YTD Total</div><div class="m-kpi-v" style="color:var(--green-l)">&#8377;36.4 Cr</div></div></div>
-    <div style="font-size:11px;color:var(--t3);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">Revenue by product segment</div>
-    <div style="position:relative;height:160px;margin-bottom:18px;"><canvas id="dc1"></canvas></div>
-    <table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr><th style="background:var(--bg4);padding:8px 12px;color:var(--t4);font-size:9px;text-transform:uppercase;letter-spacing:0.6px;border-bottom:1px solid var(--b1);">Client</th><th style="background:var(--bg4);padding:8px 12px;color:var(--t4);font-size:9px;text-transform:uppercase;letter-spacing:0.6px;border-bottom:1px solid var(--b1);">Revenue</th><th style="background:var(--bg4);padding:8px 12px;color:var(--t4);font-size:9px;text-transform:uppercase;letter-spacing:0.6px;border-bottom:1px solid var(--b1);">YoY</th></tr></thead><tbody>
-    <tr><td style="padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.03);">ONGC Ltd</td><td style="padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.03);">&#8377;82 L</td><td style="padding:9px 12px;color:var(--green-l)">+18%</td></tr>
-    <tr><td style="padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.03);">BPCL Mumbai</td><td style="padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.03);">&#8377;64 L</td><td style="padding:9px 12px;color:var(--green-l)">+12%</td></tr>
-    <tr><td style="padding:9px 12px;">L&T Constructions</td><td style="padding:9px 12px;">&#8377;47 L</td><td style="padding:9px 12px;color:var(--red-l)">-4%</td></tr>
+    <div class="m-kpis"><div class="m-kpi"><div class="m-kpi-l">This Month</div><div class="m-kpi-v" style="color:var(--blue)">₹4.7 Cr</div></div><div class="m-kpi"><div class="m-kpi-l">Last Month</div><div class="m-kpi-v">₹4.2 Cr</div></div><div class="m-kpi"><div class="m-kpi-l">YTD Total</div><div class="m-kpi-v" style="color:var(--green-l)">₹36.4 Cr</div></div></div>
+    <div style="position:relative;height:170px;margin-bottom:18px;"><canvas id="dc1"></canvas></div>
+    <table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr><th style="background:var(--bg3);padding:8px 14px;color:var(--t4);font-size:9px;text-transform:uppercase;border-bottom:1px solid var(--b1);">Client</th><th style="background:var(--bg3);padding:8px 14px;color:var(--t4);font-size:9px;text-transform:uppercase;border-bottom:1px solid var(--b1);">Revenue</th><th style="background:var(--bg3);padding:8px 14px;color:var(--t4);font-size:9px;text-transform:uppercase;border-bottom:1px solid var(--b1);">YoY</th></tr></thead><tbody>
+    <tr><td style="padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.03);">ONGC Ltd</td><td style="padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.03);">₹82 L</td><td style="padding:9px 14px;color:var(--green-l)">+18%</td></tr>
+    <tr><td style="padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.03);">BPCL Mumbai</td><td style="padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.03);">₹64 L</td><td style="padding:9px 14px;color:var(--green-l)">+12%</td></tr>
+    <tr><td style="padding:9px 14px;">L&T Constructions</td><td style="padding:9px 14px;">₹47 L</td><td style="padding:9px 14px;color:var(--red-l)">-4%</td></tr>
     </tbody></table>`,
-    afterRender:()=>mk('dc1',{type:'bar',data:{labels:['PV','HE','Tanks','Piping','Other'],datasets:[{data:[1.6,1.3,0.9,0.56,0.34],backgroundColor:'rgba(59,127,245,0.65)',borderRadius:3}]},options:baseOpts('Cr',false)})
-  },
-  orders:{title:'Active Orders Breakdown',sub:'Operational KPIs → Active Orders',ic:'<i class="ti ti-package"></i>',icBg:'var(--green-dim)',icCol:'var(--green-l)',
+    after:()=>mkC('dc1',{type:'bar',data:{labels:['PV','HE','Tanks','Piping','Other'],datasets:[{data:[1.6,1.3,0.9,0.56,0.34],backgroundColor:'rgba(59,126,244,.65)',borderRadius:3}]},options:baseOpts('Cr',false)})},
+  orders:{ttl:'Active Orders Breakdown',st:'Operational KPIs → Active Orders → By Stage',ic:'<i class="ti ti-package"></i>',bg:'var(--gdim)',cl:'var(--green-l)',
     html:`<div class="bc-trail"><span class="bcl" onclick="closeDrill()">Operational KPIs</span><span>›</span>Active Orders<span>›</span>By Stage</div>
     <div class="m-kpis"><div class="m-kpi"><div class="m-kpi-l">In Fabrication</div><div class="m-kpi-v" style="color:var(--green-l)">18</div></div><div class="m-kpi"><div class="m-kpi-l">In Quality Check</div><div class="m-kpi-v" style="color:var(--amber-l)">8</div></div><div class="m-kpi"><div class="m-kpi-l">At Risk</div><div class="m-kpi-v" style="color:var(--red-l)">3</div></div></div>
-    <div style="position:relative;height:170px;margin-bottom:16px;"><canvas id="dc2"></canvas></div>
-    <div class="insight warn">3 orders are at risk due to raw material delays. Average fabrication cycle is 42 days against a 38-day target.</div>`,
-    afterRender:()=>mk('dc2',{type:'doughnut',data:{labels:['Engineering','Fabrication','Quality','Dispatch'],datasets:[{data:[6,18,8,6],backgroundColor:['#3b7ff5','#22c55e','#f59e0b','#14b8a6'],borderWidth:0,hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,cutout:'66%',plugins:{legend:{position:'right',labels:{color:TC,font:{size:10},boxWidth:9}}}}})
-  },
-  estimation:{title:'Quote Pipeline Detail',sub:'Financial KPIs → Pending Quotes',ic:'<i class="ti ti-file-text"></i>',icBg:'var(--amber-dim)',icCol:'var(--amber-l)',
-    html:`<div class="bc-trail"><span class="bcl" onclick="closeDrill()">Financial KPIs</span><span>›</span>Quotes<span>›</span>Pipeline</div>
-    <div class="m-kpis"><div class="m-kpi"><div class="m-kpi-l">Awaiting Approval</div><div class="m-kpi-v" style="color:var(--amber-l)">3</div></div><div class="m-kpi"><div class="m-kpi-l">Expiring &lt;7 days</div><div class="m-kpi-v" style="color:var(--red-l)">2</div></div><div class="m-kpi"><div class="m-kpi-l">Pipeline Value</div><div class="m-kpi-v" style="color:var(--green-l)">&#8377;9.2 Cr</div></div></div>
-    <div class="insight danger"><strong>Urgent:</strong> Q-1168 (Tata Projects, &#8377;62 L) needs revision before 7 Feb or the opportunity is lost.</div>
-    <div style="font-size:12px;color:var(--t2);line-height:1.7;">Win probability by segment: <strong style="color:var(--t1)">Process Equipment 72%</strong> · Storage Tanks 61% · Piping 54%. Win rate improving but average turnaround of 4.2 days exceeds the 3-day target.</div>`
-  },
-  headcount:{title:'Headcount by Department',sub:'HR KPIs → Headcount → Detail',ic:'<i class="ti ti-users"></i>',icBg:'var(--teal-dim)',icCol:'var(--teal-l)',
+    <div style="position:relative;height:170px;margin-bottom:14px;"><canvas id="dc2"></canvas></div>
+    <div class="insight warn"><strong>3 orders at risk</strong> due to raw material delays. Avg fabrication cycle is 42 days against a 38-day target.</div>`,
+    after:()=>mkC('dc2',{type:'doughnut',data:{labels:['Engineering','Fabrication','Quality','Dispatch'],datasets:[{data:[6,18,8,6],backgroundColor:['#3b7ef4','#22c55e','#f59e0b','#14b8a6'],borderWidth:0,hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,cutout:'64%',plugins:{legend:{position:'right',labels:{color:TC,font:{size:10},boxWidth:8}}}}})},
+  estimation:{ttl:'Quote Pipeline Detail',st:'Financial KPIs → Pending Quotes → Pipeline',ic:'<i class="ti ti-file-text"></i>',bg:'var(--adim)',cl:'var(--amber-l)',
+    html:`<div class="bc-trail"><span class="bcl" onclick="closeDrill()">Financial KPIs</span><span>›</span>Quotes<span>›</span>Pipeline Detail</div>
+    <div class="m-kpis"><div class="m-kpi"><div class="m-kpi-l">Awaiting Approval</div><div class="m-kpi-v" style="color:var(--amber-l)">3</div></div><div class="m-kpi"><div class="m-kpi-l">Expiring &lt;7 days</div><div class="m-kpi-v" style="color:var(--red-l)">2</div></div><div class="m-kpi"><div class="m-kpi-l">Pipeline Value</div><div class="m-kpi-v" style="color:var(--green-l)">₹9.2 Cr</div></div></div>
+    <div class="insight danger"><strong>Urgent:</strong> Q-1168 (Tata Projects, ₹62 L) requires revision before 7 Feb or the opportunity is lost.</div>
+    <div style="font-size:12px;color:var(--t2);line-height:1.7;">Win probability by segment: <strong style="color:var(--t1)">Process Equipment 72%</strong> · Storage Tanks 61% · Piping 54%. Win rate has improved but average turnaround of 4.2 days still exceeds the 3-day target.</div>`},
+  headcount:{ttl:'Headcount by Department',st:'HR KPIs → Headcount → Department Breakdown',ic:'<i class="ti ti-users"></i>',bg:'var(--tdim)',cl:'var(--teal-l)',
     html:`<div class="bc-trail"><span class="bcl" onclick="closeDrill()">HR KPIs</span><span>›</span>Headcount<span>›</span>By Department</div>
     <div class="m-kpis"><div class="m-kpi"><div class="m-kpi-l">Permanent</div><div class="m-kpi-v" style="color:var(--teal-l)">152</div></div><div class="m-kpi"><div class="m-kpi-l">Contract</div><div class="m-kpi-v">28</div></div><div class="m-kpi"><div class="m-kpi-l">Trainee</div><div class="m-kpi-v">7</div></div></div>
     <div style="position:relative;height:190px;"><canvas id="dc3"></canvas></div>`,
-    afterRender:()=>mk('dc3',{type:'bar',data:{labels:['Fabrication','Quality','Design','Finance','HR','Admin','Stores'],datasets:[{data:[74,22,28,14,8,19,22],backgroundColor:'rgba(20,184,166,0.65)',borderRadius:3}]},options:baseOpts('',false)})
-  },
-  overdue:{title:'Invoice Aging Analysis',sub:'Financial KPIs → Overdue Invoices',ic:'<i class="ti ti-alert-circle"></i>',icBg:'var(--red-dim)',icCol:'var(--red-l)',
+    after:()=>mkC('dc3',{type:'bar',data:{labels:['Fabrication','Quality','Design','Finance','HR','Admin','Stores'],datasets:[{data:[74,22,28,14,8,19,22],backgroundColor:'rgba(20,184,166,.65)',borderRadius:3}]},options:baseOpts('',false)})},
+  overdue:{ttl:'Invoice Aging Analysis',st:'Financial KPIs → Overdue Invoices → Aging Buckets',ic:'<i class="ti ti-alert-circle"></i>',bg:'var(--rdim)',cl:'var(--red-l)',
     html:`<div class="bc-trail"><span class="bcl" onclick="closeDrill()">Financial KPIs</span><span>›</span>Overdue Invoices<span>›</span>Aging</div>
-    <div class="m-kpis"><div class="m-kpi"><div class="m-kpi-l">0–30 days</div><div class="m-kpi-v" style="color:var(--amber-l)">&#8377;28 L</div></div><div class="m-kpi"><div class="m-kpi-l">31–60 days</div><div class="m-kpi-v" style="color:var(--red-l)">&#8377;22 L</div></div><div class="m-kpi"><div class="m-kpi-l">60+ days</div><div class="m-kpi-v" style="color:var(--red-l)">&#8377;12 L</div></div></div>
-    <div class="insight danger"><strong>Critical:</strong> &#8377;12 L overdue 60+ days. IOCL (&#8377;8.2 L) and Adani Gas (&#8377;3.8 L) are the primary defaulters. Immediate escalation recommended.</div>
-    <table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr><th style="background:var(--bg4);padding:8px 12px;color:var(--t4);font-size:9px;text-transform:uppercase;letter-spacing:0.6px;border-bottom:1px solid var(--b1);">Client</th><th style="background:var(--bg4);padding:8px 12px;color:var(--t4);font-size:9px;text-transform:uppercase;letter-spacing:0.6px;border-bottom:1px solid var(--b1);">Amount</th><th style="background:var(--bg4);padding:8px 12px;color:var(--t4);font-size:9px;text-transform:uppercase;letter-spacing:0.6px;border-bottom:1px solid var(--b1);">Days Overdue</th></tr></thead><tbody>
-    <tr><td style="padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.03);">Indian Oil Corp</td><td style="padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--red-l)">&#8377;8.2 L</td><td style="padding:9px 12px;">68 days</td></tr>
-    <tr><td style="padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.03);">Adani Gas</td><td style="padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--red-l)">&#8377;3.8 L</td><td style="padding:9px 12px;">71 days</td></tr>
-    <tr><td style="padding:9px 12px;">BPCL Mumbai</td><td style="padding:9px 12px;color:var(--amber-l)">&#8377;6.4 L</td><td style="padding:9px 12px;">38 days</td></tr>
-    </tbody></table>`
-  },
-  production:{title:'Production Efficiency by Work Centre',sub:'Operational KPIs → Fabrication Efficiency',ic:'<i class="ti ti-settings-2"></i>',icBg:'var(--purple-dim)',icCol:'var(--purple-l)',
+    <div class="m-kpis"><div class="m-kpi"><div class="m-kpi-l">0–30 days</div><div class="m-kpi-v" style="color:var(--amber-l)">₹28 L</div></div><div class="m-kpi"><div class="m-kpi-l">31–60 days</div><div class="m-kpi-v" style="color:var(--red-l)">₹22 L</div></div><div class="m-kpi"><div class="m-kpi-l">60+ days</div><div class="m-kpi-v" style="color:var(--red-l)">₹12 L</div></div></div>
+    <div class="insight danger"><strong>Critical:</strong> ₹12 L overdue 60+ days. IOCL (₹8.2 L, 68 days) and Adani Gas (₹3.8 L, 71 days) are the primary defaulters. Immediate escalation required.</div>
+    <table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr><th style="background:var(--bg3);padding:8px 14px;color:var(--t4);font-size:9px;text-transform:uppercase;border-bottom:1px solid var(--b1);">Client</th><th style="background:var(--bg3);padding:8px 14px;color:var(--t4);font-size:9px;text-transform:uppercase;border-bottom:1px solid var(--b1);">Amount</th><th style="background:var(--bg3);padding:8px 14px;color:var(--t4);font-size:9px;text-transform:uppercase;border-bottom:1px solid var(--b1);">Days Overdue</th></tr></thead><tbody>
+    <tr><td style="padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.03);">Indian Oil Corp</td><td style="padding:9px 14px;color:var(--red-l);border-bottom:1px solid rgba(255,255,255,.03);">₹8.2 L</td><td style="padding:9px 14px;">68 days</td></tr>
+    <tr><td style="padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.03);">Adani Gas</td><td style="padding:9px 14px;color:var(--red-l);border-bottom:1px solid rgba(255,255,255,.03);">₹3.8 L</td><td style="padding:9px 14px;">71 days</td></tr>
+    <tr><td style="padding:9px 14px;">BPCL Mumbai</td><td style="padding:9px 14px;color:var(--amber-l);">₹6.4 L</td><td style="padding:9px 14px;">38 days</td></tr>
+    </tbody></table>`},
+  production:{ttl:'Production Efficiency by Work Centre',st:'Operational KPIs → Fabrication → Work Centres',ic:'<i class="ti ti-settings-2"></i>',bg:'var(--pdim)',cl:'var(--purple-l)',
     html:`<div class="bc-trail"><span class="bcl" onclick="closeDrill()">Operational KPIs</span><span>›</span>Fabrication<span>›</span>Work Centres</div>
     <div class="m-kpis"><div class="m-kpi"><div class="m-kpi-l">Rolling</div><div class="m-kpi-v" style="color:var(--green-l)">92%</div></div><div class="m-kpi"><div class="m-kpi-l">Welding</div><div class="m-kpi-v" style="color:var(--amber-l)">84%</div></div><div class="m-kpi"><div class="m-kpi-l">Blasting</div><div class="m-kpi-v" style="color:var(--red-l)">76%</div></div></div>
-    <div class="insight danger"><strong>Bottleneck identified:</strong> Blasting centre at 76% efficiency vs 90% target. 2 operators absent this week. Consider peak-load subcontracting to clear backlog.</div>
-    <div style="font-size:12px;color:var(--t2);line-height:1.7;">Assembly: 88% · NDE/Testing: 91% · Painting: 89%. Overall plant efficiency at 87% against 84% target — good position despite the blasting constraint.</div>`
-  },
-  'order-detail':{title:'Order #BEV-2847 — ONGC Ltd',sub:'Operational KPIs → Order Tracker → Detail',ic:'<i class="ti ti-package"></i>',icBg:'var(--blue-dim)',icCol:'var(--blue)',
+    <div class="insight danger"><strong>Bottleneck — Blasting Centre:</strong> Running at 76% vs 90% target. 2 operators absent this week. Consider subcontracting peak load to clear accumulated backlog on 3 orders.</div>
+    <div style="font-size:12px;color:var(--t2);line-height:1.8;">Assembly: 88% · NDE / Testing: 91% · Painting: 89% · Overall plant: 87% (target 84%).</div>`},
+  'order-detail':{ttl:'Order #BEV-2847 — ONGC Ltd',st:'Operational KPIs → Order Tracker → Detail',ic:'<i class="ti ti-package"></i>',bg:'var(--bdim)',cl:'var(--blue)',
     html:`<div class="bc-trail"><span class="bcl" onclick="closeDrill()">Operational KPIs</span><span>›</span>Orders<span>›</span>#BEV-2847</div>
     <div class="m-kpis"><div class="m-kpi"><div class="m-kpi-l">Completion</div><div class="m-kpi-v" style="color:var(--green-l)">72%</div></div><div class="m-kpi"><div class="m-kpi-l">Days Remaining</div><div class="m-kpi-v">14</div></div><div class="m-kpi"><div class="m-kpi-l">Gross Margin</div><div class="m-kpi-v" style="color:var(--green-l)">24.3%</div></div></div>
     <div style="background:var(--bg3);border-radius:var(--r);padding:14px 16px;font-size:12px;line-height:2;margin-bottom:16px;">
-      <div><span style="color:var(--t3);min-width:130px;display:inline-block;">Client</span>ONGC Ltd, Hazira</div>
-      <div><span style="color:var(--t3);min-width:130px;display:inline-block;">Product</span>Pressure Vessel, CS, 4.2 m dia</div>
-      <div><span style="color:var(--t3);min-width:130px;display:inline-block;">Stage</span><span class="chip g">Fabrication</span></div>
-      <div><span style="color:var(--t3);min-width:130px;display:inline-block;">PO Date</span>12 Dec 2024 &nbsp;·&nbsp; Delivery 14 Feb 2025</div>
-      <div><span style="color:var(--t3);min-width:130px;display:inline-block;">Engineer</span>Vikram Nair</div>
+      <div><span style="color:var(--t3);min-width:120px;display:inline-block;">Client</span>ONGC Ltd, Hazira</div>
+      <div><span style="color:var(--t3);min-width:120px;display:inline-block;">Product</span>Pressure Vessel, CS, 4.2 m dia</div>
+      <div><span style="color:var(--t3);min-width:120px;display:inline-block;">Stage</span><span class="chip g">Fabrication — Welding</span></div>
+      <div><span style="color:var(--t3);min-width:120px;display:inline-block;">PO Date</span>12 Dec 2024 · Delivery 14 Feb 2025</div>
+      <div><span style="color:var(--t3);min-width:120px;display:inline-block;">Engineer</span>Vikram Nair</div>
     </div>
-    <div style="font-size:11px;color:var(--t3);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.6px;">Milestone trail</div>
-    <div style="font-size:12px;color:var(--t2);line-height:1.8;">PO Received &rarr; BOM Released &rarr; Material Procured &rarr; Cutting <span style="color:var(--green-l)">&#10003;</span> &rarr; Rolling <span style="color:var(--green-l)">&#10003;</span> &rarr; Welding <span style="color:var(--amber-l)">(in progress)</span> &rarr; NDE &rarr; Hydro Test &rarr; Dispatch</div>`
-  },
-  inventory:{title:'Raw Material — Low Stock Alerts',sub:'Operational KPIs → Inventory',ic:'<i class="ti ti-box"></i>',icBg:'var(--amber-dim)',icCol:'var(--amber-l)',
+    <div style="font-size:11px;color:var(--t3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Milestone trail</div>
+    <div style="font-size:12px;color:var(--t2);line-height:1.9;">PO Received → BOM Released → Material Procured → Cutting <span style="color:var(--green-l)">✓</span> → Rolling <span style="color:var(--green-l)">✓</span> → <strong style="color:var(--t1)">Welding (in progress)</strong> → NDE → Hydro Test → Dispatch</div>`},
+  inventory:{ttl:'Raw Material — Low Stock Alerts',st:'Operational KPIs → Inventory → Critical Items',ic:'<i class="ti ti-box"></i>',bg:'var(--adim)',cl:'var(--amber-l)',
     html:`<div class="bc-trail"><span class="bcl" onclick="closeDrill()">Operational KPIs</span><span>›</span>Inventory<span>›</span>Alerts</div>
-    <div class="insight warn">3 items are below minimum stock level. Procurement orders should be raised immediately to prevent production stoppages on active orders.</div>
-    <table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr><th style="background:var(--bg4);padding:9px 14px;color:var(--t4);font-size:9px;text-transform:uppercase;letter-spacing:0.6px;border-bottom:1px solid var(--b1);">Material</th><th style="background:var(--bg4);padding:9px 14px;color:var(--t4);font-size:9px;text-transform:uppercase;border-bottom:1px solid var(--b1);">Stock</th><th style="background:var(--bg4);padding:9px 14px;color:var(--t4);font-size:9px;text-transform:uppercase;border-bottom:1px solid var(--b1);">Minimum</th><th style="background:var(--bg4);padding:9px 14px;color:var(--t4);font-size:9px;text-transform:uppercase;border-bottom:1px solid var(--b1);">Status</th></tr></thead><tbody>
-    <tr><td style="padding:9px 14px;border-bottom:1px solid rgba(255,255,255,0.03);">CS Plates 12 mm</td><td style="padding:9px 14px;color:var(--red-l)">2.4 T</td><td style="padding:9px 14px;color:var(--t2)">5 T</td><td style="padding:9px 14px;"><span class="chip r">Critical</span></td></tr>
-    <tr><td style="padding:9px 14px;border-bottom:1px solid rgba(255,255,255,0.03);">SS 316 Pipes</td><td style="padding:9px 14px;color:var(--amber-l)">18 pcs</td><td style="padding:9px 14px;color:var(--t2)">25 pcs</td><td style="padding:9px 14px;"><span class="chip a">Low</span></td></tr>
-    <tr><td style="padding:9px 14px;">Nozzle Flanges 6"</td><td style="padding:9px 14px;color:var(--amber-l)">41 pcs</td><td style="padding:9px 14px;color:var(--t2)">60 pcs</td><td style="padding:9px 14px;"><span class="chip a">Low</span></td></tr>
-    </tbody></table>`
-  },
-  attrition:{title:'Attrition Analysis by Department',sub:'HR KPIs → Attrition YTD',ic:'<i class="ti ti-trending-down"></i>',icBg:'var(--red-dim)',icCol:'var(--red-l)',
+    <div class="insight warn">3 materials are below minimum stock levels. Raise procurement orders immediately to prevent production stoppages on active orders.</div>
+    <table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr><th style="background:var(--bg3);padding:9px 14px;color:var(--t4);font-size:9px;text-transform:uppercase;border-bottom:1px solid var(--b1);">Material</th><th style="background:var(--bg3);padding:9px 14px;color:var(--t4);font-size:9px;text-transform:uppercase;border-bottom:1px solid var(--b1);">Stock</th><th style="background:var(--bg3);padding:9px 14px;color:var(--t4);font-size:9px;text-transform:uppercase;border-bottom:1px solid var(--b1);">Minimum</th><th style="background:var(--bg3);padding:9px 14px;color:var(--t4);font-size:9px;text-transform:uppercase;border-bottom:1px solid var(--b1);">Status</th></tr></thead><tbody>
+    <tr><td style="padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.03);">CS Plates 12 mm</td><td style="padding:9px 14px;color:var(--red-l);border-bottom:1px solid rgba(255,255,255,.03);">2.4 T</td><td style="padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.03);">5 T</td><td style="padding:9px 14px;"><span class="chip r">Critical</span></td></tr>
+    <tr><td style="padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.03);">SS 316 Pipes</td><td style="padding:9px 14px;color:var(--amber-l);border-bottom:1px solid rgba(255,255,255,.03);">18 pcs</td><td style="padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.03);">25 pcs</td><td style="padding:9px 14px;"><span class="chip a">Low</span></td></tr>
+    <tr><td style="padding:9px 14px;">Nozzle Flanges 6"</td><td style="padding:9px 14px;color:var(--amber-l);">41 pcs</td><td style="padding:9px 14px;">60 pcs</td><td style="padding:9px 14px;"><span class="chip a">Low</span></td></tr>
+    </tbody></table>`},
+  attrition:{ttl:'Attrition Analysis — By Department',st:'HR KPIs → Attrition YTD → Department View',ic:'<i class="ti ti-trending-down"></i>',bg:'var(--rdim)',cl:'var(--red-l)',
     html:`<div class="bc-trail"><span class="bcl" onclick="closeDrill()">HR KPIs</span><span>›</span>Attrition<span>›</span>By Department</div>
     <div class="m-kpis"><div class="m-kpi"><div class="m-kpi-l">YTD Exits</div><div class="m-kpi-v" style="color:var(--red-l)">15</div></div><div class="m-kpi"><div class="m-kpi-l">Voluntary</div><div class="m-kpi-v">11</div></div><div class="m-kpi"><div class="m-kpi-l">Industry Avg</div><div class="m-kpi-v" style="color:var(--t2)">12%</div></div></div>
-    <div class="insight success">BEV's 8.3% attrition is well below the industry average. However, Fabrication accounts for 5 of 11 voluntary exits, primarily linked to pay competitiveness concerns at mid-level.</div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px;">
-    ${[['Fabrication','5.4%','r'],['Quality','3.1%','g'],['Design','2.8%','g'],['Finance','1.2%','g'],['HR','0.0%','g'],['Admin','1.5%','g']].map(([d,r,c])=>`<div style="background:var(--bg3);border-radius:var(--r);padding:12px 14px;"><div style="font-size:10px;color:var(--t3);margin-bottom:4px;">${d}</div><div style="font-size:17px;font-weight:600;" class="${c==='r'?'':''}"><span style="color:${c==='r'?'var(--red-l)':'var(--green-l)'}">${r}</span></div></div>`).join('')}
-    </div>`
-  },
-  dispatch:{title:'Dispatch Performance Analysis',sub:'Operational KPIs → On-Time Dispatch',ic:'<i class="ti ti-truck"></i>',icBg:'var(--teal-dim)',icCol:'var(--teal-l)',
-    html:`<div class="bc-trail"><span class="bcl" onclick="closeDrill()">Operational KPIs</span><span>›</span>Dispatch<span>›</span>Delay Analysis</div>
+    <div class="insight ok">BEV's 8.3% attrition is well below industry average. Fabrication accounts for 5 of 11 voluntary exits — primarily linked to pay competitiveness at the mid-level operator grade.</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px;">${[['Fabrication','5.4%','r'],['Quality','3.1%','g'],['Design','2.8%','g'],['Finance','1.2%','g'],['HR','0.0%','g'],['Admin','1.5%','g']].map(([d,r,c])=>`<div style="background:var(--bg3);border-radius:var(--r);padding:12px 14px;"><div style="font-size:10px;color:var(--t3);margin-bottom:4px;">${d}</div><div style="font-size:17px;font-weight:600;color:${c==='r'?'var(--red-l)':'var(--green-l)'};">${r}</div></div>`).join('')}</div>`},
+  dispatch:{ttl:'Dispatch Performance — Delay Analysis',st:'Operational KPIs → On-Time Dispatch',ic:'<i class="ti ti-truck"></i>',bg:'var(--tdim)',cl:'var(--teal-l)',
+    html:`<div class="bc-trail"><span class="bcl" onclick="closeDrill()">Operational KPIs</span><span>›</span>Dispatch<span>›</span>Delay Causes</div>
     <div class="m-kpis"><div class="m-kpi"><div class="m-kpi-l">On Time</div><div class="m-kpi-v" style="color:var(--green-l)">83%</div></div><div class="m-kpi"><div class="m-kpi-l">Delayed ≤7 days</div><div class="m-kpi-v" style="color:var(--amber-l)">11%</div></div><div class="m-kpi"><div class="m-kpi-l">Delayed >7 days</div><div class="m-kpi-v" style="color:var(--red-l)">6%</div></div></div>
-    <div class="insight">Top delay causes: <strong>Material procurement delays</strong> (42%) · <strong>QC re-inspection</strong> (31%) · Transport availability (27%). Addressing the material procurement process would eliminate nearly half of all delays.</div>`
-  },
-  winrate:{title:'Win Rate Trend Analysis',sub:'Financial KPIs → Quote Win Rate',ic:'<i class="ti ti-trophy"></i>',icBg:'var(--green-dim)',icCol:'var(--green-l)',
-    html:`<div class="bc-trail"><span class="bcl" onclick="closeDrill()">Financial KPIs</span><span>›</span>Win Rate<span>›</span>Trend</div>
+    <div class="insight">Top delay causes: <strong>Material procurement</strong> (42%) · <strong>QC re-inspection</strong> (31%) · Transport availability (27%). Addressing procurement lead times would recover the largest share of delays.</div>`},
+  winrate:{ttl:'Win Rate — Quarterly Trend',st:'Financial KPIs → Quote Win Rate → Trend',ic:'<i class="ti ti-trophy"></i>',bg:'var(--gdim)',cl:'var(--green-l)',
+    html:`<div class="bc-trail"><span class="bcl" onclick="closeDrill()">Financial KPIs</span><span>›</span>Win Rate<span>›</span>Quarterly Trend</div>
     <div class="m-kpis"><div class="m-kpi"><div class="m-kpi-l">This Quarter</div><div class="m-kpi-v" style="color:var(--green-l)">68%</div></div><div class="m-kpi"><div class="m-kpi-l">Last Quarter</div><div class="m-kpi-v">64%</div></div><div class="m-kpi"><div class="m-kpi-l">Industry Avg</div><div class="m-kpi-v" style="color:var(--t2)">58%</div></div></div>
-    <div style="position:relative;height:170px;margin-bottom:16px;"><canvas id="dc4"></canvas></div>
-    <div class="insight success">Win rate is above industry average and improving. The 4-point gain vs Q3 is attributed to faster quote turnaround and more competitive pricing on Heat Exchanger packages.</div>`,
-    afterRender:()=>mk('dc4',{type:'line',data:{labels:['Q1','Q2','Q3','Q4'],datasets:[{label:'Win Rate %',data:[58,62,64,68],borderColor:'rgba(34,197,94,0.8)',backgroundColor:'rgba(34,197,94,0.08)',pointRadius:4,fill:true,tension:0.3,borderWidth:2}]},options:baseOpts('%',false)})
-  }
+    <div style="position:relative;height:170px;margin-bottom:14px;"><canvas id="dc4"></canvas></div>
+    <div class="insight ok">Win rate is above industry average and on an improving trajectory. The 4-point gain vs Q3 is attributable to faster turnaround and more competitive Heat Exchanger pricing.</div>`,
+    after:()=>mkC('dc4',{type:'line',data:{labels:['Q1','Q2','Q3','Q4'],datasets:[{label:'Win Rate %',data:[58,62,64,68],borderColor:'rgba(34,197,94,.8)',backgroundColor:'rgba(34,197,94,.08)',pointRadius:4,fill:true,tension:.3,borderWidth:2}]},options:baseOpts('%',false)})}
 };
 
-function drill(key){
-  const d=DRILLS[key];if(!d)return;
-  document.getElementById('d-ic').innerHTML=d.ic;
-  document.getElementById('d-ic').style.background=d.icBg;
-  document.getElementById('d-ic').style.color=d.icCol;
-  document.getElementById('d-title').textContent=d.title;
-  document.getElementById('d-sub').textContent=d.sub;
-  document.getElementById('d-body').innerHTML=d.html;
+function drill(key) {
+  const d = DRILLS[key]; if (!d) return;
+  document.getElementById('d-ic').innerHTML = d.ic;
+  document.getElementById('d-ic').style.background = d.bg;
+  document.getElementById('d-ic').style.color = d.cl;
+  document.getElementById('d-ttl').textContent = d.ttl;
+  document.getElementById('d-st').textContent = d.st;
+  document.getElementById('d-bd').innerHTML = d.html;
   document.getElementById('drill-overlay').classList.add('open');
-  logEvt('drill','Drilled through: '+d.title,document.getElementById('bc-now').textContent);
-  if(d.afterRender)setTimeout(d.afterRender,80);
+  logEvt('drill', 'Drill-through: ' + d.ttl, document.getElementById('bc-now').textContent);
+  if (d.after) setTimeout(d.after, 80);
 }
-function closeDrill(){document.getElementById('drill-overlay').classList.remove('open');}
+function closeDrill() { document.getElementById('drill-overlay').classList.remove('open'); }
 
-// ─── AUDIT LOG ────────────────────────────────────────────
+// ─── AUDIT ───────────────────────────────────────────────
 const AEVENTS=[
-  {type:'login',user:'Rajiv Shah',dept:'MD',action:'Signed in',page:'Company Overview',time:'Today 09:12'},
-  {type:'view',user:'Rajiv Shah',dept:'MD',action:'Viewed page',page:'Company Overview',time:'Today 09:13'},
-  {type:'drill',user:'Rajiv Shah',dept:'MD',action:'Drill-through: Revenue Deep Dive',page:'Financial KPIs',time:'Today 09:17'},
-  {type:'view',user:'Anita Mehta',dept:'Finance',action:'Viewed page',page:'Financial KPIs',time:'Today 09:24'},
-  {type:'view',user:'Anita Mehta',dept:'Finance',action:'Viewed page',page:'Financial KPIs',time:'Today 09:31'},
-  {type:'export',user:'Anita Mehta',dept:'Finance',action:'Exported report',page:'Financial Report (PDF)',time:'Today 09:36'},
-  {type:'drill',user:'Anita Mehta',dept:'Finance',action:'Drill-through: Invoice Aging',page:'Financial KPIs',time:'Today 09:40'},
-  {type:'login',user:'Deepa Joshi',dept:'HR',action:'Signed in',page:'HR KPIs',time:'Today 10:08'},
-  {type:'view',user:'Deepa Joshi',dept:'HR',action:'Viewed page',page:'HR KPIs',time:'Today 10:08'},
-  {type:'drill',user:'Deepa Joshi',dept:'HR',action:'Drill-through: Headcount by Dept',page:'HR KPIs',time:'Today 10:14'},
-  {type:'view',user:'Suresh Kumar',dept:'Operations',action:'Viewed page',page:'Operational KPIs',time:'Today 11:22'},
-  {type:'export',user:'Suresh Kumar',dept:'Operations',action:'Exported report',page:'Operational Report (Excel)',time:'Today 11:28'},
-  {type:'alert',user:'Suresh Kumar',dept:'Operations',action:'After-hours access detected',page:'Operational KPIs',time:'Yesterday 22:49'},
-  {type:'view',user:'Anita Mehta',dept:'Finance',action:'Viewed page',page:'Financial KPIs',time:'Yesterday 18:05'},
-  {type:'alert',user:'Anita Mehta',dept:'Finance',action:'After-hours access detected',page:'Financial KPIs',time:'Yesterday 20:01'},
-  {type:'export',user:'Rajiv Shah',dept:'MD',action:'Exported report',page:'Executive Summary (PDF)',time:'Yesterday 16:35'},
-  {type:'login',user:'Rajiv Shah',dept:'MD',action:'Signed in',page:'Company Overview',time:'Yesterday 09:00'},
-  {type:'view',user:'Rajiv Shah',dept:'MD',action:'Viewed page',page:'Audit Logs',time:'Yesterday 09:48'},
-  {type:'drill',user:'Rajiv Shah',dept:'MD',action:'Drill-through: Active Orders',page:'Operational KPIs',time:'2 days ago 14:15'},
-  {type:'export',user:'Deepa Joshi',dept:'HR',action:'Exported report',page:'HR Analytics (PDF)',time:'2 days ago 11:33'},
+  {type:'login',user:'Rajiv Shah',dept:'MD',action:'Signed in',page:'KPI Library',time:'Today 09:12'},
+  {type:'view',user:'Rajiv Shah',dept:'MD',action:'Opened KPI: Monthly Revenue',page:'KPI Library',time:'Today 09:14'},
+  {type:'drill',user:'Rajiv Shah',dept:'MD',action:'Drill-through: Revenue Deep Dive',page:'KPI Library',time:'Today 09:16'},
+  {type:'view',user:'Anita Mehta',dept:'Finance',action:'Opened KPI: Overdue Invoices',page:'KPI Library',time:'Today 09:25'},
+  {type:'view',user:'Anita Mehta',dept:'Finance',action:'Opened KPI: Quote Pipeline Value',page:'KPI Library',time:'Today 09:32'},
+  {type:'export',user:'Anita Mehta',dept:'Finance',action:'Downloaded report',page:'Financial Report (PDF)',time:'Today 09:37'},
+  {type:'drill',user:'Anita Mehta',dept:'Finance',action:'Drill-through: Invoice Aging',page:'KPI Library',time:'Today 09:41'},
+  {type:'login',user:'Deepa Joshi',dept:'HR',action:'Signed in',page:'KPI Library',time:'Today 10:05'},
+  {type:'view',user:'Deepa Joshi',dept:'HR',action:'Pinned KPI: Attrition YTD',page:'KPI Library',time:'Today 10:07'},
+  {type:'drill',user:'Deepa Joshi',dept:'HR',action:'Drill-through: Headcount by Dept',page:'KPI Library',time:'Today 10:12'},
+  {type:'view',user:'Suresh Kumar',dept:'Operations',action:'Searched KPIs: "dispatch"',page:'KPI Library',time:'Today 11:20'},
+  {type:'export',user:'Suresh Kumar',dept:'Operations',action:'Downloaded report',page:'Operational Report (Excel)',time:'Today 11:27'},
+  {type:'alert',user:'Suresh Kumar',dept:'Operations',action:'After-hours access detected',page:'KPI Library',time:'Yesterday 22:48'},
+  {type:'view',user:'Anita Mehta',dept:'Finance',action:'Opened KPI: Gross Margin',page:'KPI Library',time:'Yesterday 18:04'},
+  {type:'alert',user:'Anita Mehta',dept:'Finance',action:'After-hours access detected',page:'KPI Library',time:'Yesterday 19:58'},
+  {type:'export',user:'Rajiv Shah',dept:'MD',action:'Downloaded report',page:'Executive Summary (PDF)',time:'Yesterday 16:32'},
+  {type:'login',user:'Rajiv Shah',dept:'MD',action:'Signed in',page:'KPI Library',time:'Yesterday 08:57'},
+  {type:'view',user:'Rajiv Shah',dept:'MD',action:'Viewed Audit Logs',page:'Audit Logs',time:'Yesterday 09:46'},
+  {type:'drill',user:'Rajiv Shah',dept:'MD',action:'Drill-through: Active Orders',page:'KPI Library',time:'2 days ago 14:14'},
+  {type:'export',user:'Deepa Joshi',dept:'HR',action:'Downloaded report',page:'HR Analytics (PDF)',time:'2 days ago 11:31'},
 ];
-const DCOL={MD:'#f59e0b',Finance:'#3b7ff5',HR:'#22c55e',Operations:'#14b8a6'};
+const DCOL={MD:'#f59e0b',Finance:'#3b7ef4',HR:'#22c55e',Operations:'#14b8a6'};
 
-function renderAudit(){
-  const df=document.getElementById('af-dept').value;
-  const tf=document.getElementById('af-type').value;
-  const filtered=AEVENTS.filter(e=>(df==='all'||e.dept===df)&&(tf==='all'||e.type===tf));
-  document.getElementById('audit-list').innerHTML=filtered.map(e=>`
-    <div class="audit-item">
+function renderAudit() {
+  const df=document.getElementById('af-dept').value, tf=document.getElementById('af-type').value;
+  const f=AEVENTS.filter(e=>(df==='all'||e.dept===df)&&(tf==='all'||e.type===tf));
+  document.getElementById('audit-list').innerHTML=f.map(e=>`
+    <div class="ai-t">
       <div class="a-dot ${e.type}"></div>
       <div style="flex:1;">
-        <div class="a-action">${e.action}: <span style="color:var(--t1);font-weight:500;">${e.page}</span>${e.type==='alert'?` <span class="chip a" style="font-size:9px;padding:2px 7px;margin-left:6px;">Flagged</span>`:''}</div>
+        <div class="a-action">${e.action}: <span style="font-weight:500;color:var(--t1);">${e.page}</span>${e.type==='alert'?` <span class="chip a" style="font-size:9px;padding:2px 7px;margin-left:6px;">Flagged</span>`:''}</div>
         <div class="a-meta"><span style="color:${DCOL[e.dept]||'var(--t2)'}">${e.user}</span> · ${e.dept}</div>
       </div>
       <div class="a-time">${e.time}</div>
     </div>`).join('');
 }
-function exportAudit(){logEvt('export','Exported Audit Log','Audit Logs');toast('Audit log exported to CSV','ok');}
+function exportAudit(){logEvt('export','Exported Audit Log','Audit Logs');showToast('Audit log exported to CSV','ok');}
 
-// ─── REPORT MODAL ─────────────────────────────────────────
-function openRptModal(){
-  document.getElementById('rpt-overlay').classList.add('open');
-  document.getElementById('prog-wrap').style.display='none';
-  document.getElementById('dl-btn').style.display='block';
-  document.getElementById('prog-fill').style.width='0%';
-}
-function selRpt(el,t){document.querySelectorAll('.rpt-opt').forEach(r=>r.classList.remove('sel'));el.classList.add('sel');}
-function startDownload(){
-  document.getElementById('prog-wrap').style.display='block';
-  document.getElementById('dl-btn').style.display='none';
-  const fill=document.getElementById('prog-fill'),status=document.getElementById('prog-status');
-  const steps=['Gathering ERP data...','Compiling HR metrics...','Generating charts...','Building report...','Done'];
-  let i=0;
-  const iv=setInterval(()=>{
-    fill.style.width=((i+1)*20)+'%';status.textContent=steps[i];i++;
-    if(i>=steps.length){clearInterval(iv);setTimeout(()=>{closeModal('rpt-overlay');logEvt('export','Downloaded report','Report');toast('Report downloaded successfully','ok');},500);}
-  },480);
+// ─── REPORT ──────────────────────────────────────────────
+function openRpt(){document.getElementById('rpt-overlay').classList.add('open');document.getElementById('prog-w').style.display='none';document.getElementById('dl-btn').style.display='block';document.getElementById('prog-fill').style.width='0%';}
+function selRo(el){document.querySelectorAll('.ro').forEach(r=>r.classList.remove('sel'));el.classList.add('sel');}
+function startDl(){
+  document.getElementById('prog-w').style.display='block';document.getElementById('dl-btn').style.display='none';
+  const fill=document.getElementById('prog-fill'),st=document.getElementById('prog-st');
+  const steps=['Fetching KPI data...','Compiling metrics...','Generating charts...','Formatting report...','Done'];
+  let i=0;const iv=setInterval(()=>{fill.style.width=((i+1)*20)+'%';st.textContent=steps[i];i++;if(i>=steps.length){clearInterval(iv);setTimeout(()=>{closeModal('rpt-overlay');logEvt('export','Downloaded report','Report');showToast('Report downloaded successfully','ok');},400);}},460);
 }
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 
-// ─── AI ASSISTANT ─────────────────────────────────────────
-const AI_ANSWERS={
-  'Why are overdue invoices increasing?':'Overdue invoices have risen &#8377;8 L this week to &#8377;62 L. The primary drivers are two delivery-delayed orders (#BEV-2821, #BEV-2818) blocking billing cycles, compounded by extended payment terms being pushed by BPCL and HPCL in Q4. The 60+ day bucket (&#8377;12 L) is the critical exposure — IOCL and Adani Gas account for &#8377;12 L between them. Recommend immediate collections escalation and linking future order releases to payment clearance.',
-  'Which department has the highest cost variance?':'Fabrication shows the highest variance at +14% above budget (approximately &#8377;38 L over). This is driven by a ~9% rise in steel plate prices this quarter and three raw material items requiring urgent spot-rate procurement due to stock falling below minimums. Design and Engineering is the most on-budget department at +2%.',
-  'What is driving the dip in dispatch rate?':'On-time dispatch has fallen 2 points to 83%. Root cause analysis shows three contributing factors: material procurement delays (42% of late dispatches), QC re-inspections triggered by welding defects (31%), and transport availability (27%). Addressing procurement lead times would recover the largest share of the shortfall.',
-  'Where is BEV at highest attrition risk?':'Overall attrition at 8.3% is healthy — well below the 12% industry average. However, Fabrication is the highest-risk department at 5.4%, with 5 of 11 voluntary exits this year. Exit interviews cite pay competitiveness at the mid-level operator grade. Two senior engineers in Quality also have upcoming appraisal milestones that should be prioritised.',
+// ─── AI ──────────────────────────────────────────────────
+const AI_A={
+  'Why are overdue invoices increasing?':'Overdue invoices have risen ₹8 L this week to ₹62 L. The primary drivers are two delivery-delayed orders (#BEV-2821, #BEV-2818) blocking billing cycles, compounded by extended payment terms being pushed by BPCL and HPCL in Q4. The 60+ day bucket (₹12 L) is the critical exposure — IOCL (₹8.2 L) and Adani Gas (₹3.8 L). Recommend immediate collections escalation and linking future order releases to clearance.',
+  'Which department has the highest cost variance?':'Fabrication shows the highest variance at +14% above budget — approximately ₹38 L over. This is driven by a ~9% rise in steel plate prices this quarter and three raw materials requiring urgent spot-rate procurement due to stock falling below minimums. Design and Engineering is the most on-budget at +2%.',
+  'What is driving the dip in dispatch rate?':'On-time dispatch has fallen 2 points to 83%. Root causes: material procurement delays (42% of late dispatches), QC re-inspections triggered by welding defects (31%), and transport availability (27%). Addressing procurement lead times would recover the largest share of the shortfall.',
+  'Where is BEV at highest attrition risk?':'Overall attrition at 8.3% is healthy — below the 12% industry average. However, Fabrication is the highest-risk department at 5.4%, with 5 of 11 voluntary exits this year primarily citing pay competitiveness at the mid-level grade. Two senior Quality engineers also have upcoming appraisal milestones to prioritise.',
 };
-const FALLBACKS=['Based on the current dashboard data, I can see this metric is within acceptable range but there are 2–3 items that warrant your attention. Would you like me to highlight the specific areas of concern?','This touches on data across multiple modules. The trend over the last 30 days shows a consistent pattern — I can cross-reference the Financial and Operational KPIs to give you a full picture if that would help.','Looking at the BEV data available, the relevant indicators point to a specific bottleneck. I can walk you through the drill-down path to get the granular view you need.'];
-let fbIdx=0;
+const AI_FB=['Based on the current KPI data, this metric is within an acceptable range but 2–3 areas warrant attention. Would you like me to highlight the specific concerns?','This touches on multiple KPI categories. The trend over the last 30 days shows a consistent pattern — I can cross-reference Financial and Operational data for a fuller picture.','Looking at the BEV metrics, the relevant indicators point to a specific bottleneck. I can walk you through the drill-down path to get the granular view you need.'];
+let fbI=0;
 
 function toggleAI(){document.getElementById('ai-panel').classList.toggle('open');}
 function sendAI(){const v=document.getElementById('ai-in').value.trim();if(!v)return;document.getElementById('ai-in').value='';askAI(v);}
 function askAI(q){
   const box=document.getElementById('ai-msgs');
-  const um=document.createElement('div');um.className='msg from-user';um.innerHTML=`<div class="bubble">${q}</div>`;box.appendChild(um);
-  const typing=document.createElement('div');typing.className='msg from-ai';typing.innerHTML=`<div class="bubble"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>`;
-  box.appendChild(typing);box.scrollTop=box.scrollHeight;
+  box.appendChild(Object.assign(document.createElement('div'),{className:'msg from-user',innerHTML:`<div class="bubble">${q}</div>`}));
+  const t=document.createElement('div');t.className='msg from-ai';t.innerHTML=`<div class="bubble"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>`;
+  box.appendChild(t);box.scrollTop=box.scrollHeight;
   document.getElementById('ai-panel').classList.add('open');
-  setTimeout(()=>{
-    typing.remove();
-    const resp=AI_ANSWERS[q]||FALLBACKS[fbIdx++%FALLBACKS.length];
-    const am=document.createElement('div');am.className='msg from-ai';am.innerHTML=`<div class="bubble">${resp}</div>`;
-    box.appendChild(am);box.scrollTop=box.scrollHeight;
-    logEvt('view','AI query: '+q.substring(0,50),document.getElementById('bc-now').textContent);
-  },1100);
+  setTimeout(()=>{t.remove();const r=AI_A[q]||AI_FB[fbI++%AI_FB.length];const m=document.createElement('div');m.className='msg from-ai';m.innerHTML=`<div class="bubble">${r}</div>`;box.appendChild(m);box.scrollTop=box.scrollHeight;logEvt('view','AI query: '+q.substring(0,50),'KPI Library');},1100);
 }
 
-// ─── AUDIT TRACKING ───────────────────────────────────────
+// ─── AUDIT LOGGER ────────────────────────────────────────
 function logEvt(type,action,page){
   if(!CUR)return;
-  AEVENTS.unshift({type,user:CUR.name,dept:CUR.title.split(' ')[0]==='Managing'?'MD':CUR.title.split(' ')[0],action,page,time:'Just now'});
+  const deptMap={Managing:'MD',Finance:'Finance',HR:'HR',Operations:'Operations'};
+  const d=deptMap[CUR.title.split(' ')[0]]||'MD';
+  AEVENTS.unshift({type,user:CUR.name,dept:d,action,page,time:'Just now'});
 }
 
-// ─── TOAST ────────────────────────────────────────────────
-function toast(msg,cls){
-  const t=document.getElementById('toast');
-  t.className='toast '+(cls||'ok');
-  document.getElementById('toast-msg').textContent=msg;
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3000);
+// ─── TOAST ───────────────────────────────────────────────
+function showToast(msg,cls){
+  const t=document.getElementById('toast');t.className='toast '+(cls||'ok');
+  document.getElementById('toast-msg').textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
 }
 
-// ─── CLOSE ON OVERLAY CLICK ───────────────────────────────
+// ─── CLOSE ON OVERLAY ────────────────────────────────────
 document.getElementById('drill-overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeDrill();});
 document.getElementById('rpt-overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal('rpt-overlay');});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDrill();closeModal('rpt-overlay');}});
